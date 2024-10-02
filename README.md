@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/phrxn/webserv/refs/heads/main/images/webserv_logo.png?token=GHSAT0AAAAAACRRNVUCPUBX4LHVL65A7FPKZX4YV6A" />
+  <img src="https://raw.githubusercontent.com/phrxn/phrxn/refs/heads/master/webserv/webserv_logo.png" />
 </p>
 <p align="center">
 	<b><i>This is when you finally understand why a URL starts
