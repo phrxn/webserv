@@ -3,3 +3,11 @@
 *.a
 *.d
 *.o
+
+#folders
+build/
+output/
+.vscode/
+
+#the executable
+webserv
