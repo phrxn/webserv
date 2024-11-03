@@ -1,16 +1,14 @@
-#include "../libs/googletest/googletest/include/gtest/gtest.h"
-
 #include <string>
 
-int main(int argc, char **argv)
-{
-	::testing::InitGoogleTest(&argc, argv);
+#include "../libs/googletest/googletest/include/gtest/gtest.h"
 
-	if (argc > 1)
-	{
-		std::string filter = argv[1];
-		::testing::GTEST_FLAG(filter) = filter;
-	}
+int main(int argc, char **argv) {
+  ::testing::InitGoogleTest(&argc, argv);
 
-	return RUN_ALL_TESTS();
+  if (argc > 1) {
+    std::string filter = argv[1];
+    ::testing::GTEST_FLAG(filter) = filter;
+  }
+
+  return RUN_ALL_TESTS();
 }

@@ -7,6 +7,8 @@ FLAGS = -Wall -Werror -Wextra
 
 CPP_VERSION = --std=c++98
 
+TEST_BINARY = output/tests/test.out
+
 BUILD_DIR = build/
 
 GTEST_LIBS = build/lib/libgmock.a \
@@ -15,10 +17,36 @@ GTEST_LIBS = build/lib/libgmock.a \
 GTEST_INCLUDES = libs/googletest/googletest/include/
 GMOCK_INCLUDES = libs/googletest/googlemock/include/
 
+SOURCES = src/Main.cpp\
+		  src/error/Log.cpp\
+		  src/error/LogDefault.cpp\
+		  src/error/Status.cpp\
+		  src/io/Epoll.cpp\
+		  src/io/FileDescriptor.cpp\
+		  src/io/Poll.cpp\
+		  src/error/LogWriter.cpp\
+		  src/error/LogWriteToConsole.cpp\
+		  src/net/Address.cpp\
+		  src/net/FileDescriptorVisitor.cpp\
+		  src/net/GenericServer.cpp\
+		  src/net/GenericServerRequestManager.cpp\
+		  src/net/ProtocolManager.cpp\
+		  src/net/ProtocolManagerEnter.cpp\
+		  src/net/ProtocolManagerFactory.cpp\
+		  src/net/ServerSocketFileDescriptor.cpp\
+		  src/net/SocketFileDescriptor.cpp\
+		  src/net/SocketFileDescriptorImpl.cpp\
+		  src/system/Errno.cpp\
+		  src/system/SystemCalls.cpp\
+		  src/time/Time.cpp\
+		  src/Start.cpp\
+		  src/Webserv.cpp
 
-SOURCES = $(VAR)
-
-SOURCES_TEST = tests/Main.cpp
+SOURCES_TEST =  tests/Main.cpp\
+                src/error/LogWriterTest.cpp\
+				src/io/EpollTest.cpp\
+				src/net/GenericServerTest.cpp\
+				src/net/SocketFileDescriptorImplTest.cpp
 
 
 OBJECTS = $(SOURCES:.cpp=.o)
@@ -28,21 +56,25 @@ OBJECTS_TEST = $(SOURCES_TEST:.cpp=.o)
 DEPENDS_TEST = $(SOURCES_TEST:.cpp=.d)
 
 all : $(NAME)
+	$(MAKE) -C tests_cli/
 
 $(NAME) : before_compile $(OBJECTS)
 	$(CXX) $(OBJECTS) -o $@
 
 clean:
+	rm -rf src/Main.d src/Main.o
 	rm -rf $(OBJECTS)
 	rm -rf $(DEPENDS)
 	rm -rf $(OBJECTS_TEST)
 	rm -rf $(DEPENDS_TEST)
+	$(MAKE) -C tests_cli/ clean
 
 fclean: clean
 	rm -rf $(NAME)
+	$(MAKE) -C tests_cli/ fclean
 
 %.o : %.cpp
-	$(CXX) -I$(GTEST_INCLUDES) -I$(GMOCK_INCLUDES) $(CPP_VERSION) $(FLAGS) -MMD -c $< -o $@
+	$(CXX) -I$(GTEST_INCLUDES) -I$(GMOCK_INCLUDES) $(CPP_VERSION) $(FLAGS) -D$(COMPILE_TEST) -MMD -c $< -o $@
 
 $(GTEST_LIBS):
 	mkdir -p $(BUILD_DIR)
@@ -50,16 +82,22 @@ $(GTEST_LIBS):
 	make -C $(BUILD_DIR)
 
 before_compile: clean
+	$(eval COMPILE_TEST := NOTHING_TEST)
 
 before_compile_tests:
+	$(eval COMPILE_TEST := COMPILE_TEST)
 	$(eval CPP_VERSION := --std=c++14)
 
 
 tests : before_compile_tests clean $(GTEST_LIBS) $(OBJECTS) $(OBJECTS_TEST)
 	mkdir -p output/tests
-	$(CXX) $(OBJECTS) $(OBJECTS_TEST) -o output/tests/test.out $(GTEST_LIBS) -lpthread
+	$(CXX) $(OBJECTS) $(OBJECTS_TEST) -o $(TEST_BINARY) $(GTEST_LIBS) -lpthread
+	./$(TEST_BINARY)
 
 -include $(DEPENDS)
 
-.PHONY : all clean fclean re before_compile_tests before_compile
+run : all
+	./$(NAME)
+
+.PHONY : all clean fclean re before_compile_tests before_compile run
 

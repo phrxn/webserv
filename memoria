@@ -1,0 +1,46 @@
+=== Memory Rules ===
+
+1) Se uma classe aloca um recurso dinamicamente com o operador 'new' ela deve deletar o mesmo com o operador 'delete'.
+
+1.1) A classe que aloca o recurso é quem deve excluí-lo, caso ela passe esse recurso para uma sub-classe fazer algo, A SUB-CLASSE NÃO DEVE DELETAR O RECURSO
+
+2) Se uma classe recebe um ponteiro pelo construtor ela não deve excluí-lo. Pois se ela está recebendo um ponteiro pelo construtor, por obvio, não foi ela quem criou o ponteiro.
+
+2.1) Ao receber um ponteiro pelo construtor a classe não sabe se ele é resultado de uma alocação dinamica usando o operador new, ou é simplemente resultado do operador de endereço (&), esse paragráfo reforça o parágrafo 2.
+
+2.2) Se uma classe A tem um ponteiro dela, e uma class B deseja iniciar esse ponteiro da classe A, a classe B pode criar o ponteiro e DEVE passar ele para a classe A atráves de um metodo set, e a classe B NÃO  DEVE DELETAR o ponteiro, pois se ele está iniciando um ponteiro que É da classe A, a classe A é quem deve deletá-lo.
+2.2.1) TODOS metodos de inicialização de ponteiro deve seguir esse padrão: set + pointer variable name.
+
+  Exemplo:
+    class MyClass{
+		public:
+		  MyClass() : _pointer(new int){}
+		  ~MyClass(){}
+
+		   void setPointer(int *pointer){ _pointer = pointer;}
+        private:
+		  int *_pointer;
+	}
+
+
+
+
+
+
+
+exemples:
+
+1)
+	class MyClass{
+
+		MyClass() : myPointer(new int){}
+		~MyClass(){if(myPointer) delete myPointer;}
+
+		private:
+		int *myPointer;
+	}
+
+1.1)
+	class ProcessInt{
+		ProcessInt
+};

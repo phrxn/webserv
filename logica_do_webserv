@@ -1,0 +1,489 @@
+Problema 1:  non-blocking
+
+1) listaDeSockets = epoll_wait(1); INPUT
+
+
+0) EPOLL_CONTROL(ADICIONAR, socket_cliente, INPUT)
+
+1) CRIAR O HttpResquest
+
+2) PROCESSAR O HttpResquest (GET, POST, DELETE...)
+
+3) EPOLL_CONTROL(socket_cliente, INPUT | OUTPUT)
+
+4) CRIAR O HttpResponse
+
+5) ENVIAR HttpResponse -> socket_client
+
+6.1) EPOLL_CONTROL(MODIFICAR, socket_cliente, INPUT);
+
+6.2) EPOLL_CONTROL(REMOVER,   socket_cliente);
+
+
+		OK = 200,
+		CREATED = 201,
+		NO_CONTENT = 204,
+        -------------------------------------
+		MOVED_PERMANENTLY = 301,
+        -------------------------------------
+		BAD_REQUEST = 400,
+		FORBIDDEN = 403,
+		NOT_FOUND = 404,
+		NOT_ALLOWED = 405,
+		TIMEOUT = 408,
+		CONFLICT = 409,
+		PAYLOAD_TOO_LARGE = 413,
+        -------------------------------------
+		SERVER_ERR = 500,
+		NOT_IMPLEMENTED = 501,
+		SERVICE_UNAVAILABLE = 503,
+
+
+
+
+
+
+
+
+Observações:
+    ** Não dar while no read do fd do socket, pois pode acontecer aquele caso, de vir a quantia certa do buffer, mas na próxima leitura pode bloquear.
+    ** Um socket não tem nada haver com um HTTPRequest, pois o mesmo socket pode ficar aberto durantes vários HTTPRequest
+        ** o socket pode mandar tudo de uma vez
+        ** de pedaço em pedaço
+        ** mandar tudo certinho ou mandar mais do que \n\n
+        ** se o socket mandar mais do que o \n\n (que seria o corpo em um post, por exemplo,
+    ** Não precisa se preocupar com a porta no listener, pois o protocolo HTTP na URL tem a porta!
+    ** O HTTP tem o objeto URL
+    ** URL tem: {string scheme:
+                 string user:
+                 string password:
+                 string host:
+                 int port: default:80
+                 string path:
+                 string query:
+                 string fragment: }
+
+    ** FD-> int     fd_socket_cliente,
+            vector  buffer_input,
+            bool    readyToInput;
+            bool    readyToOutput;
+
+            doRead(); void, throw IOException; <- ter o status, para poder lançar a execao e tirar o mapRequest
+            &getInputStream();
+            close(); void
+            getFD(): int
+            //set and get do: readyToInput e readyToOutput;
+
+    ** HTTPRequest -> FD          fd;
+                      bool        isReady;
+                      Date        lastInputReady;
+                      URL         url;
+                      Method      {PUT, POST, GET}
+
+                      processInput(String date): void
+                      getDataLastInput(): long
+                      isReady(): void
+                      process(): void, throw HTTPRequestException;
+
+    ** HTTPHeader -> metodo enum 'INVALID, GET, DELETE, POST'
+       URL->
+       Version: ENUM
+       map<String:String> key, value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============================================== Pseudo código: ===============================================
+
+
+1) Checar os argumentos
+2) Criar os "VirtualHosts" (9090)
+3) Criar os FD de "servidor" (os listeners), baseado nas portas definidas no VirtualHosts
+4) Criar o epoll
+5) Adicionar os FDs "servidor"(s) no epoll
+6) ??Já deixar as páginas de erros pre carregadas??
+
+
+------------------------------------------------------------
+Application
+{
+	while (continue)
+	{
+		list<FD> epollList = epoll_wait(1); <<-- o FD do Epoll pode ser um Herdeiro para permitir setar os isReady sem expor o setsFDsIsReady do pai!xD
+		if (epollList.size() != 0)
+		    Server.processFilesDescriptorsReady(epollList);
+		Server.closeRequestInactives();
+	}
+
+	// Saindo do while o servidor deve fechar, logo, fechar as conexoes da free e etc...
+}
+------------------------------------------------------------
+
+GenericServer
+{
+    Poll* poll
+    map<FD*, GenericServerRequestManager>   mapClientRequestManager;
+
+    processFilesDescriptorsReady(list<FD> &epollList){
+        for(FD : epollList)
+        {
+            if (FD is SOCKET_SERVIDOR)
+                createANewClientRequestHandler(FD)
+            else (FD is SOCKET_CLIENTE)
+                processClientRequest(FD)
+        }
+    }
+
+    processClientRequest(FD){
+        1) procurar o GenericServerRequestManager no map
+        3) chamar o   GenericServerRequestManager.handler() == //REQUEST_MANAGER_PROCESSING, HANDLER_FINALIZADO, FINALIZAR
+        4) if (HANDLER_PROCESSANDO) return
+
+        remover GenericServerRequestManager do map
+        deletar o GenericServerRequestManager
+
+		//colocar o FD em Leitura de novo;
+
+        5) if (FINALIZAR)
+            remover do FD do Epoll
+            remover FD (fechar o fd dentro do fd) ** O FD faz isso no destrutor
+    }
+
+    createANewClientRequestHandler(FD){
+        //como o FD eh o do servidor, pegar o 'fd', e usar o accept systemcall
+        //se o accept funcionar
+
+		//Criar um GenericServerRequestManager(poll, socketFd, [ProtocolManager]);
+		//Adicionar o SocketFD e o GenericServerRequestManager no mapa
+
+		poll.adicionarFD(
+
+
+
+        criar um FD (inputOK, outputOFF, add o Epoll*, Tipo SOCKET_CLIENTE)
+        adicionar ao epoll o FD criado
+
+    }
+
+
+
+    closeRequestInactives(){
+        (ClientRequestManager cli : mapClientRequestManager)
+        {
+            ClientRequestManager.checkTimeOut()
+        }
+    }
+}
+
+------------------------------------------------------------
+
+GenericServerRequestManager:
+
+	-Poll *poll;
+	-SocketFileDescriptor *socketFd;
+	-Stage        {Request, ProcessServlet, TimeoutInput, Response};
+	-Date lastInputTime;
+	-ProtocolManager *protocolManager //INTERFACE ........
+
+
+	GenericServerRequestManager(poll, socketFd, [ProtocolManager])
+	{
+		poll;
+		socketFd
+		protocolManager;
+	}
+
+    handler()  //HANDLER_PROCESSANDO, HANDLER_FINALIZADO, FINALIZAR
+	{
+		if (Stage == Request){ <<-- parece ser redundante (fd.isProntoToReady() && Stage == Request)... tipo sempre esses estados vao estar juntos! se o Stage == Request, logo, fd.isProntoToReady()
+			try{
+				atualizar lastInputTime;
+				socketFd.doRead();
+			}catch(ERROR -1 do FD ou CONEXAO FECHADA 0){
+				//pensar e se der erro na locacao de memoria do read? fazer o HTTPResponse.createStatus = Internal?)
+                //memoria é impossível checar! logo nao faz sentido erro interno
+				return FINALIZAR
+			}
+
+			protocolManager.createRequest() : // REQUEST_CREATED, REQUEST_CREATING
+
+			if (REQUEST_CREATING)
+               return REQUEST_MANAGER_PROCESSING
+			Stage = ProcessServlet;
+		}
+
+        if (etapaRequisito == ProcessServlet){
+
+            protocolManager.servlet();            
+			mudar o FD so para escrita no epoll               *****como o HTTPReponse está pronto, mas como o FD está pronto só para leitura, temos que mudar o FD pra escrita e retornar, para ai sim, na proxima interacao o epoll diga que podemos escrever
+			Stage = Response
+            return REQUEST_MANAGER_PROCESSING;
+        }
+
+		if (etapaRequisito == TimeoutInput){
+			protocolManager.connectionHitTheTimeout();
+		    mudar o FD so para escrita no epoll               *****como o HTTPReponse está pronto, mas como o FD está pronto só para leitura, temos que mudar o FD pra escrita e retornar, para ai sim, na proxima interacao o epoll diga que podemos escrever
+			Stage = Response
+            return REQUEST_MANAGER_PROCESSING;
+		}
+
+        if (etapaRequisito == Response){ //aqui ja esta no modo leitura (nao precisa do fd.isProntoToWrite() && ..., mesma ideia do Stage de Request se está nessa etapa ja esta pronto para leitura)
+
+			protocolManager.createResponse(); //eh legar deixar o response aqui, pois o Stage do Request já consome um tempo legal fazendo muita coisa!
+
+			int writed;
+			try{
+				writed = fd.doWrite();
+			}Catch(std::exception &ex)
+				return FINALIZAR_TUDO
+
+			if (socketFd.getOutputStream().size() != 0)
+				return REQUEST_MANAGER_PROCESSING;
+
+			if (socketFd.isClose())  //eh para fechar a conexao depois do response? Pensar nisso e fazer uns testes tambem!
+				return FINALIZAR_TUDO;
+			return HANDLER_FINALIZADO
+		}
+
+    void resetForANewRequest(){
+       //mudar o FD so para leitura no epoll **isso vai dar certinho pelo visto (testar) tipo se um POST veio com 10 de tamanho, mas o peao já quis mandar a proximo requisao (mesmo o protocolo falando que é 1 por vez) o resto vai ficar no vectorInputStrem pronto para ser lido!
+       //criar um novo protocolorManager?
+       //resetar o tempo (pegar o atual aqui)
+       //resetar o Stage para == Request;
+   }
+
+
+	checkTimeOut()
+	{
+        //o timeout SEMPRE vai acontecer quando o FD estiver no INPUT, pois uma vez que o INPUT chegou completo o servidor vai processar, criar e enviar o output
+        //logo, devemos mudar o fd para escrita (ele nesse momento soh esta para leitura)
+		Stage = TimeoutInput
+	}
+
+------------------------------------------------------------
+
+ProtocolManager  << -- abstract;
+
+    protected:
+		-SocketFileDescriptor *socketFd;
+
+	ProtocolManager(SocketFileDescriptor *socketFd) : socketFd(socketFd)
+
+	<<abstract>> createRequest() = 0;     // REQUEST_CREATED, REQUEST_CREATING
+	<<abstract>> servlet() = 0;
+	<<abstract>> createResponse() = 0;
+    <<abstract>> connectionHitTheTimeout() = 0;  //vai ser chamada se a requisicao atingir o timeout (o protocolo terá chance de fazer algo)
+                                                 //chance para escrever no output do socketFd
+
+------------------------------------------------------------
+
+ProtocolManagerHTTP  <<-- ProtocolManager
+{
+    -HTTPRequest           request
+    -HTTPResponse          response
+	-HttpServletManager    servletManager
+
+	ProtocolManagerHTTP(SocketFileDescriptor *socketFd){
+		HttpServletManager(socketFd)
+		HTTPRequest(socketFd)
+		HTTPResponse(socketFd)
+	}
+
+	createRequest(){  //  REQUEST_CREATED, REQUEST_CREATING
+		return request.createRequest();
+	};
+
+	servlet(){
+		servletManager.doService(HTTPRequest &request, HTTPResponse &response);
+	};
+
+	createResponse(){
+		response.createResponse();
+	};
+
+	connectionTimeout(){
+		servletManager.doError(CodeError = Timout, HTTPResponse response);
+	};
+}
+
+------------------------------------------------------------
+
+HttpServletManager
+	-HttpServlet servlet <--- HttpServlet {HttpServletStatic, HttpServletCGI}
+	-list<VirtualHost>  listVirtualHost  // ou map?   map<int porta, VirtualHost> mapVirtualHost;
+
+	HttpServletManager(SocketFileDescriptor *socketFd){
+		//pegar o virtual host baseado na porta do servidor no socketFd;
+		//checar se é Static
+			Se sim: servlet = new HttpServletStatic(VirtualHost)
+			Se nao: servlet = new HttpServletCGI(VirtualHost)
+	}
+
+	doService(HTTPRequest &request, HTTPResponse &response)
+	{
+		1)Pegar o CreateStatus do HTTP, se for diferente de OK:
+			1.1)doError(CodeError, HTTPResponse response); com o código de erro baseado no CreateStatus do HTTPRequest
+			1.2)return;
+
+		//Se o CreateStatus == OK, que dizer que a criacao do HTTPResquest deu certo
+
+		2)Chamar o método em servlet de acordo com o método no request
+	}
+
+	doError(CodeError, HTTPResponse response){
+		servlet.doError(CodeError, HTTPResponse response);
+	}
+
+
+------------------------------------------------------------
+
+HttpServlet : <<------------ INTERFACE
+
+	<<abstract>> void doGet(HTTPRequest &request, HTTPResponse &response) = 0;
+	<<abstract>> void doPost(HTTPRequest &request, HTTPResponse &response) = 0;
+	<<abstract>> void doDelete(HTTPRequest &request, HTTPResponse &response) = 0;
+
+	//metodo especial para tratar erros
+	<<abstract>> void doError(Code erro, HTTPResponse) = 0;
+
+------------------------------------------------------------
+
+HttpServletStatic  <<------------ HttpServlet
+
+	VirtualHost virtualHost;
+
+	HttpServletStatic(VirtualHost virtualHost){
+
+	}
+
+	//implementar os metodos do HttpServlet
+
+------------------------------------------------------------
+
+HttpServletCGI  <<------------ HttpServlet
+
+	VirtualHost virtualHost;
+
+	HttpServletCGI(VirtualHost virtualHost);
+
+	//implementar os metodos do HttpServlet
+
+------------------------------------------------------------
+
+
+
+
+
+HTTPRequest
+  -HTTPHeader httpHeader;
+  -vector body
+  -enum CreateStatus {OK, TIMEOUT, BAD_REQUEST, INTERNAL_ERROR} // o default eh OK //INTERNAL_ERROR pode ser por exemplo um erro de locacao de memoria!
+  -enum EtapaDoProcesso (CriandoHeader, CriandoBody);
+
+
+
+	HTTPRequest.createRequest() : // REQUEST_CREATED, REQUEST_CREATING
+	{
+		if (EtapaDoProcesso == CriandoHTTPHeader)
+		{
+			 1) HTTPRequest.createTheHeader()
+				if(createTheHeader  == Criando)
+				   return RESPONSE_CREATING
+				if(createTheHeader == Criado
+				   EtapaDoProcesso = CriandoBody
+				if(createTheHeader == BadRequest)
+				{
+					 CreateStatus = BAD_REQUEST;
+					 return REQUEST_CREATED;
+				}
+		}
+
+		if (EtapaDoProcesso == Criando_Body)
+		{
+			return createBody() : // REQUEST_CREATED, REQUEST_CREATING
+		}
+	}
+
+	createBody() : // REQUEST_CREATED, REQUEST_CREATING
+	{
+		if(HTTPHeader.Metodo != de qualquer metodo que tenha um corpo)
+			return REQUEST_CREATED
+		//ir lendo ate criar o body por completo, enquando o body nao for criado ir retornando REQUEST_CREATING
+		//quando body for criado ou der algum erro (tipo body menor que o esperado) REQUEST_CREATED
+		//no caso de erro nao esquecer de setar o CreateStatus
+	}
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+HTTPHeader
+    Metodo (GET, POST, DELETE)
+    URL : url;
+    Version: enum {1_1}
+    map<String, String> map;
+    isReady: boolean; (começa com falso)
+
+createTheHeader() : Criando, Criado, BadRequest (quando for BAD request deixar o tipo para badRequest)
+{
+
+}
+
+------------------------------------------------------------
+
+HTTPResponse
+
+    vector  ouputPutStream;
+    bool isOutputGerado = false;
+    CodeStatus   {200,201, 400, 300, 3xx, 500m 5xx} //criar um mapa global, do tipo <codestatus, String> para associar o codigo a string??
+    map<String, String> keyAndValue;
+
+
+    setContentType("application/pdf");
+    setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+    setContentLength((int) file.length());
+    setCloseConnection();
+    writeBytes(); //sei lah pode ser bom para escrever no outputStream
+    addOutputStream(OutputStream *output);
+    ========================================================================================
+	createResponse()
+	{
+		escrever no outup do FileDescriptor;
+		if (isOutputGerado)
+			criar o output vector com todos os dados (ele comeca vazio)
+		return ouputPutStream
+
+        //pensar que o createResponse vai criar a responsa, preenchar o vectorOutputStream do socketFD e setar no socketFD se a conexao eh ou nao para ser fechada! para lah no GenericServerRequestManager sabermos!
+	}
+
+    bool isTocloseConnectionAfterOutput(){
+    }
+
+
+   //exemplo de resposta
+			HTTP/1.1 400 Bad Request
+            \n
+			Content-Type: application/json
+
+			{
+			  "error": "O parâmetro 'name' não pode estar vazio"
+			}
+
+=============================================== FIM DO PSEUDO CODIGO: ===============================================
