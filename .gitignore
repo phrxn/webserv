@@ -9,6 +9,9 @@ build/
 output/
 .vscode/
 
+.logic
+.memory
+
 #the executable
 webserv
 cli
