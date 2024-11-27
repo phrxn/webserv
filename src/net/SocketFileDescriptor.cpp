@@ -8,15 +8,16 @@ SocketFileDescriptor::SocketFileDescriptor(int fd, const Address &address)
       _address(address),
       _closeSocketAfterProcessingResponse(false) {}
 
+SocketFileDescriptor::~SocketFileDescriptor() {}
+
+// deleted (this class or its heirs MUST BE UNIQUE!)
 SocketFileDescriptor::SocketFileDescriptor(const SocketFileDescriptor &src)
     : FileDescriptor(src) {
   (void)src;
   *this = src;
 };
 
-SocketFileDescriptor::~SocketFileDescriptor() {}
-
-// private
+// deleted (this class MUST BE UNIQUE!)
 SocketFileDescriptor &SocketFileDescriptor::operator=(
     const SocketFileDescriptor &src) {
   (void)src;
@@ -40,6 +41,11 @@ void SocketFileDescriptor::setCloseSocketAfterProcessingResponse(
 
 // Tells whether the socket should be closed after the request response
 // has been sent.
-bool SocketFileDescriptor::isForCloseSocketAfterProcessingResponse() {
+bool SocketFileDescriptor::isForCloseSocketAfterProcessingResponse() const {
   return _closeSocketAfterProcessingResponse;
 }
+
+void SocketFileDescriptor::setServerPort(int serverPort) {
+  _serverPort = serverPort;
+}
+int SocketFileDescriptor::getServerPort() const { return _serverPort; }

@@ -4,7 +4,7 @@
 
 Address::Address() {}
 
-Address::Address(uint16_t port, Type type) : port(port) {
+Address::Address(uint16_t port, Type type) : _port(port) {
   if (type == LOCAL) createLocalAddress();
 }
 
@@ -13,18 +13,20 @@ Address::~Address() {}
 Address::Address(const Address &src) { *this = src; }
 
 Address &Address::operator=(const Address &src) {
-  this->address = src.address;
+  if (this == &src) return *this;
+  _address = src._address;
+  _port = src._port;
   return *this;
 }
 
 struct sockaddr_in *Address::getAddress() {
-  return &(this->address);
+  return &(_address);
 }
 
 void Address::createLocalAddress() {
-  memset(&address, 0, sizeof address);
+  memset(&_address, 0, sizeof _address);
 
-  address.sin_family = AF_INET;
-  address.sin_port = htons(port);
-  address.sin_addr.s_addr = INADDR_ANY;
+  _address.sin_family = AF_INET;
+  _address.sin_port = htons(_port);
+  _address.sin_addr.s_addr = INADDR_ANY;
 }

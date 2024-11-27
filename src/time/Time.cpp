@@ -4,8 +4,8 @@
 #include <string>
 
 Time::Time() {}
+
 Time::Time(const Time &src) {
-  (void)src;
   *this = src;
 }
 Time::~Time() {}

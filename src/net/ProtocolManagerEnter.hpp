@@ -11,8 +11,6 @@ class ProtocolManagerEnter : public ProtocolManager {
  public:
   ProtocolManagerEnter(SocketFileDescriptor *socketFd, Log *logger);
   ~ProtocolManagerEnter();
-  ProtocolManagerEnter(const ProtocolManagerEnter &src);
-  ProtocolManagerEnter &operator=(const ProtocolManagerEnter &src);
 
   RequestCreationStatus createRequest();
   void servlet();
@@ -20,6 +18,9 @@ class ProtocolManagerEnter : public ProtocolManager {
   void connectionHitTheTimeout();
 
  private:
+  ProtocolManagerEnter(const ProtocolManagerEnter &src);
+  ProtocolManagerEnter &operator=(const ProtocolManagerEnter &src);
+
   SocketFileDescriptor &_socketFd;
   Log *_logger;
   std::string _buffer;

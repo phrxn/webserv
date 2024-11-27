@@ -18,6 +18,7 @@ GTEST_INCLUDES = libs/googletest/googletest/include/
 GMOCK_INCLUDES = libs/googletest/googlemock/include/
 
 SOURCES = src/Main.cpp\
+		  src/config/Configuration.cpp\
 		  src/error/Log.cpp\
 		  src/error/LogDefault.cpp\
 		  src/error/Status.cpp\
@@ -30,9 +31,20 @@ SOURCES = src/Main.cpp\
 		  src/net/FileDescriptorVisitor.cpp\
 		  src/net/GenericServer.cpp\
 		  src/net/GenericServerRequestManager.cpp\
+		  src/net/HTTPRequest.cpp\
+		  src/net/HTTPRequestFake.cpp\
+		  src/net/HTTPResponse.cpp\
+		  src/net/HTTPResponseFake.cpp\
+		  src/net/HTTPServlet.cpp\
+		  src/net/HTTPServletManager.cpp\
+		  src/net/HTTPServletStatic.cpp\
 		  src/net/ProtocolManager.cpp\
 		  src/net/ProtocolManagerEnter.cpp\
 		  src/net/ProtocolManagerFactory.cpp\
+		  src/net/ProtocolManagerHTTP.cpp\
+		  src/net/ProtocolManagerHTTPFake.cpp\
+		  src/net/Request.cpp\
+		  src/net/Response.cpp\
 		  src/net/ServerSocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptorImpl.cpp\
@@ -46,6 +58,7 @@ SOURCES_TEST =  tests/Main.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/EpollTest.cpp\
 				src/net/GenericServerTest.cpp\
+				src/net/HTTPRequestFakeTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp
 
 

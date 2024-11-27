@@ -6,12 +6,12 @@ LogDefault::LogDefault() {}
 
 LogDefault ::~LogDefault() { clearListLogListerns(); }
 
-// private (this class MUST BE UNIQUE!)
+// deleted (this class MUST BE UNIQUE!)
 LogDefault ::LogDefault(const LogDefault &src) { *this = src; }
 
-// private (this class MUST BE UNIQUE!)
+// deleted (this class MUST BE UNIQUE!)
 LogDefault &LogDefault::operator=(const LogDefault &src) {
-  if (this == &src) return *this;
+  (void)src;
   return *this;
 }
 

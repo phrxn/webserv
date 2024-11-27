@@ -18,7 +18,9 @@ class SocketFileDescriptor : public FileDescriptor {
   std::vector<char> &getOutputStream();
 
   void setCloseSocketAfterProcessingResponse(bool isToClose);
-  virtual bool isForCloseSocketAfterProcessingResponse();
+  virtual bool isForCloseSocketAfterProcessingResponse() const;
+  void setServerPort(int serverPort);
+  int  getServerPort() const;
 
  protected:
   SocketFileDescriptor(const SocketFileDescriptor &src);
@@ -33,6 +35,7 @@ class SocketFileDescriptor : public FileDescriptor {
   // Tells whether the socket should be closed after the request response
   // has been sent.
   bool _closeSocketAfterProcessingResponse;
+  int _serverPort;
 };
 
 #endif

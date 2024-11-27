@@ -56,7 +56,9 @@ void Start::startTheProgram() {
 
   setupSignal(handleSignal);
 
-  startWebserver(*_poll, *_logger);
+  createConfiguration();
+
+  startWebserver(*_poll, *_logger, _configuration);
 
   exitingFromProgram();
 }
@@ -65,16 +67,21 @@ void Start::exitingFromProgram() {
   _logger->log(Log::INFO, "Start", "exiting From Program", "Exiting...", "");
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 Start::Start(const Start &src) {
   (void)src;
   *this = src;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 Start &Start::operator=(const Start &src) {
   (void)src;
   return *this;
+}
+
+void Start::createConfiguration(){
+	_configuration.setEnvironment(TEST);
+	_configuration.setTypeOfProtocol(HTTP);
 }
 
 void Start::startLog() {
@@ -119,7 +126,7 @@ bool Start::startPoll(ServerSocketFileDescriptor *ssfd) {
   return true;
 }
 
-void Start::startWebserver(Poll &poll, Log &logger) {
-  Webserv webserv(poll, logger);
+void Start::startWebserver(Poll &poll, Log &logger, Configuration &configuration) {
+  Webserv webserv(poll, logger, configuration);
   webserv.start();
 }

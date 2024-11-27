@@ -3,6 +3,7 @@
 
 #include <ctime>
 
+#include "../config/Configuration.hpp"
 #include "../error/Log.hpp"
 #include "../io/Poll.hpp"
 #include "ProtocolManager.hpp"
@@ -11,13 +12,6 @@
 
 class GenericServerRequestManager {
  public:
-  /*
-    enum Stage { HANDLER_REQUEST_PROCESSING, HANDLER_REQUEST_FINISHED, FINISHED
-    }; enum ProtocolStage { REQUEST, PROCESS_SERVLET, TIME_OUT, RESPONSE,
-      WRITING_RESPONSE
-    };
-  */
-
   enum Stage {
     REQUEST_CREATING,
     PROCESS_SERVLET,
@@ -30,7 +24,8 @@ class GenericServerRequestManager {
 
   GenericServerRequestManager(Poll *_poll,
                               SocketFileDescriptorImpl *_socketFileDescriptor,
-                              Log *logger);
+                              Log *logger, Configuration &configuration);
+
   ~GenericServerRequestManager();
 
   bool readInputFromSocket();
@@ -58,11 +53,14 @@ class GenericServerRequestManager {
   GenericServerRequestManager &operator=(
       const GenericServerRequestManager &src);
 
+  void setProtocolManager();
+
   Poll *_poll;
   SocketFileDescriptorImpl *_socketFileDescriptor;
   Log *_logger;
   Stage _managerStage;
   ProtocolManager *_protocolManager;
+  Configuration &_configuration;
   std::time_t _timeOfLastInputFromCLient;
 };
 

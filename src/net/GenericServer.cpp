@@ -1,14 +1,16 @@
 #include "GenericServer.hpp"
 
+#include "../config/Configuration.hpp"
 #include "GenericServerRequestManager.hpp"
 #include "ServerSocketFileDescriptor.hpp"
 #include "SocketFileDescriptor.hpp"
 
-GenericServer::GenericServer(Poll &poll, Log &log) : _poll(poll), _log(log) {}
+GenericServer::GenericServer(Poll &poll, Log &log, Configuration &configuration)
+    : _poll(poll), _log(log), _configuration(configuration) {}
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 GenericServer::GenericServer(const GenericServer &src)
-    : _poll(src._poll), _log(src._log) {
+    : _poll(src._poll), _log(src._log), _configuration(src._configuration) {
   *this = src;
 }
 
@@ -21,7 +23,7 @@ GenericServer::~GenericServer() {
   }
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 GenericServer &GenericServer::operator=(const GenericServer &src) {
   (void)src;
   return *this;
@@ -89,7 +91,7 @@ void GenericServer::createANewClientRequestHandler(
   if (!client) return;
 
   GenericServerRequestManager *gsrm =
-      new GenericServerRequestManager(&_poll, client, &_log);
+      new GenericServerRequestManager(&_poll, client, &_log, _configuration);
 
   addAnewGenericServerRequestManager(client, gsrm);
 
@@ -124,7 +126,7 @@ void GenericServer::doForSocketFileDescriptorImp(
   processClientRequest(clientSocket);
 }
 
-std::map<FileDescriptor *, GenericServerRequestManager *>
-    &GenericServer::getMapClientRequestHandler() {
+std::map<FileDescriptor *, GenericServerRequestManager *> &
+GenericServer::getMapClientRequestHandler() {
   return _mapClientRequestHandler;
 }

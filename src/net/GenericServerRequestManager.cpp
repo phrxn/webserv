@@ -1,15 +1,16 @@
 #include "GenericServerRequestManager.hpp"
 
+#include "../config/Variables.hpp"
+
 GenericServerRequestManager::GenericServerRequestManager(
-    Poll *poll, SocketFileDescriptorImpl *socketFileDescriptor, Log *logger)
+    Poll *poll, SocketFileDescriptorImpl *socketFileDescriptor, Log *logger,
+    Configuration &configuration)
     : _poll(poll),
       _socketFileDescriptor(socketFileDescriptor),
       _logger(logger),
-      _managerStage(REQUEST_CREATING) {
-  ProtocolManagerFactory pmf(logger);
-
-  _protocolManager = pmf.createProtocolManager(ProtocolManagerFactory::ENTER,
-                                               socketFileDescriptor);
+      _managerStage(REQUEST_CREATING),
+      _configuration(configuration) {
+  setProtocolManager();
 
   _timeOfLastInputFromCLient = std::time(0);
 }
@@ -18,17 +19,18 @@ GenericServerRequestManager::~GenericServerRequestManager() {
   if (_protocolManager) delete _protocolManager;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 GenericServerRequestManager::GenericServerRequestManager(
     const GenericServerRequestManager &src)
     : _poll(src._poll),
       _socketFileDescriptor(src._socketFileDescriptor),
-      _logger(src._logger) {
+      _logger(src._logger),
+      _configuration(src._configuration) {
   (void)src;
   *this = src;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 GenericServerRequestManager &GenericServerRequestManager::operator=(
     const GenericServerRequestManager &src) {
   (void)src;
@@ -154,10 +156,8 @@ GenericServerRequestManager::Stage GenericServerRequestManager::handler() {
 void GenericServerRequestManager::resetForANewRequest() {
   if (_protocolManager) delete _protocolManager;
 
-  ProtocolManagerFactory pmf(_logger);
+  setProtocolManager();
 
-  _protocolManager = pmf.createProtocolManager(ProtocolManagerFactory::ENTER,
-                                               _socketFileDescriptor);
   _poll->changeOptionFileDescriptor(_socketFileDescriptor, Poll::INPUT);
   _managerStage = REQUEST_CREATING;
 }
@@ -185,4 +185,10 @@ void GenericServerRequestManager::checkTimeOut() {
 void GenericServerRequestManager::setProtocolManager(
     ProtocolManager *protocolManager) {
   _protocolManager = protocolManager;
+}
+
+void GenericServerRequestManager::setProtocolManager() {
+  ProtocolManagerFactory pmf(_logger, _configuration);
+
+  _protocolManager = pmf.createProtocolManager(_socketFileDescriptor);
 }

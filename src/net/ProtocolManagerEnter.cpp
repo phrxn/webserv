@@ -7,8 +7,12 @@ ProtocolManagerEnter::ProtocolManagerEnter(SocketFileDescriptor *socketFd,
   _buffer += "Response: ";
 }
 ProtocolManagerEnter::~ProtocolManagerEnter() {}
+
+// deleted (this class MUST BE UNIQUE!)
 ProtocolManagerEnter::ProtocolManagerEnter(const ProtocolManagerEnter &src)
     : _socketFd(src._socketFd) {}
+
+// deleted (this class MUST BE UNIQUE!)
 ProtocolManagerEnter &ProtocolManagerEnter::operator=(
     const ProtocolManagerEnter &src) {
   (void)src;

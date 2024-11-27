@@ -1,6 +1,8 @@
 #ifndef PROTOCOL_MANAGER_HPP
 #define PROTOCOL_MANAGER_HPP
 
+
+//interface ProtocolManager
 class ProtocolManager {
  public:
   enum RequestCreationStatus { REQUEST_CREATED, REQUEST_CREATING };

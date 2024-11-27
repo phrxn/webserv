@@ -14,13 +14,13 @@ Epoll::~Epoll() {
   if (_systemCalls) delete _systemCalls;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 Epoll::Epoll(const Epoll &src)
     : _logger(src._logger), _systemCalls(src._systemCalls) {
   (void)src;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 Epoll &Epoll::operator=(const Epoll &src) {
   (void)src;
   return *this;

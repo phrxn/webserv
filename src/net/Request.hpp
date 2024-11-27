@@ -3,8 +3,11 @@
 
 class Request {
  public:
-  enum { REQUEST_CREATED, REQUEST_CREATING };
-  // createResponse() : // REQUEST_CREATED, REQUEST_CREATING
+  enum StateOfCreation { REQUEST_CREATED, REQUEST_CREATING };
+
+  virtual ~Request() = 0;
+
+  virtual StateOfCreation createRequest() = 0;
 };
 
 #endif

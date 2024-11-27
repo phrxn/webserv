@@ -19,8 +19,8 @@ class Address {
  private:
   void createLocalAddress();
 
-  struct sockaddr_in address;
-  uint16_t port;
+  struct sockaddr_in _address;
+  uint16_t _port;
 };
 
 #endif

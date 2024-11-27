@@ -6,7 +6,7 @@ FileDescriptor::FileDescriptor(int fd)
       _isReadyToRead(false),
       _isReadyToWrite(false) {}
 
-// private
+// protected (this class or its heirs MUST BE UNIQUE!)
 FileDescriptor::FileDescriptor(const FileDescriptor &src)
     : _systemCalls(src._systemCalls) {
   (void)src;
@@ -19,7 +19,7 @@ FileDescriptor::~FileDescriptor() {
   }
 }
 
-// private
+// deleted (this class or its heirs MUST BE UNIQUE!)
 FileDescriptor &FileDescriptor::operator=(const FileDescriptor &src) {
   (void)src;
   return *this;

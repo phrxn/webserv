@@ -22,10 +22,9 @@ class LogDefault : public Log {
 
  private:
   LogDefault(const LogDefault &src);
+  LogDefault &operator=(const LogDefault &src);
 
   void clearListLogListerns();
-
-  LogDefault &operator=(const LogDefault &src);
 
   std::list<Log *> _listLogListeners;
 };

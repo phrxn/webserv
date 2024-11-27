@@ -11,14 +11,14 @@ ServerSocketFileDescriptor::ServerSocketFileDescriptor(Log *log)
 
 ServerSocketFileDescriptor::~ServerSocketFileDescriptor() {}
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 ServerSocketFileDescriptor::ServerSocketFileDescriptor(
     const ServerSocketFileDescriptor &src)
     : FileDescriptor(src), _logger(src._logger) {
   (void)src;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 ServerSocketFileDescriptor &ServerSocketFileDescriptor::operator=(
     const ServerSocketFileDescriptor &src) {
   (void)src;
@@ -96,6 +96,8 @@ SocketFileDescriptorImpl *ServerSocketFileDescriptor::createSocketClient() {
 
   SocketFileDescriptorImpl *newSocketClient =
       new SocketFileDescriptorImpl(socketClientFileDescriptor, _logger);
+
+  newSocketClient->setServerPort(_listenPort);
 
   return newSocketClient;
 }

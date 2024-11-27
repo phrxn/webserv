@@ -23,14 +23,14 @@ SocketFileDescriptorImpl::SocketFileDescriptorImpl(int fd,
 
 SocketFileDescriptorImpl::~SocketFileDescriptorImpl() {}
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 SocketFileDescriptorImpl::SocketFileDescriptorImpl(
     const SocketFileDescriptorImpl &src)
     : SocketFileDescriptor(src), _logger(src._logger) {
   (void)src;
 }
 
-// private
+// deleted (this class MUST BE UNIQUE!)
 SocketFileDescriptor &SocketFileDescriptorImpl::operator=(
     const SocketFileDescriptorImpl &src) {
   (void)src;

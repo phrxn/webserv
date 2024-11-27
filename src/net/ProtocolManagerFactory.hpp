@@ -1,24 +1,24 @@
 #ifndef NET_PROTOCOL_MANAGER_FACTORY_HPP
 #define NET_PROTOCOL_MANAGER_FACTORY_HPP
 
+#include "../config/Configuration.hpp"
+#include "../config/Variables.hpp"
 #include "../error/Log.hpp"
 #include "ProtocolManager.hpp"
 #include "SocketFileDescriptor.hpp"
 
 class ProtocolManagerFactory {
  public:
-  enum TypesOfProtocol { ENTER, HTTP };
-
-  ProtocolManagerFactory(Log *logger);
+  ProtocolManagerFactory(Log *logger, Configuration &_configuration);
   virtual ~ProtocolManagerFactory();
-  virtual ProtocolManager *createProtocolManager(
-      TypesOfProtocol typeOfProtocol, SocketFileDescriptor *socketFd);
+  virtual ProtocolManager *createProtocolManager(SocketFileDescriptor *socketFd);
 
  private:
   ProtocolManagerFactory(const ProtocolManagerFactory &src);
   ProtocolManagerFactory &operator=(const ProtocolManagerFactory &src);
 
   Log *_logger;
+  Configuration &_configuration;
 };
 
 #endif

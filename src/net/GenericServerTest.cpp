@@ -1,5 +1,6 @@
 #include "../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
+#include "../config/Configuration.hpp"
 #include "../error/Log.hpp"
 #include "../io/Poll.hpp"
 #include "../net/SocketFileDescriptorImpl.hpp"
@@ -53,13 +54,19 @@ class SocketFileDescriptorMock : public SocketFileDescriptor {
 
 class GenericServerRequestMock : public GenericServerRequestManager {
  public:
-  GenericServerRequestMock() : GenericServerRequestManager(NULL, NULL, NULL) {}
+  GenericServerRequestMock(Configuration &config)
+      : GenericServerRequestManager(NULL, NULL, NULL, config) {}
+};
+
+class ConfigurationMock : public Configuration{
+
 };
 
 TEST(GenericServerTest, processClientRequest_clientDoesntExist) {
   LogMock loggerMock, loggerMock2;
   PollNothingMock poll;
   SystemCallsMock systemCallsMock;
+  ConfigurationMock configMock;
 
   EXPECT_CALL(
       loggerMock,
@@ -67,7 +74,7 @@ TEST(GenericServerTest, processClientRequest_clientDoesntExist) {
           "The client doesn't have a generic server request manager", -1))
       .Times(1);
 
-  GenericServer gs(poll, loggerMock);
+  GenericServer gs(poll, loggerMock, configMock);
 
   SocketFileDescriptorImpl *sdi = new SocketFileDescriptorImpl(-1, NULL);
   sdi->setSystemCalls(new SystemCallsMock);
@@ -83,17 +90,18 @@ TEST(GenericServerTest, checkMemoryLeak) {
   SystemCallsMock sm;
   PollNothingMock poll;
   LogMock log;
+  ConfigurationMock configMock;
 
   SocketFileDescriptorMock *fd = new SocketFileDescriptorMock(-1);
   fd->setSystemCalls(new SystemCallsMock);
 
-  GenericServerRequestMock *gsrm = new GenericServerRequestMock();
+  GenericServerRequestMock *gsrm = new GenericServerRequestMock(configMock);
 
   // empty
-  GenericServer genericServer(poll, log);
+  GenericServer genericServer(poll, log, configMock);
 
   // one item
-  GenericServer genericServer2(poll, log);
+  GenericServer genericServer2(poll, log, configMock);
   genericServer2.getMapClientRequestHandler()[fd] = gsrm;
 
   // two item
@@ -102,10 +110,10 @@ TEST(GenericServerTest, checkMemoryLeak) {
   SocketFileDescriptorMock *fd3 = new SocketFileDescriptorMock(-1);
   fd3->setSystemCalls(new SystemCallsMock);
 
-  GenericServerRequestMock *gsrm2 = new GenericServerRequestMock();
-  GenericServerRequestMock *gsrm3 = new GenericServerRequestMock();
+  GenericServerRequestMock *gsrm2 = new GenericServerRequestMock(configMock);
+  GenericServerRequestMock *gsrm3 = new GenericServerRequestMock(configMock);
 
-  GenericServer genericServer3(poll, log);
+  GenericServer genericServer3(poll, log, configMock);
   genericServer3.getMapClientRequestHandler()[fd2] = gsrm2;
   genericServer3.getMapClientRequestHandler()[fd3] = gsrm3;
 }
