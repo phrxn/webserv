@@ -54,8 +54,8 @@ class SocketFileDescriptorMock : public SocketFileDescriptor {
 
 class GenericServerRequestMock : public GenericServerRequestManager {
  public:
-  GenericServerRequestMock(Configuration &config)
-      : GenericServerRequestManager(NULL, NULL, NULL, config) {}
+  GenericServerRequestMock(Log *log, Configuration &config)
+      : GenericServerRequestManager(NULL, NULL, log, config) {}
 };
 
 class ConfigurationMock : public Configuration{
@@ -92,10 +92,18 @@ TEST(GenericServerTest, checkMemoryLeak) {
   LogMock log;
   ConfigurationMock configMock;
 
+  //this expect_call is to hide warning messages form googletest
+  EXPECT_CALL(log, log(::testing::A<Log::LogLevel>(),
+                              ::testing::A<const std::string &>(),
+                              ::testing::A<const std::string &>(),
+                              ::testing::A<const std::string &>(),
+                              ::testing::A<const std::string &>()))
+      .Times(::testing::AtLeast(0));
+
   SocketFileDescriptorMock *fd = new SocketFileDescriptorMock(-1);
   fd->setSystemCalls(new SystemCallsMock);
 
-  GenericServerRequestMock *gsrm = new GenericServerRequestMock(configMock);
+  GenericServerRequestMock *gsrm = new GenericServerRequestMock(&log, configMock);
 
   // empty
   GenericServer genericServer(poll, log, configMock);
@@ -110,8 +118,8 @@ TEST(GenericServerTest, checkMemoryLeak) {
   SocketFileDescriptorMock *fd3 = new SocketFileDescriptorMock(-1);
   fd3->setSystemCalls(new SystemCallsMock);
 
-  GenericServerRequestMock *gsrm2 = new GenericServerRequestMock(configMock);
-  GenericServerRequestMock *gsrm3 = new GenericServerRequestMock(configMock);
+  GenericServerRequestMock *gsrm2 = new GenericServerRequestMock(&log, configMock);
+  GenericServerRequestMock *gsrm3 = new GenericServerRequestMock(&log, configMock);
 
   GenericServer genericServer3(poll, log, configMock);
   genericServer3.getMapClientRequestHandler()[fd2] = gsrm2;
