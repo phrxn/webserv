@@ -2,6 +2,7 @@
 #define CONFIG_CONFIGURATION_HPP
 
 #include "Variables.hpp"
+#include "../error/Log.hpp"
 
 class Configuration {
  public:
@@ -19,10 +20,14 @@ class Configuration {
   int getTimeOutForNewRequestOrToSendAFullRequest() const;
   void setTimeOutForNewRequestOrToSendAFullRequest(int timeout);
 
+  Log::LogLevel getLogLevel() const;
+  void setLogLevel(Log::LogLevel logLevel);
+
  private:
   TypesOfProtocol _typeOfProtocol;
   Environment _environment;
   int _timeOutForNewRequestOrToSendAFullRequest;
+  Log::LogLevel _logLevel;
 
 };
 

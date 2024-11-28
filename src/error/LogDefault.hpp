@@ -8,6 +8,7 @@
 class LogDefault : public Log {
  public:
   LogDefault();
+  LogDefault(LogLevel logLevelFilter);
   ~LogDefault();
 
   void log(LogLevel level, const std::string &clazzName,
@@ -27,6 +28,7 @@ class LogDefault : public Log {
   void clearListLogListerns();
 
   std::list<Log *> _listLogListeners;
+  LogLevel _logLevelFilter;
 };
 
 #endif

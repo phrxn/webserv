@@ -2,7 +2,10 @@
 
 #include "LogWriteToConsole.hpp"
 
-LogDefault::LogDefault() {}
+LogDefault::LogDefault() : _logLevelFilter(DEBUG) {}
+
+LogDefault::LogDefault(LogLevel logLevelFilter) : _logLevelFilter(logLevelFilter){
+}
 
 LogDefault ::~LogDefault() { clearListLogListerns(); }
 
@@ -18,6 +21,7 @@ LogDefault &LogDefault::operator=(const LogDefault &src) {
 void LogDefault::log(LogLevel level, const std::string &clazzName,
                      const std::string &methodName, const std::string &message,
                      const std::string &details) {
+  if (level < _logLevelFilter) return;
   for (std::list<Log *>::iterator it = _listLogListeners.begin();
        it != _listLogListeners.end(); ++it) {
     try {
@@ -31,6 +35,7 @@ void LogDefault::log(LogLevel level, const std::string &clazzName,
 void LogDefault::log(LogLevel level, const std::string &clazzName,
                      const std::string &methodName, const std::string &message,
                      int details) {
+  if (level < _logLevelFilter) return;
   for (std::list<Log *>::iterator it = _listLogListeners.begin();
        it != _listLogListeners.end(); ++it) {
     try {

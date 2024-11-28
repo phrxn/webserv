@@ -83,10 +83,11 @@ void Start::createConfiguration() {
   _configuration.setEnvironment(TEST);
   _configuration.setTypeOfProtocol(HTTP);
   _configuration.setTimeOutForNewRequestOrToSendAFullRequest(5);
+  _configuration.setLogLevel(Log::INFO);
 }
 
 void Start::startLog() {
-  _logger = new LogDefault;
+  _logger = new LogDefault(_configuration.getLogLevel());
   _logger->startLogger();
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 

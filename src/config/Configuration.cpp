@@ -15,6 +15,7 @@ Configuration &Configuration::operator=(const Configuration &src) {
   _environment = src._environment;
   _timeOutForNewRequestOrToSendAFullRequest =
       src._timeOutForNewRequestOrToSendAFullRequest;
+  _logLevel = src._logLevel;
   return *this;
 }
 
@@ -35,7 +36,12 @@ int Configuration::getTimeOutForNewRequestOrToSendAFullRequest() const {
   return _timeOutForNewRequestOrToSendAFullRequest;
 }
 
-void Configuration::setTimeOutForNewRequestOrToSendAFullRequest(
-    int timeout) {
+void Configuration::setTimeOutForNewRequestOrToSendAFullRequest(int timeout) {
   _timeOutForNewRequestOrToSendAFullRequest = timeout;
+}
+
+Log::LogLevel Configuration::getLogLevel() const { return _logLevel; }
+
+void Configuration::setLogLevel(Log::LogLevel logLevel) {
+  _logLevel = logLevel;
 }
