@@ -31,11 +31,11 @@ void Configuration::setEnvironment(Environment environment) {
   _environment = environment;
 }
 
-double Configuration::getTimeOutForNewRequestOrToSendAFullRequest() const {
+int Configuration::getTimeOutForNewRequestOrToSendAFullRequest() const {
   return _timeOutForNewRequestOrToSendAFullRequest;
 }
 
 void Configuration::setTimeOutForNewRequestOrToSendAFullRequest(
-    double timeout) {
+    int timeout) {
   _timeOutForNewRequestOrToSendAFullRequest = timeout;
 }

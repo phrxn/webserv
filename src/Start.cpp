@@ -47,6 +47,8 @@ Start::~Start() {
 }
 
 void Start::startTheProgram() {
+  createConfiguration();
+
   startLog();
 
   _ssfd = startTheServerSocket();
@@ -55,8 +57,6 @@ void Start::startTheProgram() {
   if (!startPoll(_ssfd)) return;
 
   setupSignal(handleSignal);
-
-  createConfiguration();
 
   startWebserver(*_poll, *_logger, _configuration);
 
@@ -79,9 +79,10 @@ Start &Start::operator=(const Start &src) {
   return *this;
 }
 
-void Start::createConfiguration(){
-	_configuration.setEnvironment(TEST);
-	_configuration.setTypeOfProtocol(HTTP);
+void Start::createConfiguration() {
+  _configuration.setEnvironment(TEST);
+  _configuration.setTypeOfProtocol(HTTP);
+  _configuration.setTimeOutForNewRequestOrToSendAFullRequest(5);
 }
 
 void Start::startLog() {
@@ -126,7 +127,8 @@ bool Start::startPoll(ServerSocketFileDescriptor *ssfd) {
   return true;
 }
 
-void Start::startWebserver(Poll &poll, Log &logger, Configuration &configuration) {
+void Start::startWebserver(Poll &poll, Log &logger,
+                           Configuration &configuration) {
   Webserv webserv(poll, logger, configuration);
   webserv.start();
 }

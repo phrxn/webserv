@@ -16,13 +16,13 @@ class Configuration {
   Environment getEnvironment() const;
   void setEnvironment(Environment environment);
 
-  double getTimeOutForNewRequestOrToSendAFullRequest() const;
-  void setTimeOutForNewRequestOrToSendAFullRequest(double timeout);
+  int getTimeOutForNewRequestOrToSendAFullRequest() const;
+  void setTimeOutForNewRequestOrToSendAFullRequest(int timeout);
 
  private:
   TypesOfProtocol _typeOfProtocol;
   Environment _environment;
-  double _timeOutForNewRequestOrToSendAFullRequest;
+  int _timeOutForNewRequestOrToSendAFullRequest;
 
 };
 
