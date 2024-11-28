@@ -10,15 +10,19 @@ class Configuration {
   Configuration(const Configuration &src);
   Configuration &operator=(const Configuration &src);
 
-  TypesOfProtocol getTypeOfProtocol();
+  TypesOfProtocol getTypeOfProtocol() const;
   void setTypeOfProtocol(TypesOfProtocol typeOfProtocol);
 
-  Environment getEnvironment();
+  Environment getEnvironment() const;
   void setEnvironment(Environment environment);
+
+  double getTimeOutForNewRequestOrToSendAFullRequest() const;
+  void setTimeOutForNewRequestOrToSendAFullRequest(double timeout);
 
  private:
   TypesOfProtocol _typeOfProtocol;
   Environment _environment;
+  double _timeOutForNewRequestOrToSendAFullRequest;
 
 };
 

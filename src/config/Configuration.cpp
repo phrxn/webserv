@@ -1,6 +1,9 @@
 #include "Configuration.hpp"
 
-Configuration::Configuration() {}
+Configuration::Configuration()
+    : _typeOfProtocol(HTTP),
+      _environment(TEST),
+      _timeOutForNewRequestOrToSendAFullRequest(10) {}
 
 Configuration::~Configuration() {}
 
@@ -10,16 +13,29 @@ Configuration &Configuration::operator=(const Configuration &src) {
   if (this == &src) return *this;
   _typeOfProtocol = src._typeOfProtocol;
   _environment = src._environment;
+  _timeOutForNewRequestOrToSendAFullRequest =
+      src._timeOutForNewRequestOrToSendAFullRequest;
   return *this;
 }
 
-TypesOfProtocol Configuration::getTypeOfProtocol() { return _typeOfProtocol; }
+TypesOfProtocol Configuration::getTypeOfProtocol() const {
+  return _typeOfProtocol;
+}
 void Configuration::setTypeOfProtocol(TypesOfProtocol typeOfProtocol) {
   _typeOfProtocol = typeOfProtocol;
 }
 
-Environment Configuration::getEnvironment() { return _environment; }
+Environment Configuration::getEnvironment() const { return _environment; }
 
 void Configuration::setEnvironment(Environment environment) {
   _environment = environment;
+}
+
+double Configuration::getTimeOutForNewRequestOrToSendAFullRequest() const {
+  return _timeOutForNewRequestOrToSendAFullRequest;
+}
+
+void Configuration::setTimeOutForNewRequestOrToSendAFullRequest(
+    double timeout) {
+  _timeOutForNewRequestOrToSendAFullRequest = timeout;
 }

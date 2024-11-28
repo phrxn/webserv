@@ -172,7 +172,8 @@ void GenericServerRequestManager::checkTimeOut() {
   double diff = std::difftime(timeNow, _timeOfLastInputFromCLient);
 
   // checks if the last input time has passed the limit
-  if (diff < 10) return;
+  if (diff < _configuration.getTimeOutForNewRequestOrToSendAFullRequest())
+    return;
 
   _logger->log(
       Log::WARNING, "GenericServerRequestManager", "checkTimeOut",
