@@ -25,13 +25,23 @@ ProtocolManagerFactory &ProtocolManagerFactory::operator=(
   return *this;
 }
 
-ProtocolManager *ProtocolManagerFactory::createProtocolManager(SocketFileDescriptor *socketFd) {
+ProtocolManager *ProtocolManagerFactory::createProtocolManager(
+    SocketFileDescriptor *socketFd) {
 
-  if (_configuration.getTypeOfProtocol() == ENTER)
+  if (_configuration.getTypeOfProtocol() == ENTER) {
+    _logger->log(Log::WARNING, "ProtocolManagerFactory",
+                 "createProtocolManager", "the protocol is ENTER", "");
     return new ProtocolManagerEnter(socketFd, _logger);
+  }
 
-  if (_configuration.getEnvironment() == TEST)
+  if (_configuration.getEnvironment() == TEST) {
+    _logger->log(Log::WARNING, "ProtocolManagerFactory",
+                 "createProtocolManager", "webserv is in the test environment",
+                 "");
     return new ProtocolManagerHTTPFake(socketFd, _logger);
+  }
 
+  _logger->log(Log::INFO, "ProtocolManagerFactory", "createProtocolManager",
+               "the configured protocol is HTTP", "");
   return new ProtocolManagerHTTP(socketFd);
 }

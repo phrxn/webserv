@@ -177,7 +177,7 @@ void GenericServerRequestManager::checkTimeOut() {
 
   _logger->log(
       Log::WARNING, "GenericServerRequestManager", "checkTimeOut",
-      "Client timed out fd:", _socketFileDescriptor->getFileDescriptor());
+      "client timed out fd:", _socketFileDescriptor->getFileDescriptor());
 
   _managerStage = TIME_OUT;
   _poll->changeOptionFileDescriptor(_socketFileDescriptor, Poll::OUTPUT);
