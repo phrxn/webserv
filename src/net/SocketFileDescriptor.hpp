@@ -1,17 +1,16 @@
 #ifndef NET_SOCKET_FILE_DESCRIPTOR_HPP
 #define NET_SOCKET_FILE_DESCRIPTOR_HPP
 
+#include <string>
 #include <vector>
 
 #include "../io/FileDescriptor.hpp"
 #include "../system/SystemCalls.hpp"
-#include "Address.hpp"
 #include "FileDescriptorVisitor.hpp"
 
 class SocketFileDescriptor : public FileDescriptor {
  public:
   SocketFileDescriptor(int fd);
-  SocketFileDescriptor(int fd, const Address &_address);
   virtual ~SocketFileDescriptor();
 
   std::vector<char> &getInputStream();
@@ -21,13 +20,16 @@ class SocketFileDescriptor : public FileDescriptor {
   virtual bool isForCloseSocketAfterProcessingResponse() const;
   void setServerPort(int serverPort);
   int  getServerPort() const;
+  void setRemoteClientPort(int port);
+  int getRemoteClientPort() const;
+  void setClientIPv4(const std::string &ipv4);
+  std::string getClientIPv4() const;
 
  protected:
   SocketFileDescriptor(const SocketFileDescriptor &src);
 
   std::vector<char> _vectorInputStream;
   std::vector<char> _vectorOutputStream;
-  Address _address;
 
  private:
   SocketFileDescriptor &operator=(const SocketFileDescriptor &src);
@@ -36,6 +38,8 @@ class SocketFileDescriptor : public FileDescriptor {
   // has been sent.
   bool _closeSocketAfterProcessingResponse;
   int _serverPort;
+  int _remoteClientPort;
+  std::string _clientIPv4;
 };
 
 #endif

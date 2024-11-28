@@ -13,14 +13,6 @@ SocketFileDescriptorImpl::SocketFileDescriptorImpl(int fd, size_t bufferResize,
                                                    Log *logger)
     : SocketFileDescriptor(fd), _bufferResize(bufferResize), _logger(logger) {}
 
-SocketFileDescriptorImpl::SocketFileDescriptorImpl(int fd,
-                                                   const Address &address,
-                                                   size_t bufferResize,
-                                                   Log *logger)
-    : SocketFileDescriptor(fd, address),
-      _bufferResize(bufferResize),
-      _logger(logger) {}
-
 SocketFileDescriptorImpl::~SocketFileDescriptorImpl() {}
 
 // deleted (this class MUST BE UNIQUE!)

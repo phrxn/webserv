@@ -27,7 +27,6 @@ SOURCES = src/Main.cpp\
 		  src/io/Poll.cpp\
 		  src/error/LogWriter.cpp\
 		  src/error/LogWriteToConsole.cpp\
-		  src/net/Address.cpp\
 		  src/net/FileDescriptorVisitor.cpp\
 		  src/net/GenericServer.cpp\
 		  src/net/GenericServerRequestManager.cpp\
@@ -59,6 +58,7 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/io/EpollTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/HTTPRequestFakeTest.cpp\
+				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp
 
 

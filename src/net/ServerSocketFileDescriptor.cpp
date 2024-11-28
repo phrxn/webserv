@@ -4,10 +4,9 @@
 
 #include "../error/StatusOr.hpp"
 #include "../system/Errno.hpp"
-#include "Address.hpp"
 
 ServerSocketFileDescriptor::ServerSocketFileDescriptor(Log *log)
-    : FileDescriptor(-1), _logger(log){};
+    : FileDescriptor(-1), _logger(log) {};
 
 ServerSocketFileDescriptor::~ServerSocketFileDescriptor() {}
 
@@ -29,7 +28,10 @@ ServerSocketFileDescriptor &ServerSocketFileDescriptor::operator=(
 bool ServerSocketFileDescriptor::createSocketServer(int port) {
   _listenPort = port;
 
-  Address localAddress(port, Address::LOCAL);
+  struct sockaddr_in addressIPv4;
+  addressIPv4.sin_family = AF_INET;
+  addressIPv4.sin_port = htons(port);
+  addressIPv4.sin_addr.s_addr = INADDR_ANY;
 
   error::StatusOr<int> serverSocket =
       _systemCalls->socket(PF_INET, SOCK_STREAM, 0);
@@ -52,9 +54,8 @@ bool ServerSocketFileDescriptor::createSocketServer(int port) {
     return false;
   }
 
-  serverSocket =
-      _systemCalls->bind(_fd, (struct sockaddr *)localAddress.getAddress(),
-                         sizeof(*localAddress.getAddress()));
+  serverSocket = _systemCalls->bind(_fd, (struct sockaddr *)&addressIPv4,
+                                    sizeof(addressIPv4));
 
   if (!serverSocket.ok()) {
     _logger->log(Log::FATAL, "ServerSocketFileDescriptor", "createSocketServer",
@@ -77,10 +78,11 @@ int ServerSocketFileDescriptor::getListenPort() const { return _listenPort; }
 
 // return null if any errors occurs
 SocketFileDescriptorImpl *ServerSocketFileDescriptor::createSocketClient() {
-  Address socketClientAddress;
+  struct sockaddr_in addressIPv4;
+  socklen_t addrLen = sizeof(addressIPv4);
 
-  error::StatusOr<int> clientSocket = _systemCalls->accept(
-      _fd, 0, (socklen_t *)sizeof(*(socketClientAddress.getAddress())));
+  error::StatusOr<int> clientSocket =
+      _systemCalls->accept(_fd, (struct sockaddr *)&addressIPv4, &addrLen);
 
   if (!clientSocket.ok()) {
     _logger->log(Log::FATAL, "ServerSocketFileDescriptor", "createSocketClient",
@@ -88,18 +90,59 @@ SocketFileDescriptorImpl *ServerSocketFileDescriptor::createSocketClient() {
     return NULL;
   }
 
-  int socketClientFileDescriptor = clientSocket.value();
+  int socketClientFD = clientSocket.value();
+
+  int socketRemoteClientPort = ntohs(addressIPv4.sin_port);
+
+  std::string clientIPv4 = getSocketClientIPv4(addressIPv4.sin_addr.s_addr);
+
+  getLocalClientPort(socketClientFD);
 
   _logger->log(Log::INFO, "ServerSocketFileDescriptor", "createSocketClient",
-               "a new client connection has been created. fd:",
-               socketClientFileDescriptor);
+               "a new client connection has been created. fd:", socketClientFD);
 
   SocketFileDescriptorImpl *newSocketClient =
-      new SocketFileDescriptorImpl(socketClientFileDescriptor, _logger);
+      new SocketFileDescriptorImpl(socketClientFD, _logger);
 
   newSocketClient->setServerPort(_listenPort);
+  newSocketClient->setRemoteClientPort(socketRemoteClientPort);
+  newSocketClient->setClientIPv4(clientIPv4);
 
   return newSocketClient;
+}
+
+std::string ServerSocketFileDescriptor::getSocketClientIPv4(uint32_t ipv4) {
+  uint32_t ipv4Host = ntohl(ipv4);
+
+  unsigned char bytes[4];
+  bytes[0] = (ipv4Host >> 24) & 0xFF;
+  bytes[1] = (ipv4Host >> 16) & 0xFF;
+  bytes[2] = (ipv4Host >> 8) & 0xFF;
+  bytes[3] = ipv4Host & 0xFF;
+
+  std::ostringstream oss;
+  oss << static_cast<int>(bytes[0]) << "." << static_cast<int>(bytes[1]) << "."
+      << static_cast<int>(bytes[2]) << "." << static_cast<int>(bytes[3]);
+
+  return oss.str();
+}
+
+int ServerSocketFileDescriptor::getLocalClientPort(int socketClientFD) {
+  struct sockaddr_in addressIPv4;
+  socklen_t addrLen = sizeof(addressIPv4);
+
+  error::StatusOr<int> clientSocket = _systemCalls->getsockname(
+      socketClientFD, (struct sockaddr *)&addressIPv4, &addrLen);
+
+  if (!clientSocket.ok()) {
+    _logger->log(Log::ERROR, "ServerSocketFileDescriptor", "getLocalClientPort",
+                 clientSocket.status().message(), "");
+    return -1;
+  }
+
+  int port = ntohs(addressIPv4.sin_port);
+
+  return port;
 }
 
 void ServerSocketFileDescriptor::acceptVisit(FileDescriptorVisitor *fdv) {

@@ -11,8 +11,6 @@ class SocketFileDescriptorImpl : public SocketFileDescriptor {
 
   SocketFileDescriptorImpl(int fd, Log *logger);
   SocketFileDescriptorImpl(int fd, size_t bufferResize, Log *log);
-  SocketFileDescriptorImpl(int fd, const Address &_address, size_t bufferResize,
-                           Log *log);
   ~SocketFileDescriptorImpl();
 
   virtual bool doRead();

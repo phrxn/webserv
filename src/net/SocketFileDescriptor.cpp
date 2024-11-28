@@ -3,11 +3,6 @@
 SocketFileDescriptor::SocketFileDescriptor(int fd)
     : FileDescriptor(fd), _closeSocketAfterProcessingResponse(false) {}
 
-SocketFileDescriptor::SocketFileDescriptor(int fd, const Address &address)
-    : FileDescriptor(fd),
-      _address(address),
-      _closeSocketAfterProcessingResponse(false) {}
-
 SocketFileDescriptor::~SocketFileDescriptor() {}
 
 // deleted (this class or its heirs MUST BE UNIQUE!)
@@ -49,3 +44,16 @@ void SocketFileDescriptor::setServerPort(int serverPort) {
   _serverPort = serverPort;
 }
 int SocketFileDescriptor::getServerPort() const { return _serverPort; }
+
+void SocketFileDescriptor::setRemoteClientPort(int port) {
+	_remoteClientPort = port;
+}
+int SocketFileDescriptor::getRemoteClientPort() const {
+	return _remoteClientPort;
+}
+void SocketFileDescriptor::setClientIPv4(const std::string &ipv4) {
+	_clientIPv4 = ipv4;
+}
+std::string SocketFileDescriptor::getClientIPv4() const {
+	return _clientIPv4;
+}

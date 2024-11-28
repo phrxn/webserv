@@ -113,6 +113,16 @@ error::StatusOr<int> SystemCalls::accept(int sockfd, struct sockaddr *addr,
   return socketClientFd;
 }
 
+error::StatusOr<int> SystemCalls::getsockname(int sockfd, struct sockaddr *addr,
+                                              socklen_t *addrlen) const {
+  int status = ::getsockname(sockfd, addr, addrlen);
+  if (status == -1) {
+    return error::Status(error::Status::SystemCall,
+                         createErrorMessage("getsockname"));
+  }
+  return status;
+}
+
 std::string SystemCalls::createErrorMessage(
     const std::string &systemCallName) const {
   std::stringstream errorMessage;

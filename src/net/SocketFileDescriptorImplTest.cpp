@@ -6,7 +6,6 @@
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
 #include "../error/Log.hpp"
 #include "../error/Status.hpp"
-#include "../net/Address.hpp"
 #include "../system/Errno.hpp"
 #include "../system/SystemCalls.hpp"
 #include "SocketFileDescriptorImpl.hpp"
@@ -41,7 +40,6 @@ class LogMock : public Log {
 
 TEST(SocketFileDescriptorImplTest, doRead_testOneRead) {
   SystemCallsMock *systemCallsMock = new SystemCallsMock;
-  Address address;
   LogMock logMock;
 
   EXPECT_CALL(
@@ -63,7 +61,7 @@ TEST(SocketFileDescriptorImplTest, doRead_testOneRead) {
           ::testing::A<const std::string &>(), ::testing::A<int>()))
       .Times(2);
 
-  SocketFileDescriptorImpl socketFDimpl(-1, address, 5, &logMock);
+  SocketFileDescriptorImpl socketFDimpl(-1, 5, &logMock);
   socketFDimpl.setSystemCalls(systemCallsMock);
 
   socketFDimpl.doRead();
@@ -76,7 +74,6 @@ TEST(SocketFileDescriptorImplTest, doRead_testOneRead) {
 
 TEST(SocketFileDescriptorImplTest, doRead_testTwoReads) {
   SystemCallsMock *systemCallsMock = new SystemCallsMock;
-  Address address;
   LogMock logMock;
 
   EXPECT_CALL(*systemCallsMock,
@@ -101,7 +98,7 @@ TEST(SocketFileDescriptorImplTest, doRead_testTwoReads) {
           ::testing::A<const std::string &>(), ::testing::A<int>()))
       .Times(::testing::AtLeast(0));
 
-  SocketFileDescriptorImpl socketFDimpl(-1, address, 5, &logMock);
+  SocketFileDescriptorImpl socketFDimpl(-1, 5, &logMock);
   socketFDimpl.setSystemCalls(systemCallsMock);
 
   bool readed = socketFDimpl.doRead();
@@ -120,7 +117,6 @@ TEST(SocketFileDescriptorImplTest, doRead_testTwoReads) {
 
 TEST(SocketFileDescriptorImplTest, dowrite_writedAllCharacters) {
   SystemCallsMock *systemCallsMock = new SystemCallsMock;
-  Address address;
   LogMock logMock;
 
   EXPECT_CALL(*systemCallsMock,
@@ -141,7 +137,7 @@ TEST(SocketFileDescriptorImplTest, dowrite_writedAllCharacters) {
                            ::testing::A<const std::string &>()))
       .Times(::testing::AtLeast(0));
 
-  SocketFileDescriptorImpl socketFDimpl(-1, address, 5, &logMock);
+  SocketFileDescriptorImpl socketFDimpl(-1, 5, &logMock);
   socketFDimpl.setSystemCalls(systemCallsMock);
 
   for (int count = 0; count < 5; count++)
@@ -153,7 +149,6 @@ TEST(SocketFileDescriptorImplTest, dowrite_writedAllCharacters) {
 
 TEST(SocketFileDescriptorImplTest, dowrite_doesntWritedAllCharacters) {
   SystemCallsMock *systemCallsMock = new SystemCallsMock;
-  Address address;
   LogMock logMock;
 
   EXPECT_CALL(*systemCallsMock,
@@ -174,7 +169,7 @@ TEST(SocketFileDescriptorImplTest, dowrite_doesntWritedAllCharacters) {
                            ::testing::A<const std::string &>()))
       .Times(::testing::AtLeast(0));
 
-  SocketFileDescriptorImpl socketFDimpl(-1, address, 5, &logMock);
+  SocketFileDescriptorImpl socketFDimpl(-1, 5, &logMock);
   socketFDimpl.setSystemCalls(systemCallsMock);
 
   for (int count = 0; count < 5; count++)
