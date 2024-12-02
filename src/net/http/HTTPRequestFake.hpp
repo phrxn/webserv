@@ -1,11 +1,11 @@
-#ifndef NET_HTTP_REQUEST_FAKE_HPP
-#define NET_HTTP_REQUEST_FAKE_HPP
+#ifndef NET_HTTP_HTTP_REQUEST_FAKE_HPP
+#define NET_HTTP_HTTP_REQUEST_FAKE_HPP
 
 #include <string>
 
-#include "../error/Log.hpp"
-#include "Request.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../../error/Log.hpp"
+#include "../Request.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class HTTPRequestFake : public Request {
  public:

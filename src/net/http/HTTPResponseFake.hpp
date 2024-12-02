@@ -1,9 +1,9 @@
-#ifndef NET_HTTP_RESPONSE_FAKE_HTTP
-#define NET_HTTP_RESPONSE_FAKE_HTTP
+#ifndef NET_HTTP_HTTP_RESPONSE_FAKE_HPP
+#define NET_HTTP_HTTP_RESPONSE_FAKE_HPP
 
-#include "../error/Log.hpp"
-#include "Response.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../../error/Log.hpp"
+#include "../Response.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class HTTPResponseFake : public Response {
  public:

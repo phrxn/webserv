@@ -1,10 +1,10 @@
-#ifndef NET_HTTP_SERVLET_MANAGER_HPP
-#define NET_HTTP_SERVLET_MANAGER_HPP
+#ifndef NET_HTTP_HTTP_SERVLET_MANAGER_HPP
+#define NET_HTTP_HTTP_SERVLET_MANAGER_HPP
 
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"
 #include "HTTPServlet.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class HTTPServletManager {
  public:

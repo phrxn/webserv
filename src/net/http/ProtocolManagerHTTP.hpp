@@ -1,11 +1,11 @@
-#ifndef NET_PROTOCOL_MANAGER_HTTP_HPP
-#define NET_PROTOCOL_MANAGER_HTTP_HPP
+#ifndef NET_HTTP_PROTOCOL_MANAGER_HTTP_HPP
+#define NET_HTTP_PROTOCOL_MANAGER_HTTP_HPP
 
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"
 #include "HTTPServletManager.hpp"
-#include "ProtocolManager.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../ProtocolManager.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class ProtocolManagerHTTP : public ProtocolManager {
  public:

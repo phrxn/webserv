@@ -1,8 +1,8 @@
-#ifndef NET_HTTP_RESPONSE_HPP
-#define NET_HTTP_RESPONSE_HPP
+#ifndef NET_HTTP_HTTP_RESPONSE_HPP
+#define NET_HTTP_HTTP_RESPONSE_HPP
 
-#include "Response.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../Response.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class HTTPResponse : public Response {
 public:

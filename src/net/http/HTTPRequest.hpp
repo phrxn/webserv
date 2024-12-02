@@ -1,10 +1,10 @@
-#ifndef NET_HTTP_REQUEST_HPP
-#define NET_HTTP_REQUEST_HPP
+#ifndef NET_HTTP_HTTP_REQUEST_HPP
+#define NET_HTTP_HTTP_REQUEST_HPP
 
 #include <string>
 
-#include "Request.hpp"
-#include "SocketFileDescriptor.hpp"
+#include "../Request.hpp"
+#include "../SocketFileDescriptor.hpp"
 
 class HTTPRequest : public Request {
  public:

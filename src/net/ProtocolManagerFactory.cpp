@@ -2,8 +2,8 @@
 
 #include "../config/Variables.hpp"
 #include "ProtocolManagerEnter.hpp"
-#include "ProtocolManagerHTTP.hpp"
-#include "ProtocolManagerHTTPFake.hpp"
+#include "http/ProtocolManagerHTTP.hpp"
+#include "http/ProtocolManagerHTTPFake.hpp"
 
 ProtocolManagerFactory::ProtocolManagerFactory(Log *logger,
                                                Configuration &configuration)

@@ -1,5 +1,5 @@
-#ifndef NET_HTTP_SERVLET_HPP
-#define NET_HTTP_SERVLET_HPP
+#ifndef NET_HTTP_HTTP_SERVLET_HPP
+#define NET_HTTP_HTTP_SERVLET_HPP
 
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"

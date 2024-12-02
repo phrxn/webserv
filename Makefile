@@ -27,21 +27,21 @@ SOURCES = src/Main.cpp\
 		  src/io/Poll.cpp\
 		  src/error/LogWriter.cpp\
 		  src/error/LogWriteToConsole.cpp\
+		  src/net/http/HTTPRequest.cpp\
+		  src/net/http/HTTPRequestFake.cpp\
+		  src/net/http/HTTPResponse.cpp\
+		  src/net/http/HTTPResponseFake.cpp\
+		  src/net/http/HTTPServlet.cpp\
+		  src/net/http/HTTPServletManager.cpp\
+		  src/net/http/HTTPServletStatic.cpp\
+		  src/net/http/ProtocolManagerHTTP.cpp\
+		  src/net/http/ProtocolManagerHTTPFake.cpp\
 		  src/net/FileDescriptorVisitor.cpp\
 		  src/net/GenericServer.cpp\
 		  src/net/GenericServerRequestManager.cpp\
-		  src/net/HTTPRequest.cpp\
-		  src/net/HTTPRequestFake.cpp\
-		  src/net/HTTPResponse.cpp\
-		  src/net/HTTPResponseFake.cpp\
-		  src/net/HTTPServlet.cpp\
-		  src/net/HTTPServletManager.cpp\
-		  src/net/HTTPServletStatic.cpp\
 		  src/net/ProtocolManager.cpp\
 		  src/net/ProtocolManagerEnter.cpp\
 		  src/net/ProtocolManagerFactory.cpp\
-		  src/net/ProtocolManagerHTTP.cpp\
-		  src/net/ProtocolManagerHTTPFake.cpp\
 		  src/net/Request.cpp\
 		  src/net/Response.cpp\
 		  src/net/ServerSocketFileDescriptor.cpp\
@@ -56,8 +56,8 @@ SOURCES = src/Main.cpp\
 SOURCES_TEST =  tests/Main.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/EpollTest.cpp\
+				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/GenericServerTest.cpp\
-				src/net/HTTPRequestFakeTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp
 

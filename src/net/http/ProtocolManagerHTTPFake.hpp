@@ -1,11 +1,11 @@
-#ifndef NET_PROTOCOL_MANAGER_HTTP_FAKE_HPP
-#define NET_PROTOCOL_MANAGER_HTTP_FAKE_HPP
+#ifndef NET_HTTP_PROTOCOL_MANAGER_HTTP_FAKE_HPP
+#define NET_HTTP_PROTOCOL_MANAGER_HTTP_FAKE_HPP
 
-#include "../error/Log.hpp"
+#include "../../error/Log.hpp"
+#include "../ProtocolManager.hpp"
+#include "../SocketFileDescriptor.hpp"
 #include "HTTPRequestFake.hpp"
 #include "HTTPResponseFake.hpp"
-#include "ProtocolManager.hpp"
-#include "SocketFileDescriptor.hpp"
 
 class ProtocolManagerHTTPFake : public ProtocolManager {
  public:
