@@ -54,6 +54,7 @@ SOURCES = src/Main.cpp\
 		  src/Webserv.cpp
 
 SOURCES_TEST =  tests/Main.cpp\
+				src/config/ConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/EpollTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\

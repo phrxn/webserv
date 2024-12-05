@@ -38,7 +38,7 @@ void Start::handleSignal(int sig) {
   }
 }
 
-Start::Start() : _logger(NULL), _poll(NULL) {}
+Start::Start() : _logger(NULL), _poll(NULL), _configuration(Configuration::getInstance()){}
 
 Start::~Start() {
   if (_logger) delete _logger;
@@ -68,7 +68,7 @@ void Start::exitingFromProgram() {
 }
 
 // deleted (this class MUST BE UNIQUE!)
-Start::Start(const Start &src) {
+Start::Start(const Start &src): _configuration(Configuration::getInstance()){
   (void)src;
   *this = src;
 }

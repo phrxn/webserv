@@ -1,9 +1,21 @@
 #include "Configuration.hpp"
 
+#include <algorithm>
+#include <stdexcept>
+
 Configuration::Configuration()
     : _typeOfProtocol(HTTP),
       _environment(TEST),
-      _timeOutForNewRequestOrToSendAFullRequest(10) {}
+      _timeOutForNewRequestOrToSendAFullRequest(10) {
+  // If the singleton is being respected, the list should only be filled out
+  // once
+  if (!_listSupportedMethods.empty())
+    throw std::runtime_error("the list of supported methods is greater than 0");
+
+  _listSupportedMethods.push_back(GET);
+  _listSupportedMethods.push_back(POST);
+  _listSupportedMethods.push_back(DELETE);
+}
 
 Configuration::~Configuration() {}
 
@@ -17,6 +29,11 @@ Configuration &Configuration::operator=(const Configuration &src) {
       src._timeOutForNewRequestOrToSendAFullRequest;
   _logLevel = src._logLevel;
   return *this;
+}
+
+Configuration &Configuration::getInstance() {
+  static Configuration instance;
+  return instance;
 }
 
 TypesOfProtocol Configuration::getTypeOfProtocol() const {
@@ -44,4 +61,10 @@ Log::LogLevel Configuration::getLogLevel() const { return _logLevel; }
 
 void Configuration::setLogLevel(Log::LogLevel logLevel) {
   _logLevel = logLevel;
+}
+
+bool Configuration::theServerSupportsThisHTTPMethod(HTTPv1_1_Methods method) {
+  std::list<HTTPv1_1_Methods>::iterator it = std::find(
+      _listSupportedMethods.begin(), _listSupportedMethods.end(), method);
+  return (it != _listSupportedMethods.end());
 }

@@ -34,7 +34,7 @@ class Start {
   LogDefault *_logger;
   Poll *_poll;
   SystemCalls systemCalls;
-  Configuration _configuration;
+  Configuration &_configuration;
   ServerSocketFileDescriptor *_ssfd;
 
 
