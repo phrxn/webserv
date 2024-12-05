@@ -47,6 +47,8 @@ SOURCES = src/Main.cpp\
 		  src/net/ServerSocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptorImpl.cpp\
+		  src/net/VirtualHost.cpp\
+		  src/net/VirtualHostFactory.cpp\
 		  src/system/Errno.cpp\
 		  src/system/SystemCalls.cpp\
 		  src/time/Time.cpp\
@@ -60,7 +62,8 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
-				src/net/SocketFileDescriptorImplTest.cpp
+				src/net/SocketFileDescriptorImplTest.cpp\
+				src/net/VirtualHostFactoryTest.cpp
 
 
 OBJECTS = $(SOURCES:.cpp=.o)
