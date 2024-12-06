@@ -37,5 +37,5 @@ void ProtocolManagerHTTP::servlet() {
 void ProtocolManagerHTTP::createResponse() { _hTTPResponse.createResponse(); }
 
 void ProtocolManagerHTTP::connectionHitTheTimeout() {
-  _hTTPServletManager.doError(TIMEOUT, _hTTPResponse);
+  _hTTPServletManager.doError(HTTPStatus::TIMEOUT, _hTTPResponse);
 }

@@ -24,14 +24,14 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 
 std::string HTTPRequest::getHost() { return ""; }
 
-HTTPv1_1_Methods HTTPRequest::getMethod(){
-	return GET;
+HTTPMethods::Method HTTPRequest::getMethod(){
+	return HTTPMethods::GET;
 }
 
 std::string HTTPRequest::getURL(){
 	return "";
 }
 
-HTTPStatus HTTPRequest::getStatus(){
-	return OK;
+HTTPStatus::Status HTTPRequest::getStatus(){
+	return HTTPStatus::OK;
 }

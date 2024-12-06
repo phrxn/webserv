@@ -18,7 +18,7 @@ TEST(ConfigurationTest, testSingleton) {
 
 TEST(ConfigurationTest, testTheServerSupportsThisHTTPMethod_invalidMethod) {
   Configuration &c = Configuration::getInstance();
-  bool b = c.theServerSupportsThisHTTPMethod(GET);
+  bool b = c.theServerSupportsThisHTTPMethod(HTTPMethods::GET);
 
   EXPECT_TRUE(b);
 }
@@ -28,7 +28,7 @@ TEST(ConfigurationTest, testTheServerSupportsThisHTTPMethod_validMethod) {
 
   // FAKE_METHOD comes from a define established during compilation, so here it
   // appears as a "wrong value" by IDEs
-  bool b = c.theServerSupportsThisHTTPMethod(FAKE_METHOD);
+  bool b = c.theServerSupportsThisHTTPMethod(HTTPMethods::FAKE_METHOD);
 
   EXPECT_FALSE(b);
 }

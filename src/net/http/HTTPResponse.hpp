@@ -12,8 +12,8 @@ class HTTPResponse : public Response {
 
   void createResponse();
 
-  HTTPStatus getStatus();
-  void setStatus(HTTPStatus status);
+  HTTPStatus::Status getStatus();
+  void setStatus(HTTPStatus::Status status);
 
  private:
   HTTPResponse(const HTTPResponse &src);

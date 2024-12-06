@@ -12,9 +12,9 @@ Configuration::Configuration()
   if (!_listSupportedMethods.empty())
     throw std::runtime_error("the list of supported methods is greater than 0");
 
-  _listSupportedMethods.push_back(GET);
-  _listSupportedMethods.push_back(POST);
-  _listSupportedMethods.push_back(DELETE);
+  _listSupportedMethods.push_back(HTTPMethods::GET);
+  _listSupportedMethods.push_back(HTTPMethods::POST);
+  _listSupportedMethods.push_back(HTTPMethods::DELETE);
 }
 
 Configuration::~Configuration() {}
@@ -63,8 +63,8 @@ void Configuration::setLogLevel(Log::LogLevel logLevel) {
   _logLevel = logLevel;
 }
 
-bool Configuration::theServerSupportsThisHTTPMethod(HTTPv1_1_Methods method) {
-  std::list<HTTPv1_1_Methods>::iterator it = std::find(
+bool Configuration::theServerSupportsThisHTTPMethod(HTTPMethods::Method method) {
+  std::list<HTTPMethods::Method>::iterator it = std::find(
       _listSupportedMethods.begin(), _listSupportedMethods.end(), method);
   return (it != _listSupportedMethods.end());
 }

@@ -6,7 +6,7 @@
 #include "../Request.hpp"
 #include "../SocketFileDescriptor.hpp"
 #include "HTTPStatus.hpp"
-#include "HTTPv1_1_Methods.hpp"
+#include "HTTPMethods.hpp"
 
 class HTTPRequest : public Request {
  public:
@@ -17,11 +17,11 @@ class HTTPRequest : public Request {
 
   std::string getHost();
 
-  HTTPv1_1_Methods getMethod();
+  HTTPMethods::Method getMethod();
 
   std::string getURL();
 
-  HTTPStatus getStatus();
+  HTTPStatus::Status getStatus();
 
  private:
   HTTPRequest(const HTTPRequest &src);

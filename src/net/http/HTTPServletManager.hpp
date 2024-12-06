@@ -14,7 +14,7 @@ class HTTPServletManager {
   HTTPServletManager(SocketFileDescriptor *socketFD, Log *logger);
   ~HTTPServletManager();
   void doService(HTTPRequest &request, HTTPResponse &response);
-  void doError(HTTPStatus httpStatus, HTTPResponse &response);
+  void doError(HTTPStatus::Status httpStatus, HTTPResponse &response);
 
  private:
   HTTPServletManager(const HTTPServletManager &src);

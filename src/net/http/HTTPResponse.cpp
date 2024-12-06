@@ -20,10 +20,10 @@ void HTTPResponse::createResponse() {
 
 }
 
-HTTPStatus HTTPResponse::getStatus(){
-	return OK;
+HTTPStatus::Status HTTPResponse::getStatus(){
+	return HTTPStatus::OK;
 }
 
-void HTTPResponse::setStatus(HTTPStatus status){
+void HTTPResponse::setStatus(HTTPStatus::Status status){
 	(void)status;
 }

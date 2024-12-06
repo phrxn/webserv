@@ -33,7 +33,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
   VirtualHostFactory vhf;
   _virtualHost = vhf.createVirtualHost(request.getHost());
 
-  if (request.getStatus() != OK) {
+  if (request.getStatus() != HTTPStatus::OK) {
     return doError(request.getStatus(), response);
   }
 
@@ -44,13 +44,13 @@ void HTTPServletManager::doService(HTTPRequest &request,
   }
 
   switch (request.getMethod()) {
-    case GET:
+    case HTTPMethods::GET:
       _hTTPServlet->doGet(request, response);
       break;
-    case POST:
+    case HTTPMethods::POST:
       _hTTPServlet->doPost(request, response);
       break;
-    case DELETE:
+    case HTTPMethods::DELETE:
       _hTTPServlet->doDelete(request, response);
       break;
     default:
@@ -59,16 +59,16 @@ void HTTPServletManager::doService(HTTPRequest &request,
                    _socketFD->getFileDescriptor());
 	  _logger->log(Log::FATAL, "HTTPServletManager", "doService",
                    "the verb value", request.getMethod());
-      response.setStatus(NOT_IMPLEMENTED);
+      response.setStatus(HTTPStatus::NOT_IMPLEMENTED);
       break;
   }
 
-  if (response.getStatus() != OK) {
+  if (response.getStatus() != HTTPStatus::OK) {
     doError(response.getStatus(), response);
   }
 }
 
-void HTTPServletManager::doError(HTTPStatus httpStatus,
+void HTTPServletManager::doError(HTTPStatus::Status httpStatus,
                                  HTTPResponse &response) {
   (void)httpStatus;
   (void)response;

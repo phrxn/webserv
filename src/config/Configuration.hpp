@@ -5,7 +5,7 @@
 
 #include "Variables.hpp"
 #include "../error/Log.hpp"
-#include "../net/http/HTTPv1_1_Methods.hpp"
+#include "../net/http/HTTPMethods.hpp"
 
 class Configuration {
  public:
@@ -22,7 +22,7 @@ class Configuration {
   int getTimeOutForNewRequestOrToSendAFullRequest() const;
   void setTimeOutForNewRequestOrToSendAFullRequest(int timeout);
 
-  bool theServerSupportsThisHTTPMethod(HTTPv1_1_Methods method);
+  bool theServerSupportsThisHTTPMethod(HTTPMethods::Method method);
 
   Log::LogLevel getLogLevel() const;
   void setLogLevel(Log::LogLevel logLevel);
@@ -36,7 +36,7 @@ class Configuration {
   Environment _environment;
   int _timeOutForNewRequestOrToSendAFullRequest;
   Log::LogLevel _logLevel;
-  std::list<HTTPv1_1_Methods> _listSupportedMethods;
+  std::list<HTTPMethods::Method> _listSupportedMethods;
 
 };
 
