@@ -9,12 +9,12 @@ Configuration::Configuration()
       _timeOutForNewRequestOrToSendAFullRequest(10) {
   // If the singleton is being respected, the list should only be filled out
   // once
-  if (!_listSupportedMethods.empty())
+  if (!_listSupportedMethodsByServer.empty())
     throw std::runtime_error("the list of supported methods is greater than 0");
 
-  _listSupportedMethods.push_back(HTTPMethods::GET);
-  _listSupportedMethods.push_back(HTTPMethods::POST);
-  _listSupportedMethods.push_back(HTTPMethods::DELETE);
+  _listSupportedMethodsByServer.push_back(HTTPMethods::GET);
+  _listSupportedMethodsByServer.push_back(HTTPMethods::POST);
+  _listSupportedMethodsByServer.push_back(HTTPMethods::DELETE);
 }
 
 Configuration::~Configuration() {}
@@ -63,8 +63,19 @@ void Configuration::setLogLevel(Log::LogLevel logLevel) {
   _logLevel = logLevel;
 }
 
-bool Configuration::theServerSupportsThisHTTPMethod(HTTPMethods::Method method) {
-  std::list<HTTPMethods::Method>::iterator it = std::find(
-      _listSupportedMethods.begin(), _listSupportedMethods.end(), method);
-  return (it != _listSupportedMethods.end());
+bool Configuration::theServerSupportsThisHTTPMethod(
+    HTTPMethods::Method method) {
+  std::list<HTTPMethods::Method>::iterator it =
+      std::find(_listSupportedMethodsByServer.begin(),
+                _listSupportedMethodsByServer.end(), method);
+  return (it != _listSupportedMethodsByServer.end());
+}
+
+const char **Configuration::getEnvironmentVariables() const {
+  return _environmentVariables;
+}
+
+void Configuration::setEnvironmentVariables(
+    const char **environmentVariables) {
+  _environmentVariables = environmentVariables;
 }

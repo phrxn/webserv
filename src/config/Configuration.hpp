@@ -3,9 +3,9 @@
 
 #include <list>
 
-#include "Variables.hpp"
 #include "../error/Log.hpp"
 #include "../net/http/HTTPMethods.hpp"
+#include "Variables.hpp"
 
 class Configuration {
  public:
@@ -22,10 +22,14 @@ class Configuration {
   int getTimeOutForNewRequestOrToSendAFullRequest() const;
   void setTimeOutForNewRequestOrToSendAFullRequest(int timeout);
 
-  bool theServerSupportsThisHTTPMethod(HTTPMethods::Method method);
-
   Log::LogLevel getLogLevel() const;
   void setLogLevel(Log::LogLevel logLevel);
+
+  bool theServerSupportsThisHTTPMethod(HTTPMethods::Method method);
+
+  const char **getEnvironmentVariables() const;
+  void setEnvironmentVariables(
+      const char **environmentVariables);
 
  protected:
   Configuration();
@@ -36,8 +40,8 @@ class Configuration {
   Environment _environment;
   int _timeOutForNewRequestOrToSendAFullRequest;
   Log::LogLevel _logLevel;
-  std::list<HTTPMethods::Method> _listSupportedMethods;
-
+  std::list<HTTPMethods::Method> _listSupportedMethodsByServer;
+  const char **_environmentVariables;
 };
 
 #endif

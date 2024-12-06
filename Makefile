@@ -48,6 +48,7 @@ SOURCES = src/Main.cpp\
 		  src/net/ServerSocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptor.cpp\
 		  src/net/SocketFileDescriptorImpl.cpp\
+		  src/net/URL.cpp\
 		  src/net/VirtualHost.cpp\
 		  src/net/VirtualHostFactory.cpp\
 		  src/system/Errno.cpp\
@@ -64,6 +65,7 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
+				src/net/URLTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp
 
 

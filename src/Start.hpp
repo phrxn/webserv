@@ -14,7 +14,7 @@ class Start {
   static void handleSignal(int sig);
   static LogDefault *loggerGlobal;
 
-  Start();
+  Start(const char **environmentVariables);
   ~Start();
 
   void startTheProgram();
@@ -36,7 +36,7 @@ class Start {
   SystemCalls systemCalls;
   Configuration &_configuration;
   ServerSocketFileDescriptor *_ssfd;
-
+  const char **_environmentVariables;
 
 };
 

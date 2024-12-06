@@ -38,7 +38,11 @@ void Start::handleSignal(int sig) {
   }
 }
 
-Start::Start() : _logger(NULL), _poll(NULL), _configuration(Configuration::getInstance()){}
+Start::Start(const char **environmentVariables)
+    : _logger(NULL),
+      _poll(NULL),
+      _configuration(Configuration::getInstance()),
+      _environmentVariables(environmentVariables) {}
 
 Start::~Start() {
   if (_logger) delete _logger;
@@ -68,7 +72,7 @@ void Start::exitingFromProgram() {
 }
 
 // deleted (this class MUST BE UNIQUE!)
-Start::Start(const Start &src): _configuration(Configuration::getInstance()){
+Start::Start(const Start &src) : _configuration(Configuration::getInstance()) {
   (void)src;
   *this = src;
 }
@@ -84,6 +88,7 @@ void Start::createConfiguration() {
   _configuration.setTypeOfProtocol(HTTP);
   _configuration.setTimeOutForNewRequestOrToSendAFullRequest(5);
   _configuration.setLogLevel(Log::INFO);
+  _configuration.setEnvironmentVariables(_environmentVariables);
 }
 
 void Start::startLog() {
