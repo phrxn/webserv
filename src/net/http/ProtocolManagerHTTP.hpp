@@ -1,15 +1,16 @@
 #ifndef NET_HTTP_PROTOCOL_MANAGER_HTTP_HPP
 #define NET_HTTP_PROTOCOL_MANAGER_HTTP_HPP
 
+#include "../../error/Log.hpp"
+#include "../ProtocolManager.hpp"
+#include "../SocketFileDescriptor.hpp"
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"
 #include "HTTPServletManager.hpp"
-#include "../ProtocolManager.hpp"
-#include "../SocketFileDescriptor.hpp"
 
 class ProtocolManagerHTTP : public ProtocolManager {
  public:
-  ProtocolManagerHTTP(SocketFileDescriptor *socket);
+  ProtocolManagerHTTP(SocketFileDescriptor *socket, Log *logger);
   ~ProtocolManagerHTTP();
 
   RequestCreationStatus createRequest();
@@ -25,7 +26,7 @@ class ProtocolManagerHTTP : public ProtocolManager {
   HTTPResponse _hTTPResponse;
   HTTPServletManager _hTTPServletManager;
   SocketFileDescriptor *_socketFD;
-
+  Log *_logger;
 };
 
 #endif

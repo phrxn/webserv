@@ -43,5 +43,5 @@ ProtocolManager *ProtocolManagerFactory::createProtocolManager(
 
   _logger->log(Log::INFO, "ProtocolManagerFactory", "createProtocolManager",
                "the configured protocol is HTTP", "");
-  return new ProtocolManagerHTTP(socketFd);
+  return new ProtocolManagerHTTP(socketFd, _logger);
 }

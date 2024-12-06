@@ -32,6 +32,7 @@ SOURCES = src/Main.cpp\
 		  src/net/http/HTTPResponse.cpp\
 		  src/net/http/HTTPResponseFake.cpp\
 		  src/net/http/HTTPServlet.cpp\
+		  src/net/http/HTTPServletCGI.cpp\
 		  src/net/http/HTTPServletManager.cpp\
 		  src/net/http/HTTPServletStatic.cpp\
 		  src/net/http/ProtocolManagerHTTP.cpp\

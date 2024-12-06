@@ -5,6 +5,8 @@
 
 #include "../Request.hpp"
 #include "../SocketFileDescriptor.hpp"
+#include "HTTPStatus.hpp"
+#include "HTTPv1_1_Methods.hpp"
 
 class HTTPRequest : public Request {
  public:
@@ -12,6 +14,14 @@ class HTTPRequest : public Request {
   ~HTTPRequest();
 
   StateOfCreation createRequest();
+
+  std::string getHost();
+
+  HTTPv1_1_Methods getMethod();
+
+  std::string getURL();
+
+  HTTPStatus getStatus();
 
  private:
   HTTPRequest(const HTTPRequest &src);

@@ -3,21 +3,23 @@
 
 #include "../Response.hpp"
 #include "../SocketFileDescriptor.hpp"
+#include "HTTPStatus.hpp"
 
 class HTTPResponse : public Response {
-public:
+ public:
   HTTPResponse(SocketFileDescriptor *socketFD);
   ~HTTPResponse();
 
-
   void createResponse();
+
+  HTTPStatus getStatus();
+  void setStatus(HTTPStatus status);
 
  private:
   HTTPResponse(const HTTPResponse &src);
   HTTPResponse &operator=(const HTTPResponse &src);
 
   SocketFileDescriptor *_socketFD;
-
 };
 
 #endif

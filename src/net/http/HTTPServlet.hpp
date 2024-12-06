@@ -11,8 +11,6 @@ class HTTPServlet {
   virtual void doGet(HTTPRequest &request, HTTPResponse &response) = 0;
   virtual void doPost(HTTPRequest &request, HTTPResponse &response) = 0;
   virtual void doDelete(HTTPRequest &request, HTTPResponse &response) = 0;
-
-  virtual void doError(HTTPRequest &request, HTTPResponse &response) = 0;
 };
 
 #endif

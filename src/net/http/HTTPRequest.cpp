@@ -2,11 +2,10 @@
 
 #include <iostream>
 
-HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD)
-    : _socketFD(socketFD) {
-		(void)_socketFD;
-		(void)_buffer;
-	}
+HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD) : _socketFD(socketFD) {
+  (void)_socketFD;
+  (void)_buffer;
+}
 
 HTTPRequest::~HTTPRequest() {}
 
@@ -21,4 +20,18 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
   return REQUEST_CREATED;
+}
+
+std::string HTTPRequest::getHost() { return ""; }
+
+HTTPv1_1_Methods HTTPRequest::getMethod(){
+	return GET;
+}
+
+std::string HTTPRequest::getURL(){
+	return "";
+}
+
+HTTPStatus HTTPRequest::getStatus(){
+	return OK;
 }

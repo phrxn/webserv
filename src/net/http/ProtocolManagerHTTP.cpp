@@ -1,10 +1,11 @@
 #include "ProtocolManagerHTTP.hpp"
 
-ProtocolManagerHTTP::ProtocolManagerHTTP(SocketFileDescriptor *socket)
+ProtocolManagerHTTP::ProtocolManagerHTTP(SocketFileDescriptor *socket, Log *logger)
     : _hTTPRequest(socket),
       _hTTPResponse(socket),
-      _hTTPServletManager(socket),
-      _socketFD(socket) {}
+      _hTTPServletManager(socket, logger),
+      _socketFD(socket),
+	  _logger(logger) {}
 
 ProtocolManagerHTTP::~ProtocolManagerHTTP() {}
 
@@ -18,7 +19,7 @@ ProtocolManager::RequestCreationStatus ProtocolManagerHTTP::createRequest() {
 ProtocolManagerHTTP::ProtocolManagerHTTP(const ProtocolManagerHTTP &src)
     : _hTTPRequest(src._socketFD),
       _hTTPResponse(src._socketFD),
-      _hTTPServletManager(src._socketFD) {
+      _hTTPServletManager(src._socketFD, src._logger) {
   (void)src;
 }
 
@@ -36,5 +37,5 @@ void ProtocolManagerHTTP::servlet() {
 void ProtocolManagerHTTP::createResponse() { _hTTPResponse.createResponse(); }
 
 void ProtocolManagerHTTP::connectionHitTheTimeout() {
-  _hTTPServletManager.doError(408, _hTTPResponse);
+  _hTTPServletManager.doError(TIMEOUT, _hTTPResponse);
 }

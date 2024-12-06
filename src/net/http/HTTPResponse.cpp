@@ -19,3 +19,11 @@ HTTPResponse &HTTPResponse::operator=(const HTTPResponse &src) {
 void HTTPResponse::createResponse() {
 
 }
+
+HTTPStatus HTTPResponse::getStatus(){
+	return OK;
+}
+
+void HTTPResponse::setStatus(HTTPStatus status){
+	(void)status;
+}

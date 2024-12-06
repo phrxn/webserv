@@ -1,6 +1,9 @@
 #include "HTTPServletStatic.hpp"
 
-HTTPServletStatic::HTTPServletStatic() {}
+HTTPServletStatic::HTTPServletStatic(const VirtualHost *virtualHost)
+    : _virtualHost(virtualHost) {
+		(void)_virtualHost;
+	}
 
 HTTPServletStatic::~HTTPServletStatic() {}
 
@@ -26,11 +29,6 @@ void HTTPServletStatic::doPost(HTTPRequest &request, HTTPResponse &response) {
 }
 
 void HTTPServletStatic::doDelete(HTTPRequest &request, HTTPResponse &response) {
-  (void)request;
-  (void)response;
-}
-
-void HTTPServletStatic::doError(HTTPRequest &request, HTTPResponse &response) {
   (void)request;
   (void)response;
 }
