@@ -22,16 +22,24 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
   return REQUEST_CREATED;
 }
 
-std::string HTTPRequest::getHost() { return ""; }
+std::string HTTPRequest::getHost() const { return ""; }
 
-HTTPMethods::Method HTTPRequest::getMethod(){
+HTTPMethods::Method HTTPRequest::getMethod() const {
 	return HTTPMethods::GET;
 }
 
-std::string HTTPRequest::getURL(){
+URL HTTPRequest::getURL() const {
+	return _url;
+}
+
+HTTPStatus::Status HTTPRequest::getStatus() const {
+	return HTTPStatus::OK;
+}
+
+std::string HTTPRequest::getContentLength() const{
 	return "";
 }
 
-HTTPStatus::Status HTTPRequest::getStatus(){
-	return HTTPStatus::OK;
+std::string HTTPRequest::getContentType() const{
+	return "";
 }

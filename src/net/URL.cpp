@@ -60,7 +60,7 @@ void URL::setPort(int port) { _port = port; }
 const std::string &URL::getDomain() const { return _domain; }
 void URL::setDomain(const std::string &domain) { _domain = domain; }
 
-const std::string &URL::getPath() const { return _path; }
+std::string URL::getPath() const { return _path; }
 void URL::setPath(const std::string &path) { _path = path; }
 
 const std::string &URL::getQuery() const { return _query; }

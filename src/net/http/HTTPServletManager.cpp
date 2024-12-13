@@ -37,7 +37,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
     return doError(request.getStatus(), response);
   }
 
-  if (_virtualHost->isUrlAPathToCGI(request.getURL())) {
+  if (_virtualHost->isUrlAPathToCGI(request.getURL().getPath())) {
     _hTTPServlet = new HTTPServletCGI(_virtualHost);
   } else {
     _hTTPServlet = new HTTPServletStatic(_virtualHost);

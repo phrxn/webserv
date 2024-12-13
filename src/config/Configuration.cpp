@@ -6,7 +6,10 @@
 Configuration::Configuration()
     : _typeOfProtocol(HTTP),
       _environment(TEST),
-      _timeOutForNewRequestOrToSendAFullRequest(10) {
+      _timeOutForNewRequestOrToSendAFullRequest(10),
+	  _logLevel(Log::FATAL),
+	  _webserverName("JID")
+	   {
   // If the singleton is being respected, the list should only be filled out
   // once
   if (!_listSupportedMethodsByServer.empty())
@@ -79,3 +82,7 @@ void Configuration::setEnvironmentVariables(
     const char **environmentVariables) {
   _environmentVariables = environmentVariables;
 }
+
+ std::string Configuration::getWebserverName(){
+	return _webserverName;
+ }

@@ -31,6 +31,8 @@ class Configuration {
   void setEnvironmentVariables(
       const char **environmentVariables);
 
+  std::string getWebserverName();
+
  protected:
   Configuration();
   Configuration(const Configuration &src);
@@ -42,6 +44,8 @@ class Configuration {
   Log::LogLevel _logLevel;
   std::list<HTTPMethods::Method> _listSupportedMethodsByServer;
   const char **_environmentVariables;
+  const std::string _webserverName;
+
 };
 
 #endif

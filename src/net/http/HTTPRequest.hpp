@@ -5,6 +5,7 @@
 
 #include "../Request.hpp"
 #include "../SocketFileDescriptor.hpp"
+#include "../URL.hpp"
 #include "HTTPStatus.hpp"
 #include "HTTPMethods.hpp"
 
@@ -15,13 +16,17 @@ class HTTPRequest : public Request {
 
   StateOfCreation createRequest();
 
-  std::string getHost();
+  std::string getHost() const;
 
-  HTTPMethods::Method getMethod();
+  HTTPMethods::Method getMethod() const;
 
-  std::string getURL();
+  HTTPStatus::Status getStatus() const;
 
-  HTTPStatus::Status getStatus();
+  std::string getContentLength() const;
+
+  std::string getContentType() const;
+
+  URL getURL() const;
 
  private:
   HTTPRequest(const HTTPRequest &src);
@@ -29,6 +34,7 @@ class HTTPRequest : public Request {
 
   SocketFileDescriptor *_socketFD;
   std::string _buffer;
+  URL _url;
 };
 
 #endif

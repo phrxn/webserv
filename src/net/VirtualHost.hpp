@@ -7,6 +7,8 @@ class VirtualHost {
  public:
   virtual ~VirtualHost();
   virtual bool isUrlAPathToCGI(std::string url) const;
+  std::string getScriptExtension() const;
+  std::string getRootFolder() const;
 };
 
 #endif

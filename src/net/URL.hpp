@@ -21,7 +21,7 @@ class URL {
   const std::string &getDomain() const;
   void setDomain(const std::string &domain);
 
-  const std::string &getPath() const;
+  virtual std::string getPath() const;
   void setPath(const std::string &path);
 
   const std::string &getQuery() const;

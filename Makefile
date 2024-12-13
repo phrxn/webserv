@@ -27,6 +27,7 @@ SOURCES = src/Main.cpp\
 		  src/io/Poll.cpp\
 		  src/error/LogWriter.cpp\
 		  src/error/LogWriteToConsole.cpp\
+		  src/net/http/cgi/CGICreateEnvironmentVariables.cpp\
 		  src/net/http/HTTPRequest.cpp\
 		  src/net/http/HTTPRequestFake.cpp\
 		  src/net/http/HTTPResponse.cpp\
@@ -61,6 +62,7 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/config/ConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/EpollTest.cpp\
+				src/net/http/cgi/CGICreateEnvironmentVariablesTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
