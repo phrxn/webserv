@@ -19,6 +19,9 @@ GMOCK_INCLUDES = libs/googletest/googlemock/include/
 
 SOURCES = src/Main.cpp\
 		  src/config/Configuration.cpp\
+		  src/config/file/Config.cpp\
+		  src/config/file/ConfigExtract.cpp\
+		  src/config/file/ConfigUtils.cpp\
 		  src/error/Log.cpp\
 		  src/error/LogDefault.cpp\
 		  src/error/Status.cpp\
