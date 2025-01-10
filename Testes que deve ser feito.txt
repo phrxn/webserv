@@ -20,3 +20,221 @@ DELETE:
     2) Delete em um arquivo que não é CGI:
        |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO de ????? | TEM DESVIO DE CAMINHO
     3) Delete em um arquivo CGI
+
+
+
+
+
+
+
+
+
+
+
+-- no caso do caminho para diretorios:
+	o servidor nao permitir listar e o diretorio nao existe
+	o servidor nao permitir listar e o diretorio existe
+	o servidor permitir listar e o diretorio nao existir
+	o servidor permitir listar e o diretorio existir
+
+
+	testes: se o caminho for para um diretorio, mas nao existir
+	testes: se o caminho for para um diretorio, mas nao existir
+
+
+-- fazer o teste bit a bit nos sites para ver como os webservers se comportam
+
+-- Só dá para criar arquivos em diretórios que existem, logo, post em pasta que nao exista eh erro
+
+-- Adicionar ao HTTPServletManager o Methodo nao implementado antes mesmo de saber se o servidor suporta o methodo do HTTP Request
+
+--  O HTTP Request pode ter N hosts apontando para a mesma porta
+	tipo:  Host: aaa.com:8080    e    bbb.com:8080
+
+-- O Nginx deixa, incluse N hosts apontarem para a mesma pasta
+
+-- Transfer-Encoding: chunked (pode aparecer tanto na requisicao quanto no request)
+
+-- criar a pasta www para colocar os arquivos de teste do site
+
+-- Testar o Broken pipe (fazer o CGI fechar os fds para ver como o server se comporta
+  -- Se o CGI fechar as coisas e nada tiver escritos no arquivo, ele foi OK?
+
+-- Testar sem o Host no HTTPRequest e com Host errado
+
+-- **pelo visto quem dita o content-type é o CGI!
+  -- Quem criar a sessão, cookies e a gerencia é o CGI
+
+-- Pode ter 2 servidores virtuais com o mesmo HOST na mesma porta, nesse caso, o primeiro listado é o usado, exemplo:
+	   ----------------------------------
+       servername foo.com:8080
+		   /aaa/bbb
+	   ----------------------------------
+       servername foo.com:8080
+		   /zzz/yyy
+	   ----------------------------------
+    Nesse caso, o primeiro será usado como o handler dos requests, ou seja, toda requisicao para foo.com vai ser tratado para
+	a pasta /aaa/bbb
+
+-- Criar o HTTPFile? Que recebe o virtualHost? e gera arquivos e se der errada? Como pegar o codigo de erro e setar no HTTPResponse?
+
+-- HTTPFile podes ser expecialista pra ler arquivos, pegar o tamanho, o tipo, ler diretorios e deixar tudo pronto pro pro HTTRequest soh
+ser setado!
+
+-- **O que fazer no redirect (300 e 301)? como vai ser o fluxo?
+
+
+
+
+   com Hosts diferentes na mesma porta
+   Exemplo:
+
+
+
+
+-------------------------------------------------------------------
+
+Testes:
+	Static:
+		GET arquivo que existe
+		GET em arquivo que nao existe
+		GET arquivo que foi redirecionado
+		GET um diretorio que existe
+		GET um diretorio que nao existe
+
+		POST arquivo que existe
+		POST em arquivo que nao existe
+		POST arquivo que foi redirecionado
+		POST um diretorio que existe
+		POST um diretorio que nao existe
+
+		DELETE arquivo que existe
+		DELETE em arquivo que nao existe
+		DELETE arquivo que foi redirecionado
+		DELETE um diretorio que existe
+		DELETE um diretorio que nao existe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Testes:
+ **Automatizar os testes baseados em um arquivo de texto para o GET
+
+
+\n\r <- devem ser interpretados como \r\n
+
+
+1) Test: valid GET request
+
+  1.1) Teste, mandar uma requisição 100% valida
+    --------------------------------------
+	  GET /foo.html HTTP/1.1\r\n
+	  Host: validHost:8080\r\n
+	  \r\n
+    --------------------------------------
+
+  1.2) Teste, mandar byte por byte:
+	--------------------------------------
+	  GET /foo.html HTTP/1.1\r\n
+	  Host: validHost:8080\r\n
+	  \r\n
+    --------------------------------------
+
+  1.3) 2 Thread:
+    Thread 1: mandar uma requisição 100% valida
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+    Thread 2: mandar uma requisição 100% valida
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+  1.4) 2 Thread:
+    Thread 1: mandar uma requisição 100% valida, mandar byte por byte:
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+    Thread 2: mandar uma requisição 100% valida, mandar byte por byte:
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+  1.5) 2 Thread:
+    Thread 1: mandar uma requisição 100% valida
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+    Thread 2: mandar uma requisição 100% valida
+	  --------------------------------------
+	    GET /bar.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+  1.6) 2 Thread:
+    Thread 1: mandar uma requisição 100% valida, mandar byte por byte:
+	  --------------------------------------
+	    GET /foo.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+    Thread 2: mandar uma requisição 100% valida, mandar byte por byte:
+	  --------------------------------------
+	    GET /bar.html HTTP/1.1\r\n
+        Host: validHost:8080\r\n
+		\r\n
+      --------------------------------------
+
+
+2) Test Timeout
+
+  2.1) Começar a mandar o HTTP Request e parar... e esperar o timeout (pedir o tempo de timeout)
+
+
+2) Testar o redirecionamento:
+     Perguntar se o arquivo de configuração para redireciomento
+
+
+
+
+criar o FakeCGI
+
+   1) Testar as variaveis de ambiente se foram setadas
+   2) Fechar os FDS para ver como o servidor se comporta
+   3) Criar um arquivo para testar o GET e a query string
+   3) Criar um arquivo para testar o POST e mandar o corpo para o cgi
+   5) Checar o content type
+
+
+
+
+
