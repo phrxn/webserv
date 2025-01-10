@@ -1,0 +1,394 @@
+
+HTTPServletStatic
+  get(HTTPRequest &request, HTTPResponse &response){
+    // o caminho é um desvio??
+
+    //o caminho é um diretorio? Sim
+      //pode listar diretorio? Sim
+         criar a lista de diretorio RETURN 200    ************************************ CHECAR NO NGNIX O RETORNO
+        Nao: erro 405 return
+    ** se nao é um diretório o caminho é um arquivo
+    // O caminho aponta para um arquivo que existe? Sim
+        //O arquivo pode ser lido? Sim
+            ler o arquivo RETURN 200
+    
+  }
+
+  post(HTTPRequest &request, HTTPResponse &response){
+     //o caminho é um diretorio? Sim
+        return 405
+     ** Se o caminho não é um 
+  
+  }
+
+  delete(HTTPRequest &request, HTTPResponse &response){
+
+
+  
+  }
+
+
+HTTPServletCGI
+  get(HTTPRequest &request, HTTPResponse &response);
+  post(HTTPRequest &request, HTTPResponse &response);
+  delete(HTTPRequest &request, HTTPResponse &response); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1) Por que criar tudo isso?
+
+
+
+FileToCGIProgram{
+
+   string fileName;
+   int fileDescriptorInput;
+   int fileDescriptorOutput;
+   bool isFileOpened;
+   SystemCalls
+
+   
+   StatusOr<int>  writeBytes(const std::vector &bufferToWrite){
+    
+
+   }
+
+   StatusOr<int>  readBytes(std::vector &bufferToFill){
+   
+
+   }
+
+   StatusOr<void> openFile(){
+       flags = O_RDWR | O_CREAT | O_TRUNC;
+       
+       fileDescriptorInput = open();
+       
+       fileDescriptorOutput = dup(fileDescriptorInput);
+
+   }
+
+   setIsFileOpened(boolean);
+    
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+InputStream  <- interface
+	int    readAllBytes(vector &bufferToFill) throw IOException;
+
+OutputStream <-
+	int    writeAllBytes(const vector &bufferToWrite) throw IOException;
+
+
+
+FileOutputStream  <- OutputStream
+  int fileDescriptor;
+  string pathToFile;
+  int flags;
+  mode_t mode;
+  systemCall *systemCall;
+
+  File(string pathToFile, truncate, createIfDoesnExist);
+
+  Status openTheFile(){  OK   NAO_EXISTE, NAO_TEM_PERMISSAO, JA_EXISTE
+
+	  1)Existe?
+
+	  2)
+
+  }
+
+  Status createTheFile(){
+	canOpenTheFile() == OK
+  }
+
+  canOpenTheFile(){
+	if (existe == false && createIfDoesnExist == false) NAO_EXISTE
+	if (existe == false && createIfDoesnExist){
+		fileDescriptor == systemCall->open();
+		if (fileDescriptor == -1)
+			return
+	}
+
+	If (existe && podeLer == false) NAO_TEM_PERMISSAO
+	OK
+  }
+
+
+  bool closeTheFile();
+
+  int readAllBytes(vector &bufferToFill); //nao existe, acesso nao permitido, erro
+
+  int getFileDescriptor();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+string pathToFile, truncate, createIfDoesnExist
+
+Existe sim:
+	Pode Ler: Sim
+		É para truncar: Sim;
+			flags |= TRUNCAR
+		fd = open("nome", flags);
+   Nao:
+	  Pode Criar: Sim:
+
+
+EXISTE   |    PODE_LER  |  TRUNCAR  |   CriarSeNaoExistir  |    Resultado
+   0     |      0       |     0     |     0                |   NAO_EXISTE
+   0     |      0       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      0       |     1     |     0                |   NAO_EXISTE
+   0     |      0       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      X       |     0     |     0                |   NAO_EXISTE
+   0     |      X       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      X       |     1     |     0                |   NAO_EXISTE
+   0     |      X       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      0       |     0     |     0                |   NAO_TEM_PERMISSAO
+   1     |      0       |     0     |     1                |   NAO_TEM_PERMISSAO
+   1     |      0       |     1     |     0                |   NAO_TEM_PERMISSAO
+   1     |      0       |     1     |     1                |   NAO_TEM_PERMISSAO
+   1     |      1       |     0     |     0                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     1     |     0                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+
+
+EXISTE   |    PODE_LER  |  TRUNCAR  |   CriarSeNaoExistir  |    Resultado
+   0     |      0       |     0     |     0                |   NAO_EXISTE
+   0     |      0       |     1     |     0                |   NAO_EXISTE
+   0     |      X       |     0     |     0                |   NAO_EXISTE
+   0     |      X       |     1     |     0                |   NAO_EXISTE
+   1     |      0       |     0     |     0                |   NAO_TEM_PERMISSAO
+   1     |      0       |     0     |     1                |   NAO_TEM_PERMISSAO
+   1     |      0       |     1     |     0                |   NAO_TEM_PERMISSAO
+   1     |      0       |     1     |     1                |   NAO_TEM_PERMISSAO
+
+
+   0     |      0       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      0       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      X       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   0     |      X       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     0     |     0                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     0     |     1                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     1     |     0                |   (OK || SYSTEM_CALL_ERROR)
+   1     |      1       |     1     |     1                |   (OK || SYSTEM_CALL_ERROR)
+
+1) [Arquivo existe == false && pode ser criado == false ] -> NAO_EXISTE
+2) [Arquivo existe == true  || pode ser lindo  == false ] -> NAO_TEM_PERMISSAO
+
+flags = O_WRONLY;
+if (CriarSeNaoExistir)
+	flags |= O_CREAT
+if (TRUNCAR)
+    flags |= O_TRUNC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+checarSeOArquivoPodeSerAbertoOuCriado(Nome Do Arquivo){
+	if (existe() == false && CriarSeNaoExistir == false)
+		return NAO_EXISTE
+    if (existe() == true && podeLer() == false())
+		return NAO_TEM_PERMISSAO
+	OK;
+}
+
+
+
+ReadFileInputStream  <- lê um arquivo que já existe e pode ser lido, se o arquivo nao existir dar um erro
+	CreateFileInputStream
+		TruncateFileInputStream
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+flags = O_RDONLY
+if (createIfDoesnExist
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+File
+	string pathToFile;
+
+
+	existe();
+	canBeReaded();
+	canBeWrited();

@@ -1,0 +1,22 @@
+
+
+GET:
+	1) Get em um diretório:
+       O VIRTUAL HOST PERMITE LEITURA/LISTAGEM |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO DE LEITURA | TEM DESVIO DE CAMINHO
+    2) Get em um arquivo que não é CGI:
+       |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO | TEM DESVIO DE CAMINHO
+    3) Get em um arquivo CGI
+
+POST:
+	1) Post em um diretório:
+       O VIRTUAL HOST PERMITE LEITURA/LISTAGEM |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO DE ESCRITA | TEM DESVIO DE CAMINHO
+    2) Post em um arquivo que não é CGI:
+       |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO | TEM DESVIO DE CAMINHO
+    3) Post em um arquivo CGI
+
+DELETE:
+	1) Delete em um diretório:
+       O VIRTUAL HOST PERMITE LEITURA/LISTAGEM |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO de ????? | TEM DESVIO DE CAMINHO
+    2) Delete em um arquivo que não é CGI:
+       |   EXISTE   |   PODE SER LIDO  |  TEM PERMISSAO de ????? | TEM DESVIO DE CAMINHO
+    3) Delete em um arquivo CGI
