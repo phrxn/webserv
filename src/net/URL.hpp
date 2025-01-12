@@ -51,7 +51,6 @@ class URL {
   int _port;
   std::string _path;
   std::string _query;
-  bool _isURLValid;
 };
 
 std::ostream &operator<<(std::ostream &os, const URL &url);

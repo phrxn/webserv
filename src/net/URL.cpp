@@ -12,8 +12,7 @@ URL::URL()
       _domain(""),
       _port(0),
       _path(""),
-      _query(""),
-      _isURLValid(false) {}
+      _query(""){}
 
 URL::~URL() {}
 
