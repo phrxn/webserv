@@ -1,5 +1,7 @@
 -- Remover mais responsabilidade do HTTPRequest, pensar nisso quanto estiver refazendo o fluxo
 
+
+================================================================================================================================
 -- Recriar o HTTPStatus e o HTTPMethod, mas usando a classe e um mapa também, tipo ao invés de ser só um enum, criar os métodos de conversao dentro da própria classe
    Além disso, criar o tipo INVALID para facilitar nos testes e nas checagem do próprio programa.
       Exemplo:
@@ -18,3 +20,109 @@
       }
     
     ** fazer a mesma coisa para o HTTPStatus
+================================================================================================================================
+
+-- Adicionar o getCaminhoCompleto no VirtualHost:  /home/user/foo/bar/site
+
+** Fazer fazer logo o static, o cgi vamos deixar para depois
+
+Static_GetMethodHTTP
+
+1) pegar o completo no virtual host: /home/user/foo/bar/site
+2) juntar o caminho com o URL ->  /home/user/foo/bar/site + /index.html
+
+3) Ver se o caminho existe (aqui ao usar o access tanto fazer se é diretório ou arquivo), se não existir, erro 404.
+
+4) Pode ser lido? Se nao, return 404
+
+5) É um arquivo?
+    File:
+		ArrayDeBytes
+        Tamanho
+        MimeType(Content-type) <- o mimetype pode ser obtido do arquivo do ngnix: /etc/ngnix/mime.types
+                    para o arquivo a.aabbcc2 o tipo content-type foi: application/octet-stream
+                    para o diretorio, como ele é um arquivo html, o content-type foi: text/html mesmo
+                    para o binario (usando o cat como exemplo) o tipo foi: application/octet-stream
+                    parece que para o que nao eh identificado o tipo eh: application/octet-stream
+
+	DirectoryFILe <====File
+
+==========================
+Static_PostMethodHTTP
+
+	http://192.168.3.210:80/sub/ <- Erro pois eh um diretorio
+	http://192.168.3.210:80/sub  <- Retorna a lista de direitos (200 OK)
+
+    **Post no diretorio (http://192.168.3.210:80/sub):                      200 OK           Se a listagem de arquivo de diretório for permitida, ele vai listar os arquivos do diretorio     
+    **Post no diretorio (http://192.168.3.210:80/sub) Se nao puder listar os diretorios: 403 Forbidden
+	**Post dentro do diretorio (http://192.168.3.210:80/sub/):              403 Forbidden    [notar a barra no fim do arquivo]
+    **Post no diretorio e o caminho aponta para uma arquivo que nao existe: 404 Not Foun     [http://192.168.3.210:80/sub/bc.txt o bc.txt nao existe na pasta sub]
+    **Post no diretorio e o caminho aponta para uma arquivo que existe:     405 Not Allowed  [http://192.168.3.210:80/sub/a.txt o a.txt existe na pasta sub]
+
+==========================
+Static_DeleteMethodHTTP
+    Fazer os mesmos testes que foram feitos acima com o post. Tipo
+    	Tentar deletar um arquivo que nao existe
+        Tentar deletar um arquivo que existe
+        Tentar deletar um Diretorio que existe
+        Tentar deletar um Diretorio que nao existe
+        Tentar deletar o proprio diretorio (sub)
+        Tentar deletar dentro do proprio diretorio (sub/)
+    **Sendo o chatgpt o ngnix nao consegue fazer POST ou DELETE, ele precisa de um backend. Mas vamos fazer os testes mesmo assim! Para evitarmos dor de cabeça
+      alias até para o get é bom testa tudo isso!
+
+================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
