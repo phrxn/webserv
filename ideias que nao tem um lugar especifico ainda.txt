@@ -47,29 +47,49 @@ Static_GetMethodHTTP
 
 	DirectoryFILe <====File
 
+Static_GETMethodHTTP
+
+    **Get no diretorio Se     puder listar os diretorios(http://192.168.3.210:80/sub):
+    **Get no diretorio Se nao puder listar os diretorios(http://192.168.3.210:80/sub):
+	---
+	**Get dentro do diretorio Se     puder listar os diretorios (http://192.168.3.210:80/sub/):
+    **Get dentro do diretorio Se nao puder listar os diretorios (http://192.168.3.210:80/sub/): 
+	---
+    **Get no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	**Get no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	---
+    **Get no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que existe:
+	**Get no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que existe:
+
 ==========================
 Static_PostMethodHTTP
 
-	http://192.168.3.210:80/sub/ <- Erro pois eh um diretorio
-	http://192.168.3.210:80/sub  <- Retorna a lista de direitos (200 OK)
-
-    **Post no diretorio (http://192.168.3.210:80/sub):                      200 OK           Se a listagem de arquivo de diretório for permitida, ele vai listar os arquivos do diretorio     
-    **Post no diretorio (http://192.168.3.210:80/sub) Se nao puder listar os diretorios: 403 Forbidden
-	**Post dentro do diretorio (http://192.168.3.210:80/sub/):              403 Forbidden    [notar a barra no fim do arquivo]
-    **Post no diretorio e o caminho aponta para uma arquivo que nao existe: 404 Not Foun     [http://192.168.3.210:80/sub/bc.txt o bc.txt nao existe na pasta sub]
-    **Post no diretorio e o caminho aponta para uma arquivo que existe:     405 Not Allowed  [http://192.168.3.210:80/sub/a.txt o a.txt existe na pasta sub]
+    **Post no diretorio Se     puder listar os diretorios(http://192.168.3.210:80/sub):            **Se a listagem de arquivo de diretório for permitida, ele vai listar os arquivos do diretorio 
+    **Post no diretorio Se nao puder listar os diretorios(http://192.168.3.210:80/sub):
+	---
+	**Post dentro do diretorio Se     puder listar os diretorios (http://192.168.3.210:80/sub/):
+    **Post dentro do diretorio Se nao puder listar os diretorios (http://192.168.3.210:80/sub/): 
+	---
+    **Post no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	**Post no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	---
+    **Post no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que existe:
+	**Post no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que existe:
 
 ==========================
 Static_DeleteMethodHTTP
-    Fazer os mesmos testes que foram feitos acima com o post. Tipo
-    	Tentar deletar um arquivo que nao existe
-        Tentar deletar um arquivo que existe
-        Tentar deletar um Diretorio que existe
-        Tentar deletar um Diretorio que nao existe
-        Tentar deletar o proprio diretorio (sub)
-        Tentar deletar dentro do proprio diretorio (sub/)
-    **Sendo o chatgpt o ngnix nao consegue fazer POST ou DELETE, ele precisa de um backend. Mas vamos fazer os testes mesmo assim! Para evitarmos dor de cabeça
-      alias até para o get é bom testa tudo isso!
+
+    **Delete no diretorio Se     puder listar os diretorios(http://192.168.3.210:80/sub):          
+    **Delete no diretorio Se nao puder listar os diretorios(http://192.168.3.210:80/sub):
+	---
+	**Delete dentro do diretorio Se     puder listar os diretorios (http://192.168.3.210:80/sub/):
+    **Delete dentro do diretorio Se nao puder listar os diretorios (http://192.168.3.210:80/sub/): 
+	---
+    **Delete no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	**Delete no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que nao existe:
+	---
+    **Delete no diretorio Se     puder listar os diretorios e o caminho aponta para uma arquivo que existe:
+	**Delete no diretorio Se nao puder listar os diretorios e o caminho aponta para uma arquivo que existe:
 
 ================================================================================================================================
 
