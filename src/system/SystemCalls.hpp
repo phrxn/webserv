@@ -46,6 +46,10 @@ class SystemCalls {
   virtual error::StatusOr<int> getsockname(int sockfd, struct sockaddr *addr,
                                            socklen_t *addrlen) const;
 
+  virtual error::StatusOr<int> stat(const char *_file, struct stat *_buf) const;
+
+  virtual error::StatusOr<int> access (const char *name, int type) const;
+
  private:
   std::string createErrorMessage(const std::string &systemCallName) const;
 

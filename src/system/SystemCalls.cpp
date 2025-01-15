@@ -1,6 +1,7 @@
 #include "SystemCalls.hpp"
 
 #include <sys/epoll.h>
+#include <sys/stat.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -121,6 +122,24 @@ error::StatusOr<int> SystemCalls::getsockname(int sockfd, struct sockaddr *addr,
                          createErrorMessage("getsockname"));
   }
   return status;
+}
+
+error::StatusOr<int> SystemCalls::stat(const char *_file, struct stat *_buf) const{
+    int status = ::stat(_file, _buf);
+    if (status == -1) {
+    	return error::Status(error::Status::SystemCall,
+                         createErrorMessage("stat"));
+  	}
+  	return status;
+}
+
+error::StatusOr<int> SystemCalls::access(const char *name, int type) const{
+	int status = ::access(name, type);
+    if (status == -1) {
+    	return error::Status(error::Status::SystemCall,
+                         createErrorMessage("access"));
+  	}
+  	return status;
 }
 
 std::string SystemCalls::createErrorMessage(

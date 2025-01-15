@@ -22,7 +22,9 @@ SOURCES = src/Main.cpp\
 		  src/error/Log.cpp\
 		  src/error/LogDefault.cpp\
 		  src/error/Status.cpp\
+		  src/io/DirectoryListing.cpp\
 		  src/io/Epoll.cpp\
+		  src/io/File.cpp\
 		  src/io/FileDescriptor.cpp\
 		  src/io/Poll.cpp\
 		  src/error/LogWriter.cpp\
@@ -62,7 +64,9 @@ SOURCES = src/Main.cpp\
 SOURCES_TEST =  tests/Main.cpp\
 				src/config/ConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
+				src/io/DirectoryListingTest.cpp\
 				src/io/EpollTest.cpp\
+				src/io/FileTest.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
@@ -113,15 +117,24 @@ before_compile_tests:
 	$(eval CPP_VERSION := --std=c++14)
 
 
-tests : before_compile_tests clean $(GTEST_LIBS) $(OBJECTS) $(OBJECTS_TEST)
+
+tests : prepare_integration_things before_compile_tests clean $(GTEST_LIBS) $(OBJECTS) $(OBJECTS_TEST)
 	mkdir -p output/tests
 	$(CXX) $(OBJECTS) $(OBJECTS_TEST) -o $(TEST_BINARY) $(GTEST_LIBS) -lpthread
 	./$(TEST_BINARY)
+	cd tests/integration/ && \
+	chmod +x remove_permissions.sh && \
+	./remove_permissions.sh
 
 -include $(DEPENDS)
+
+prepare_integration_things :
+	cd tests/integration/ && \
+	chmod +x set_permissions.sh && \
+	./set_permissions.sh
 
 run : all
 	./$(NAME)
 
-.PHONY : all clean fclean re before_compile_tests before_compile run
+.PHONY : all clean fclean re before_compile_tests before_compile run prepare_integration_things
 
