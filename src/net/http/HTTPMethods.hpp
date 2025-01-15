@@ -1,10 +1,14 @@
 #ifndef NET_HTTP_HTTP_METHODS_HPP
 #define NET_HTTP_HTTP_METHODS_HPP
 
+#include <map>
+#include <string>
+
 //this is a "class enum"!
 class HTTPMethods {
  public:
   enum Method{
+	INVALID,
     GET,
     POST,
     PUT,
@@ -23,10 +27,18 @@ class HTTPMethods {
 #endif
   };
 
+  static const std::string INVALID_STRING_TEXT;
+
+  HTTPMethods();
+  ~HTTPMethods();
+  HTTPMethods(const HTTPMethods &src);
+  HTTPMethods &operator=(const HTTPMethods &src);
+
+  HTTPMethods::Method getStringToMethod(std::string status);
+  std::string getMethodToString(HTTPMethods::Method status);
+
   private:
-	HTTPMethods();
-	~HTTPMethods();
-	HTTPMethods(const HTTPMethods &src);
-	HTTPMethods &operator=(HTTPMethods &src);
+	static const std::map<HTTPMethods::Method, std::string> mapMethods;
+	static std::map<HTTPMethods::Method, std::string> startMapMethods();
 };
 #endif

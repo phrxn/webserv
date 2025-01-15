@@ -27,6 +27,7 @@ SOURCES = src/Main.cpp\
 		  src/io/Poll.cpp\
 		  src/error/LogWriter.cpp\
 		  src/error/LogWriteToConsole.cpp\
+		  src/net/http/HTTPMethods.cpp\
 		  src/net/http/HTTPRequest.cpp\
 		  src/net/http/HTTPRequestFake.cpp\
 		  src/net/http/HTTPResponse.cpp\
@@ -35,6 +36,7 @@ SOURCES = src/Main.cpp\
 		  src/net/http/HTTPServletCGI.cpp\
 		  src/net/http/HTTPServletManager.cpp\
 		  src/net/http/HTTPServletStatic.cpp\
+		  src/net/http/HTTPStatus.cpp\
 		  src/net/http/ProtocolManagerHTTP.cpp\
 		  src/net/http/ProtocolManagerHTTPFake.cpp\
 		  src/net/FileDescriptorVisitor.cpp\
@@ -61,7 +63,9 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/config/ConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/EpollTest.cpp\
+				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
+				src/net/http/HTTPStatusTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\

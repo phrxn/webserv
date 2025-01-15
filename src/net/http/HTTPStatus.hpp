@@ -1,10 +1,15 @@
 #ifndef NET_HTTP_HTTP_STATUS_HPP
 #define NET_HTTP_HTTP_STATUS_HPP
 
+#include <map>
+#include <string>
+
 //this is a "class enum"!
 class HTTPStatus {
  public:
   enum Status{
+
+    INVALID = 0,
 
     // --- 200 family
     OK = 200,
@@ -24,16 +29,24 @@ class HTTPStatus {
     REQUEST_ENTITY_TOO_LARGE = 413,
 
     // --- 500 family
-    SERVER_ERR = 500,
+    SERVER_ERROR = 500,
     NOT_IMPLEMENTED = 501,
     SERVICE_UNAVAILABLE = 503,
   };
 
+  static const std::string INVALID_STRING_TEXT;
+
+  HTTPStatus();
+  ~HTTPStatus();
+  HTTPStatus(const HTTPStatus &src);
+  HTTPStatus &operator=(const HTTPStatus &src);
+
+  HTTPStatus::Status getStringToStatus(std::string status);
+  std::string getStatusToString(HTTPStatus::Status status);
+
   private:
-	HTTPStatus();
-	~HTTPStatus();
-	HTTPStatus(const HTTPStatus &src);
-	HTTPStatus &operator=(const HTTPStatus &src);
+	static const std::map<HTTPStatus::Status, std::string> mapStatus;
+	static std::map<HTTPStatus::Status, std::string> startMapStatus();
 };
 
 #endif
