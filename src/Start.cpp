@@ -6,6 +6,8 @@
 #include "error/LogDefault.hpp"
 #include "io/Epoll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
+#include "net/http/MimeType.hpp"
+#include "start/CreateMimeTypeMap.hpp"
 
 LogDefault *Start::loggerGlobal = NULL;
 
@@ -41,6 +43,7 @@ void Start::handleSignal(int sig) {
 Start::Start(const char **environmentVariables)
     : _logger(NULL),
       _poll(NULL),
+	  _ssfd(NULL),
       _programConfiguration(ProgramConfiguration::getInstance()),
       _environmentVariables(environmentVariables) {}
 
@@ -54,6 +57,10 @@ void Start::startTheProgram() {
   createProgramConfiguration();
 
   startLog();
+
+  if (!loadMimetypeListFromFile(_logger)) {
+    return;
+  }
 
   _ssfd = startTheServerSocket();
   if (!_ssfd) return;
@@ -72,7 +79,8 @@ void Start::exitingFromProgram() {
 }
 
 // deleted (this class MUST BE UNIQUE!)
-Start::Start(const Start &src) : _programConfiguration(ProgramConfiguration::getInstance()) {
+Start::Start(const Start &src)
+    : _programConfiguration(ProgramConfiguration::getInstance()) {
   (void)src;
   *this = src;
 }
@@ -97,6 +105,23 @@ void Start::startLog() {
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 
   if (!loggerGlobal) loggerGlobal = _logger;
+}
+
+bool Start::loadMimetypeListFromFile(Log *logger) {
+  CreateMimeTypeMap createMimetypeMap;
+
+  error::StatusOr<std::map<std::string, std::string> > mimeMap =
+      createMimetypeMap.loadMimetypeMap("conf/mime.types");
+
+  if (!mimeMap.ok()) {
+    logger->log(Log::FATAL, "Start", "loadMimetypeListFromFile",
+                "create the mimeType map", mimeMap.status().message());
+    return false;
+  }
+
+  MimeType::setMimetypeMap(mimeMap.value());
+
+  return true;
 }
 
 ServerSocketFileDescriptor *Start::startTheServerSocket() {

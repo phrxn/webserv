@@ -102,18 +102,18 @@ bool File::isReadable() const {
 }
 
 bool File::isWritable() const {
-  error::StatusOr<int> isReadable =
+  error::StatusOr<int> isWritable =
       _systemCalls->access(_path.c_str(), F_OK | W_OK);
-  if (isReadable.ok()) {
+  if (isWritable.ok()) {
     return true;
   }
   return false;
 }
 
 bool File::isExecutable() const {
-  error::StatusOr<int> isReadable =
+  error::StatusOr<int> isExecutable =
       _systemCalls->access(_path.c_str(), F_OK | X_OK);
-  if (isReadable.ok()) {
+  if (isExecutable.ok()) {
     return true;
   }
   return false;

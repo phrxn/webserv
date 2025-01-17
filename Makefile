@@ -39,6 +39,7 @@ SOURCES = src/Main.cpp\
 		  src/net/http/HTTPServletManager.cpp\
 		  src/net/http/HTTPServletStatic.cpp\
 		  src/net/http/HTTPStatus.cpp\
+		  src/net/http/MimeType.cpp\
 		  src/net/http/ProtocolManagerHTTP.cpp\
 		  src/net/http/ProtocolManagerHTTPFake.cpp\
 		  src/net/FileDescriptorVisitor.cpp\
@@ -55,6 +56,7 @@ SOURCES = src/Main.cpp\
 		  src/net/URL.cpp\
 		  src/net/VirtualHost.cpp\
 		  src/net/VirtualHostFactory.cpp\
+		  src/start/CreateMimeTypeMap.cpp\
 		  src/system/Errno.cpp\
 		  src/system/SystemCalls.cpp\
 		  src/time/Time.cpp\
@@ -70,12 +72,13 @@ SOURCES_TEST =  tests/Main.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
+				src/net/http/MimeTypeTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
-				src/net/VirtualHostFactoryTest.cpp
-
+				src/net/VirtualHostFactoryTest.cpp\
+				src/start/CreateMimeTypeMapTest.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 DEPENDS = $(SOURCES:.cpp=.d)

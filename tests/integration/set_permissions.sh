@@ -11,43 +11,43 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod 100 "${directory_str}_x"
+chmod 111 "${directory_str}_x"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_x"
     exit 1
 fi
 
-chmod 200 "${directory_str}_w"
+chmod 222 "${directory_str}_w"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_w"
     exit 1
 fi
 
-chmod 300 "${directory_str}_wx"
+chmod 333 "${directory_str}_wx"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_wx"
     exit 1
 fi
 
-chmod 400 ${directory_str}_r
+chmod 444 ${directory_str}_r
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_r"
     exit 1
 fi
 
-chmod 500 ${directory_str}_rx
+chmod 555 ${directory_str}_rx
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_rx"
     exit 1
 fi
 
-chmod 600 ${directory_str}_rw
+chmod 666 ${directory_str}_rw
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_rw"
     exit 1
 fi
 
-chmod 700 ${directory_str}_rwx
+chmod 777 ${directory_str}_rwx
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${directory_str}_rwx"
     exit 1
@@ -63,43 +63,43 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod 100 "${file_str}_x"
+chmod 111 "${file_str}_x"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_x"
     exit 1
 fi
 
-chmod 200 "${file_str}_w"
+chmod 222 "${file_str}_w"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_w"
     exit 1
 fi
 
-chmod 300 "${file_str}_wx"
+chmod 333 "${file_str}_wx"
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_wx"
     exit 1
 fi
 
-chmod 400 ${file_str}_r
+chmod 444 ${file_str}_r
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_r"
     exit 1
 fi
 
-chmod 500 ${file_str}_rx
+chmod 555 ${file_str}_rx
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_rx"
     exit 1
 fi
 
-chmod 600 ${file_str}_rw
+chmod 666 ${file_str}_rw
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_rw"
     exit 1
 fi
 
-chmod 700 ${file_str}_rwx
+chmod 777 ${file_str}_rwx
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on ${file_str}_rwx"
     exit 1
@@ -107,25 +107,25 @@ fi
 
 #add read permission to files that will be readed by File.cpp
 
-chmod 400 ${directory_file_cpp}z_file_empty
+chmod 444 ${directory_file_cpp}z_file_empty
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on z_file_empty"
     exit 1
 fi
 
-chmod 400 ${directory_file_cpp}z_file_10_bytes
+chmod 444 ${directory_file_cpp}z_file_10_bytes
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on z_file_10_bytes"
     exit 1
 fi
 
-chmod 400 ${directory_file_cpp}z_dir_empty
+chmod 444 ${directory_file_cpp}z_dir_empty
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on z_dir_empty"
     exit 1
 fi
 
-chmod 400 ${directory_file_cpp}z_dir_10_bytes
+chmod 444 ${directory_file_cpp}z_dir_10_bytes
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on z_dir_10_bytes"
     exit 1
@@ -135,25 +135,25 @@ fi
 
 directoryListing=folder_with_things_to_test_the_class_DirectoryListing-cpp/
 
-chmod 700 ${directoryListing}dir1
+chmod 777 ${directoryListing}dir1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on dir1"
     exit 1
 fi
 
-chmod 700 ${directoryListing}dir2
+chmod 777 ${directoryListing}dir2
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on dir2"
     exit 1
 fi
 
-chmod 700 ${directoryListing}file1
+chmod 777 ${directoryListing}file1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on file1"
     exit 1
 fi
 
-chmod 700 ${directoryListing}file2
+chmod 777 ${directoryListing}file2
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on file2"
     exit 1

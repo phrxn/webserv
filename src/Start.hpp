@@ -25,6 +25,7 @@ class Start {
 
   void createProgramConfiguration();
   void startLog();
+  bool loadMimetypeListFromFile(Log *logger);
   ServerSocketFileDescriptor *startTheServerSocket();
   bool startPoll(ServerSocketFileDescriptor *ssfd);
   void startWebserver(Poll &poll, Log &logger, ProgramConfiguration &configuration);
@@ -34,8 +35,8 @@ class Start {
   LogDefault *_logger;
   Poll *_poll;
   SystemCalls systemCalls;
-  ProgramConfiguration &_programConfiguration;
   ServerSocketFileDescriptor *_ssfd;
+  ProgramConfiguration &_programConfiguration;
   const char **_environmentVariables;
 
 };
