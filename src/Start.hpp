@@ -3,7 +3,7 @@
 
 #include <csignal>
 
-#include "config/Configuration.hpp"
+#include "config/ProgramConfiguration.hpp"
 #include "error/LogDefault.hpp"
 #include "io/Poll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
@@ -23,18 +23,18 @@ class Start {
   Start(const Start &src);
   Start &operator=(const Start &src);
 
-  void createConfiguration();
+  void createProgramConfiguration();
   void startLog();
   ServerSocketFileDescriptor *startTheServerSocket();
   bool startPoll(ServerSocketFileDescriptor *ssfd);
-  void startWebserver(Poll &poll, Log &logger, Configuration &configuration);
+  void startWebserver(Poll &poll, Log &logger, ProgramConfiguration &configuration);
   void exitingFromProgram();
 
  private:
   LogDefault *_logger;
   Poll *_poll;
   SystemCalls systemCalls;
-  Configuration &_configuration;
+  ProgramConfiguration &_programConfiguration;
   ServerSocketFileDescriptor *_ssfd;
   const char **_environmentVariables;
 

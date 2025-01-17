@@ -8,7 +8,7 @@ class Webserv {
  public:
   static bool continueRunningTheServer;
 
-  Webserv(Poll &poll, Log &log, Configuration &configuration);
+  Webserv(Poll &poll, Log &log, ProgramConfiguration &configuration);
   ~Webserv();
 
   void start();
@@ -19,7 +19,7 @@ class Webserv {
 
   Poll &_poll;
   Log &_log;
-  Configuration &_configuration;
+  ProgramConfiguration &_configuration;
   GenericServer _genericServer;
 
 };

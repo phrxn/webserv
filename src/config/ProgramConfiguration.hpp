@@ -1,5 +1,5 @@
-#ifndef CONFIG_CONFIGURATION_HPP
-#define CONFIG_CONFIGURATION_HPP
+#ifndef CONFIG_PROGRAM_CONFIGURATION_HPP
+#define CONFIG_PROGRAM_CONFIGURATION_HPP
 
 #include <list>
 
@@ -7,11 +7,11 @@
 #include "../net/http/HTTPMethods.hpp"
 #include "Variables.hpp"
 
-class Configuration {
+class ProgramConfiguration {
  public:
-  static Configuration &getInstance();
+  static ProgramConfiguration &getInstance();
 
-  ~Configuration();
+  ~ProgramConfiguration();
 
   TypesOfProtocol getTypeOfProtocol() const;
   void setTypeOfProtocol(TypesOfProtocol typeOfProtocol);
@@ -32,9 +32,9 @@ class Configuration {
       const char **environmentVariables);
 
  protected:
-  Configuration();
-  Configuration(const Configuration &src);
-  Configuration &operator=(const Configuration &src);
+  ProgramConfiguration();
+  ProgramConfiguration(const ProgramConfiguration &src);
+  ProgramConfiguration &operator=(const ProgramConfiguration &src);
 
   TypesOfProtocol _typeOfProtocol;
   Environment _environment;

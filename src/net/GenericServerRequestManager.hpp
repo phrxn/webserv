@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-#include "../config/Configuration.hpp"
+#include "../config/ProgramConfiguration.hpp"
 #include "../error/Log.hpp"
 #include "../io/Poll.hpp"
 #include "ProtocolManager.hpp"
@@ -24,7 +24,7 @@ class GenericServerRequestManager {
 
   GenericServerRequestManager(Poll *_poll,
                               SocketFileDescriptorImpl *_socketFileDescriptor,
-                              Log *logger, Configuration &configuration);
+                              Log *logger, ProgramConfiguration &configuration);
 
   ~GenericServerRequestManager();
 
@@ -60,7 +60,7 @@ class GenericServerRequestManager {
   Log *_logger;
   Stage _managerStage;
   ProtocolManager *_protocolManager;
-  Configuration &_configuration;
+  ProgramConfiguration &_configuration;
   std::time_t _timeOfLastInputFromCLient;
 };
 

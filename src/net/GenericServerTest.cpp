@@ -1,6 +1,6 @@
 #include "../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
-#include "../config/Configuration.hpp"
+#include "../config/ProgramConfiguration.hpp"
 #include "../error/Log.hpp"
 #include "../io/Poll.hpp"
 #include "../net/SocketFileDescriptorImpl.hpp"
@@ -54,11 +54,11 @@ class SocketFileDescriptorMock : public SocketFileDescriptor {
 
 class GenericServerRequestMock : public GenericServerRequestManager {
  public:
-  GenericServerRequestMock(Log *log, Configuration &config)
+  GenericServerRequestMock(Log *log, ProgramConfiguration &config)
       : GenericServerRequestManager(NULL, NULL, log, config) {}
 };
 
-class ConfigurationMock : public Configuration{
+class ConfigurationMock : public ProgramConfiguration{
 
 };
 

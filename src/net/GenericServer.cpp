@@ -1,11 +1,11 @@
 #include "GenericServer.hpp"
 
-#include "../config/Configuration.hpp"
+#include "../config/ProgramConfiguration.hpp"
 #include "GenericServerRequestManager.hpp"
 #include "ServerSocketFileDescriptor.hpp"
 #include "SocketFileDescriptor.hpp"
 
-GenericServer::GenericServer(Poll &poll, Log &log, Configuration &configuration)
+GenericServer::GenericServer(Poll &poll, Log &log, ProgramConfiguration &configuration)
     : _poll(poll), _log(log), _configuration(configuration) {}
 
 // deleted (this class MUST BE UNIQUE!)

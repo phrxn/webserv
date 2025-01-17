@@ -1,9 +1,9 @@
-#include "Configuration.hpp"
+#include "ProgramConfiguration.hpp"
 
 #include <algorithm>
 #include <stdexcept>
 
-Configuration::Configuration()
+ProgramConfiguration::ProgramConfiguration()
     : _typeOfProtocol(HTTP),
       _environment(TEST),
       _timeOutForNewRequestOrToSendAFullRequest(10) {
@@ -17,11 +17,11 @@ Configuration::Configuration()
   _listSupportedMethodsByServer.push_back(HTTPMethods::DELETE);
 }
 
-Configuration::~Configuration() {}
+ProgramConfiguration::~ProgramConfiguration() {}
 
-Configuration::Configuration(const Configuration &src) { *this = src; }
+ProgramConfiguration::ProgramConfiguration(const ProgramConfiguration &src) { *this = src; }
 
-Configuration &Configuration::operator=(const Configuration &src) {
+ProgramConfiguration &ProgramConfiguration::operator=(const ProgramConfiguration &src) {
   if (this == &src) return *this;
   _typeOfProtocol = src._typeOfProtocol;
   _environment = src._environment;
@@ -31,39 +31,39 @@ Configuration &Configuration::operator=(const Configuration &src) {
   return *this;
 }
 
-Configuration &Configuration::getInstance() {
-  static Configuration instance;
+ProgramConfiguration &ProgramConfiguration::getInstance() {
+  static ProgramConfiguration instance;
   return instance;
 }
 
-TypesOfProtocol Configuration::getTypeOfProtocol() const {
+TypesOfProtocol ProgramConfiguration::getTypeOfProtocol() const {
   return _typeOfProtocol;
 }
-void Configuration::setTypeOfProtocol(TypesOfProtocol typeOfProtocol) {
+void ProgramConfiguration::setTypeOfProtocol(TypesOfProtocol typeOfProtocol) {
   _typeOfProtocol = typeOfProtocol;
 }
 
-Environment Configuration::getEnvironment() const { return _environment; }
+Environment ProgramConfiguration::getEnvironment() const { return _environment; }
 
-void Configuration::setEnvironment(Environment environment) {
+void ProgramConfiguration::setEnvironment(Environment environment) {
   _environment = environment;
 }
 
-int Configuration::getTimeOutForNewRequestOrToSendAFullRequest() const {
+int ProgramConfiguration::getTimeOutForNewRequestOrToSendAFullRequest() const {
   return _timeOutForNewRequestOrToSendAFullRequest;
 }
 
-void Configuration::setTimeOutForNewRequestOrToSendAFullRequest(int timeout) {
+void ProgramConfiguration::setTimeOutForNewRequestOrToSendAFullRequest(int timeout) {
   _timeOutForNewRequestOrToSendAFullRequest = timeout;
 }
 
-Log::LogLevel Configuration::getLogLevel() const { return _logLevel; }
+Log::LogLevel ProgramConfiguration::getLogLevel() const { return _logLevel; }
 
-void Configuration::setLogLevel(Log::LogLevel logLevel) {
+void ProgramConfiguration::setLogLevel(Log::LogLevel logLevel) {
   _logLevel = logLevel;
 }
 
-bool Configuration::theServerSupportsThisHTTPMethod(
+bool ProgramConfiguration::theServerSupportsThisHTTPMethod(
     HTTPMethods::Method method) {
   std::list<HTTPMethods::Method>::iterator it =
       std::find(_listSupportedMethodsByServer.begin(),
@@ -71,11 +71,11 @@ bool Configuration::theServerSupportsThisHTTPMethod(
   return (it != _listSupportedMethodsByServer.end());
 }
 
-const char **Configuration::getEnvironmentVariables() const {
+const char **ProgramConfiguration::getEnvironmentVariables() const {
   return _environmentVariables;
 }
 
-void Configuration::setEnvironmentVariables(
+void ProgramConfiguration::setEnvironmentVariables(
     const char **environmentVariables) {
   _environmentVariables = environmentVariables;
 }

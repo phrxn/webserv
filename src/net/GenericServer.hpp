@@ -13,7 +13,7 @@
 
 class GenericServer : public FileDescriptorVisitor {
  public:
-  GenericServer(Poll &poll, Log &log, Configuration &configuration);
+  GenericServer(Poll &poll, Log &log, ProgramConfiguration &configuration);
   ~GenericServer();
 
   void processFilesDescriptorsReady(std::vector<FileDescriptor *> &vectorFD);
@@ -40,7 +40,7 @@ class GenericServer : public FileDescriptorVisitor {
 
   Poll &_poll;
   Log &_log;
-  Configuration &_configuration;
+  ProgramConfiguration &_configuration;
   std::map<FileDescriptor *, GenericServerRequestManager *>
       _mapClientRequestHandler;
 };

@@ -6,7 +6,7 @@
 #include "http/ProtocolManagerHTTPFake.hpp"
 
 ProtocolManagerFactory::ProtocolManagerFactory(Log *logger,
-                                               Configuration &configuration)
+                                               ProgramConfiguration &configuration)
     : _logger(logger), _configuration(configuration) {}
 
 ProtocolManagerFactory::~ProtocolManagerFactory() {}

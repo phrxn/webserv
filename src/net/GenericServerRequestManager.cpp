@@ -4,7 +4,7 @@
 
 GenericServerRequestManager::GenericServerRequestManager(
     Poll *poll, SocketFileDescriptorImpl *socketFileDescriptor, Log *logger,
-    Configuration &configuration)
+    ProgramConfiguration &configuration)
     : _poll(poll),
       _socketFileDescriptor(socketFileDescriptor),
       _logger(logger),

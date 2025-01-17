@@ -41,7 +41,7 @@ void Start::handleSignal(int sig) {
 Start::Start(const char **environmentVariables)
     : _logger(NULL),
       _poll(NULL),
-      _configuration(Configuration::getInstance()),
+      _programConfiguration(ProgramConfiguration::getInstance()),
       _environmentVariables(environmentVariables) {}
 
 Start::~Start() {
@@ -51,7 +51,7 @@ Start::~Start() {
 }
 
 void Start::startTheProgram() {
-  createConfiguration();
+  createProgramConfiguration();
 
   startLog();
 
@@ -62,7 +62,7 @@ void Start::startTheProgram() {
 
   setupSignal(handleSignal);
 
-  startWebserver(*_poll, *_logger, _configuration);
+  startWebserver(*_poll, *_logger, _programConfiguration);
 
   exitingFromProgram();
 }
@@ -72,7 +72,7 @@ void Start::exitingFromProgram() {
 }
 
 // deleted (this class MUST BE UNIQUE!)
-Start::Start(const Start &src) : _configuration(Configuration::getInstance()) {
+Start::Start(const Start &src) : _programConfiguration(ProgramConfiguration::getInstance()) {
   (void)src;
   *this = src;
 }
@@ -83,16 +83,16 @@ Start &Start::operator=(const Start &src) {
   return *this;
 }
 
-void Start::createConfiguration() {
-  _configuration.setEnvironment(TEST);
-  _configuration.setTypeOfProtocol(HTTP);
-  _configuration.setTimeOutForNewRequestOrToSendAFullRequest(5);
-  _configuration.setLogLevel(Log::INFO);
-  _configuration.setEnvironmentVariables(_environmentVariables);
+void Start::createProgramConfiguration() {
+  _programConfiguration.setEnvironment(TEST);
+  _programConfiguration.setTypeOfProtocol(HTTP);
+  _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(5);
+  _programConfiguration.setLogLevel(Log::INFO);
+  _programConfiguration.setEnvironmentVariables(_environmentVariables);
 }
 
 void Start::startLog() {
-  _logger = new LogDefault(_configuration.getLogLevel());
+  _logger = new LogDefault(_programConfiguration.getLogLevel());
   _logger->startLogger();
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 
@@ -134,7 +134,7 @@ bool Start::startPoll(ServerSocketFileDescriptor *ssfd) {
 }
 
 void Start::startWebserver(Poll &poll, Log &logger,
-                           Configuration &configuration) {
+                           ProgramConfiguration &configuration) {
   Webserv webserv(poll, logger, configuration);
   webserv.start();
 }

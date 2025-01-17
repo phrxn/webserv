@@ -18,7 +18,7 @@ GTEST_INCLUDES = libs/googletest/googletest/include/
 GMOCK_INCLUDES = libs/googletest/googlemock/include/
 
 SOURCES = src/Main.cpp\
-		  src/config/Configuration.cpp\
+		  src/config/ProgramConfiguration.cpp\
 		  src/error/Log.cpp\
 		  src/error/LogDefault.cpp\
 		  src/error/Status.cpp\
@@ -62,7 +62,7 @@ SOURCES = src/Main.cpp\
 		  src/Webserv.cpp
 
 SOURCES_TEST =  tests/Main.cpp\
-				src/config/ConfigurationTest.cpp\
+				src/config/ProgramConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
 				src/io/DirectoryListingTest.cpp\
 				src/io/EpollTest.cpp\

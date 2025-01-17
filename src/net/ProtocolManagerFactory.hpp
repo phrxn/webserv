@@ -1,7 +1,7 @@
 #ifndef NET_PROTOCOL_MANAGER_FACTORY_HPP
 #define NET_PROTOCOL_MANAGER_FACTORY_HPP
 
-#include "../config/Configuration.hpp"
+#include "../config/ProgramConfiguration.hpp"
 #include "../config/Variables.hpp"
 #include "../error/Log.hpp"
 #include "ProtocolManager.hpp"
@@ -9,7 +9,7 @@
 
 class ProtocolManagerFactory {
  public:
-  ProtocolManagerFactory(Log *logger, Configuration &_configuration);
+  ProtocolManagerFactory(Log *logger, ProgramConfiguration &_configuration);
   virtual ~ProtocolManagerFactory();
   virtual ProtocolManager *createProtocolManager(SocketFileDescriptor *socketFd);
 
@@ -18,7 +18,7 @@ class ProtocolManagerFactory {
   ProtocolManagerFactory &operator=(const ProtocolManagerFactory &src);
 
   Log *_logger;
-  Configuration &_configuration;
+  ProgramConfiguration &_configuration;
 };
 
 #endif

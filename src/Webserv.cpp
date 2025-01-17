@@ -2,11 +2,11 @@
 
 #include <vector>
 
-#include "config/Configuration.hpp"
+#include "config/ProgramConfiguration.hpp"
 
 bool Webserv::continueRunningTheServer = true;
 
-Webserv::Webserv(Poll &poll, Log &log, Configuration &configuration)
+Webserv::Webserv(Poll &poll, Log &log, ProgramConfiguration &configuration)
     : _poll(poll),
       _log(log),
       _configuration(configuration),
