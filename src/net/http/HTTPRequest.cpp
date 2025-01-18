@@ -5,7 +5,8 @@
 HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD, log *logger)
 {
   _socketFD = socketFD;
-  (void)_buffer;
+  (void)_header;
+  (void)_body;
   _logger = logger;
 }
 
@@ -25,9 +26,15 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 
   std::string strTmp(date.begin(), date.begin() + date.size());// transformando ele em string
 
+  date.clear();
 
   buffer += strTmp;
-  date.clear();return REQUEST_CREATED;
+  if (!isTheHTTPHeaderComplete(_buffer)) { 
+
+    return REQUEST_CREATING;
+  }
+
+  return REQUEST_CREATED;
 }
 
 std::string HTTPRequest::getHost() { return ""; }
@@ -43,3 +50,8 @@ std::string HTTPRequest::getURL(){
 HTTPStatus::Status HTTPRequest::getStatus(){
 	return HTTPStatus::OK;
 }
+
+bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer){
+	if (_buffer.find("\r\n\r\n") != std::string::npos)
+		return true;
+	return false;

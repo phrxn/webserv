@@ -2,6 +2,7 @@
 #define NET_HTTP_HTTP_REQUEST_HPP
 
 #include <string>
+#include <map>
 
 #include "../Request.hpp"
 #include "../../error/Log.hpp"
@@ -10,6 +11,15 @@
 #include "HTTPMethods.hpp"
 
 class HTTPRequest : public Request {
+ private:
+  HTTPRequest(const HTTPRequest &src);
+  HTTPRequest &operator=(const HTTPRequest &src);
+
+  SocketFileDescriptor *_socketFD;
+  map<std::string, std::string> _header;
+  std::string _body;
+  log *_logger
+ 
  public:
   HTTPRequest(SocketFileDescriptor *socketFD, log *logger);
   ~HTTPRequest();
@@ -26,13 +36,6 @@ class HTTPRequest : public Request {
 
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
- private:
-  HTTPRequest(const HTTPRequest &src);
-  HTTPRequest &operator=(const HTTPRequest &src);
-
-  SocketFileDescriptor *_socketFD;
-  std::string _buffer;
-  log *_logger
 };
 
 #endif
