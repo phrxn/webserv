@@ -1,0 +1,32 @@
+1) Virtual host:
+1.1) tem que retornar a porta   (OK)
+1.1) tem que retornar se o caminho é um diretório
+1.1) tem que dizer se o caminho aponta para um CGI  (NOTHING | PHP | PYTHON)
+1.1) tem que retornar se o caminho é um "desvio"
+1.1) tem que dizer se o host pode listar diretorios
+1.1) tem que dizer um verbo HTTP é suportado por ele (GET | POST | DELETE)
+1.1) tem que retornar o host
+1.1) o tamanho máximo do corpo do Request
+1.1) o tamanho máximo de arquivos para UPLOAD
+
+
+**Virtual host  eh sinonimo de  ServerConfig
+
+
+Observacoes:
+  -- ter Multi servidores (ServerConfig)
+
+
+
+
+
+
+GET  /pasta/coisas/arquivo.php  HTTP/1.1
+Host:  legal1
+
+
+
+
+---- Verificar ----
+
+Confirmar se a partir da location_path /pasta eh possivel verifcar os subdiretorios e arquivos.
