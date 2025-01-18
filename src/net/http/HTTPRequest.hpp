@@ -4,13 +4,14 @@
 #include <string>
 
 #include "../Request.hpp"
+#include "../../error/Log.hpp"
 #include "../SocketFileDescriptor.hpp"
 #include "HTTPStatus.hpp"
 #include "HTTPMethods.hpp"
 
 class HTTPRequest : public Request {
  public:
-  HTTPRequest(SocketFileDescriptor *socketFD);
+  HTTPRequest(SocketFileDescriptor *socketFD, log *logger);
   ~HTTPRequest();
 
   StateOfCreation createRequest();
@@ -23,12 +24,15 @@ class HTTPRequest : public Request {
 
   HTTPStatus::Status getStatus();
 
+  bool isTheHTTPHeaderComplete(std::string _buffer);
+
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
 
   SocketFileDescriptor *_socketFD;
   std::string _buffer;
+  log *_logger
 };
 
 #endif
