@@ -18,13 +18,24 @@ class HTTPRequest : public Request {
   SocketFileDescriptor *_socketFD;
   map<std::string, std::string> _header;
   std::string _body;
+  std::string _buffer;
+  Status _status;
   log *_logger
  
  public:
+
   HTTPRequest(SocketFileDescriptor *socketFD, log *logger);
   ~HTTPRequest();
 
   StateOfCreation createRequest();
+
+  StateOfCreation headerRequest();
+
+  Status headerValidation();
+
+  Status body();
+
+  StateOfCreation bodyRequest();
 
   std::string getHost();
 
