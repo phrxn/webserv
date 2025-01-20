@@ -10,23 +10,34 @@
 1.1) o tamanho máximo de arquivos para UPLOAD
 
 
-**Virtual host  eh sinonimo de  ServerConfig
+--- Regras para o arquivo de configuracao ---
+
+  ** O nosso servidor vai suportar de 1 a N ServerConfig
+  ** Criar a classe CheckConfiguration
 
 
-Observacoes:
-  -- ter Multi servidores (ServerConfig)
+--- Regras para interface entre o Servlet e o arquivo de configuracao ---
+Perguntas:
+  1) O caminho eh valido ou nao? (NOT_FOUND 404)
+  2) O caminho tem um redirecionamento? 
+  3) O caminho aceita o metodo HTTP ...? (NOT_ALLOWED 405)
+  4) O caminho eh um CGI?
+  5) Pegar o caminho absoluto a partir do caminhoURI.
+  6) Pode listar diretorios?
+
+  A) pegar uma pagina de erro para o codigo tal (400, 300);
+
+  
 
 
 
 
+===================================================================================
 
+Interface CheckConfiguration:
+  bool oCaminhoEhValid(String caminhoURI); //tem que checar no arquivo de configuracao se o caminhoURI eh valido ou nao.
+  string oCaminhoEhUmRedirecionamento(caminho URI);
+  bool oMetodoHTTPEhPermitido(HTTP_METHOD method, String caminhoURI);
+  bool oCaminhoApontaParaUmCGI(String caminhoURI);
+  string obterOCaminhoAbsolutoDoCaminhoURI(String caminhoURI);
 
-GET  /pasta/coisas/arquivo.php  HTTP/1.1
-Host:  legal1
-
-
-
-
----- Verificar ----
-
-Confirmar se a partir da location_path /pasta eh possivel verifcar os subdiretorios e arquivos.
