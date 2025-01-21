@@ -31,6 +31,52 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
   return REQUEST_CREATED;
 }
 
+map<std::string, std::string> HTTPRequest::parserHeader()
+{
+	std::map<std::string, std::string> headers;
+	std::size_t pos = 0;
+	std::string line;
+
+	 // Parse the first line (request line)
+    line = _buffer.substr(pos, _buffer.find("\r\n", pos) - pos);
+    pos += line.size() + 2;
+
+    // implementação para extrair método, URL e versão HTTP da requisição
+    std::size_t spacePos1 = line.find(' ');
+    std::size_t spacePos2 = line.find(' ', spacePos1 + 1);
+    if (spacePos1 == std::string::npos || spacePos2 == std::string::npos) {
+        _status = HTTPStatus::BAD_REQUEST;
+        _logger->log(Log::ERROR, "HTTPRequest", "parserHeader", "Invalid request line", line);
+        return false;
+    }
+
+    headers["Method"] = line.substr(0, spacePos1);
+    headers["URL"] = line.substr(spacePos1 + 1, spacePos2 - spacePos1 - 1);
+    headers["HTTP-Version"] = line.substr(spacePos2 + 1);
+
+	while (pos < _buffer.size()) {
+		line = _buffer.substr(pos, _buffer.find("\r\n", pos) - pos);
+		pos += line.size() + 2; // Skip the line and the \r\n
+
+		if (line.empty()) {
+			break; // End of headers
+		}
+
+		std::size_t colonPos = line.find(":");
+		if (colonPos != std::string::npos) {
+			std::string key = line.substr(0, colonPos);
+			std::string value = line.substr(colonPos + 2); // Skip ": "
+			headers[key] = value;
+		}
+		else {
+            _status = HTTPStatus::BAD_REQUEST;
+            _logger->log(Log::ERROR, "HTTPRequest", "parserHeader", "Invalid header format", line);
+		}
+	}
+	headerValidation();
+	_header = headers;
+}
+
 HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
     std::vector<char> &data = _socketFD->getInputStream();
     std::string strTmp(data.begin(), data.begin() + data.size());
@@ -38,77 +84,50 @@ HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
     _buffer += strTmp;
 
     if (!isTheHTTPHeaderComplete(_buffer)) {
-        return HEADER_CREATING;
+        return REQUEST_CREATING;
     }
+	parserHeader();
 
-    std::map<std::string, std::string> headers;
-    std::size_t pos = 0;
-    std::string line;
-    while (pos < _buffer.size()) {
-      line = _buffer.substr(pos, _buffer.find("\r\n", pos) - pos);
-      pos += line.size() + 2; // Skip the line and the \r\n
-
-      if (line.empty()) {
-        break; // End of headers
-      }
-
-      std::size_t colonPos = line.find(":");
-      if (colonPos != std::string::npos) {
-          std::string key = line.substr(0, colonPos);
-          std::string value = line.substr(colonPos + 2); // Skip ": "
-          headers[key] = value;
-      }
-      else {
-        colonPos = line.find(" ");
-        if (colonPos != std::string::npos) {
-          std::string key = "Method";
-          std::string value = line.substr(0, colonPos);
-          headers[key] = value;
-          key = "URL";
-          value = line.substr(colonPos + 1);
-          headers[key] = value;
-          colonPos = line.find("HTTP");
-          key = "HTTP";
-          value = line.substr(colonPos);
-        
-      }
-      }
-      headerValidation();
-      return REQUEST_CREATED;
-    }
-
-    _header = headers; 
-
-    _logger->log(Log::DEBUG, "HTTPRequestFake", "createRequest", _buffer, "");
-
-    return HEADER_CREATED;
+    _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
+	return REQUEST_CREATED;
 }
 
-HTTPRequest::Status HTTPRequest::headerValidation()
+void HTTPRequest::headerValidation()
 {
-    if (_header.find("Host") == _header.end() || _header.find("Content-Length") == _header.end() 
-        || _header.find("Method") == _header.end() || _header.find("URL") == _header.end() || ){
-        return HTTPStatus::BAD_REQUEST;
+    if (_header.find("Host") == _header.end() || _header.find("Method") == _header.end() 
+		|| _header.find("URL") == _header.end() || _header.find("HTTP-Version") == _header.end()) {
+        _status = HTTPStatus::BAD_REQUEST;
     }
-
-    return HTTPStatus::OK;
+	else if (HTTPMethods::getStringToMethod(_header["Method"]) == HTTPMethods::INVALID) {
+		_status = HTTPStatus::BAD_REQUEST;
+	}
+	else if (_header["HTTP-Version"] != "HTTP/1.1") {
+		_status = HTTPStatus::HTTP_VERSION_NOT_SUPPORTED;
+	}
+	else
+		_status = HTTPStatus::OK;
 }
 
-std::string HTTPRequest::getHost() { return ""; }
+std::string HTTPRequest::getHost() { 
+	return ""; 
+}
 
 HTTPMethods::Method HTTPRequest::getMethod(){
-	return HTTPMethods::GET;
+	return HTTPMethods::getStringToMethod(_header["Method"]);
 }
 
 std::string HTTPRequest::getURL(){
-	return "";
+	return _header["URL"];
 }
 
 HTTPStatus::Status HTTPRequest::getStatus(){
-	return HTTPStatus::OK;
+	return _status;
 }
 
-bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer){
+bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
 	if (_buffer.find("\r\n\r\n") != std::string::npos)
 		return true;
-	return false;
+	return false;	key = "URL";
+}
+
+HTTPStatus::Status  HTTPRequest::body();
