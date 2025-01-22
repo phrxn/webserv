@@ -2,7 +2,6 @@
 
 #include "Start.hpp"
 
-#ifndef COMPILE_TEST
 int main(int argc, char **argv, const char **env) {
   (void)argc;
   (void)argv;
@@ -13,4 +12,3 @@ int main(int argc, char **argv, const char **env) {
 
   return 0;
 }
-#endif

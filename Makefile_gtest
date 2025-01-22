@@ -1,0 +1,13 @@
+CC = cc
+CXX = c++
+
+GTEST_BUILD_DIR = $(ARG_GTEST_BUILD_DIR)
+
+GTEST_LIBS = $(ARG_GTEST_LIBS)
+
+all: $(GTEST_LIBS)
+
+$(GTEST_LIBS):
+	mkdir -p $(GTEST_BUILD_DIR)
+	cd $(GTEST_BUILD_DIR) && cmake ../../../libs/googletest/ -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)
+	make -C $(GTEST_BUILD_DIR)

@@ -27,7 +27,7 @@ This project is a simple HTTP server in C++98 with some restrictions and require
 
 1. Google tests version: v1.15.2
 
-2. As the project MUST BE written in C++98, but Google tests require the C++14 version, compile this project always recompile everything.
+2. As the project MUST BE written in C++98, but Google tests require at least the C++14 version two folder of objects are created
 
 3. The project is under development...
 
@@ -64,9 +64,25 @@ Before you begin, ensure you have met the following requirements:
 
 2. After downloading, enter the project folder ``cd webserv``
 
-3. Run ``make`` to compile the project
+3. Give execute permission to the build.sh script ``chmod 755 build.sh``
 
-4. After running make, 2 executables will be created: ``webserv`` and ``cli`` (this one inside the tests_cli folder)
+### The build script
+
+The script build accept 3 options (parameters):
+
+1. ``compile`` this command will compile the project (using c++98)<br>
+	Example: ``./build compile``
+
+2. ``tests`` this command will compile the tests and project (using c++17)<br>
+	Example: ``./build tests``<br>
+  This command also accepts one more parameter if you want to filter a Test Suite.<br>
+	Example: ``./build tests MyTest``<br>
+
+3. ``clean`` this command will remove things created during compilation (except the executable)<br>
+	Example: ``./build clean``
+
+
+4. After running ``./build compile``, one executable will be created: ``webserv``
 
 ### Run
 
@@ -74,13 +90,8 @@ Before you begin, ensure you have met the following requirements:
 
 **Important things**<br>
 - By default the server will wait for clients on port 8080
-- The Log is in DEBUG mode.
+- The Log is in INFO mode.
 - To close the webserv just type CTRL+C.
 - The server will echo every line sent to it. (The line must contain <code>\n</code> for the server to respond.)
-- The timeout for inactivity is 10 seconds. (After 10 seconds of not sending anything to the server, it will close the connection)
+- The timeout for inactivity is 5 seconds. (After 5 seconds of not sending anything to the server, it will close the connection)
 - :bangbang:_These options will be configurable in the future. In the configuration file_
-
-### How to connect?
-
-To access the server you can, in a NEW terminal, use the command: ``telnet localhost 8080`` or use the executable (``cli``) inside the tests_cli folder.<br>
-For now the server will echo everything that is sent to it after a <code>\n</code>
