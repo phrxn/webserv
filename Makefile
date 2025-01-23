@@ -60,6 +60,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/SocketFileDescriptorImpl.cpp\
 		src/net/URL.cpp\
 		src/net/VirtualHost.cpp\
+		src/net/VirtualHostCluster.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
 		src/start/LoaderOfProgramFiles.cpp\
@@ -82,7 +83,9 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
+				src/net/VirtualHostClusterTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp\
+				src/net/VirtualHostTest.cpp\
 				src/start/CreateMimeTypeMapTest.cpp
 
 ifeq ($(COMPILE), binary)

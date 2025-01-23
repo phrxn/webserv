@@ -1,23 +1,19 @@
 #include "VirtualHostFactory.hpp"
 
-std::map<std::string, const VirtualHost *> VirtualHostFactory::mapOfVirtualHost;
+#include <sstream>
 
-void VirtualHostFactory::fillTheFactory(const
-    std::map<std::string, const VirtualHost *> &map) {
+#include "../Start.hpp"
 
-	std::map<std::string, const VirtualHost *>::const_iterator it;
-	for (it = map.begin(); it != map.end(); ++it){
-		mapOfVirtualHost[it->first] = it->second;
-	}
+VirtualHostCluster VirtualHostFactory::virtualHostCluster;
+
+void VirtualHostFactory::fillTheFactory(const std::list<VirtualHost> &map) {
+  std::list<VirtualHost>::const_iterator it;
+  for (it = map.begin(); it != map.end(); ++it) {
+    virtualHostCluster.addVirtualHostToCluster(*it);
+  }
 }
 
-void VirtualHostFactory::destroyFactory() {
-
-	std::map<std::string, const VirtualHost *>::iterator it;
-	for (it = mapOfVirtualHost.begin(); it != mapOfVirtualHost.end(); ++it){
-		delete it->second;
-	}
-}
+void VirtualHostFactory::destroyFactory() {}
 
 VirtualHostFactory::VirtualHostFactory() {}
 
@@ -33,9 +29,21 @@ VirtualHostFactory &VirtualHostFactory::operator=(
   return *this;
 }
 
-const VirtualHost *VirtualHostFactory::createVirtualHost(
-    const std::string &hostName) const {
-  if (mapOfVirtualHost.find(hostName) != mapOfVirtualHost.end())
-    return mapOfVirtualHost[hostName];
-  return NULL;
+VirtualHost VirtualHostFactory::getVirtualHost(
+    int port, const std::string &hostName) const {
+  error::StatusOr<VirtualHost> vh =
+      virtualHostCluster.getVirtualHost(port, hostName);
+  if (!vh.ok()) {
+    if (Start::loggerGlobal) {
+      std::stringstream errorMessage;
+      errorMessage << "port: " << port << ", hostName: " << hostName;
+
+      Start::loggerGlobal->log(
+          Log::FATAL, "VirtualHostFactory", "getVirtualHost",
+          "using default VirtualHost, the virtualhost wasn't found",
+          errorMessage.str());
+    }
+	return VirtualHost(-1, "");
+  }
+  return vh.value();
 }

@@ -23,6 +23,8 @@ class HTTPRequest : public Request {
 
   HTTPStatus::Status getStatus();
 
+  int getPort();
+
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);

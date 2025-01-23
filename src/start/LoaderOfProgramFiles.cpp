@@ -6,6 +6,7 @@
 #include "../net/VirtualHost.hpp"
 #include "../net/http/MimeType.hpp"
 #include "CreateMimeTypeMap.hpp"
+#include "../net/VirtualHostFactory.hpp"
 
 LoaderOfProgramFiles::LoaderOfProgramFiles(Log *logger) : _logger(logger) {}
 
@@ -69,8 +70,18 @@ bool LoaderOfProgramFiles::checkParameters(int argc) const {
   return true;
 }
 
-
 bool loadConfigurarionFile(char **argv) {
+
+
+  std::list<VirtualHost> virtualHostsFromFile;
+  VirtualHost a(80, "abc");
+  VirtualHost b(81, "xyz");
+  virtualHostsFromFile.push_back(a);
+  virtualHostsFromFile.push_back(b);
+
+
+
+
   std::string pathToConfigurationFile = argv[1];
   return true;
 }

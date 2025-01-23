@@ -35,3 +35,7 @@ std::string HTTPRequest::getURL(){
 HTTPStatus::Status HTTPRequest::getStatus(){
 	return HTTPStatus::OK;
 }
+
+int HTTPRequest::getPort(){
+	return _socketFD->getServerPort();
+}

@@ -21,7 +21,7 @@ class HTTPServletManager {
   HTTPServletManager &operator=(const HTTPServletManager &src);
 
   HTTPServlet *_hTTPServlet;
-  const VirtualHost *_virtualHost;
+  VirtualHost _virtualHost;
   SocketFileDescriptor *_socketFD;
   Log *_logger;
 

@@ -1,6 +1,6 @@
 #include "HTTPServletStatic.hpp"
 
-HTTPServletStatic::HTTPServletStatic(const VirtualHost *virtualHost)
+HTTPServletStatic::HTTPServletStatic(const VirtualHost virtualHost)
     : _virtualHost(virtualHost) {
 		(void)_virtualHost;
 	}
