@@ -43,9 +43,10 @@ void Start::handleSignal(int sig) {
 Start::Start(const char **environmentVariables)
     : _logger(NULL),
       _poll(NULL),
-	  _ssfd(NULL),
+      _ssfd(NULL),
       _programConfiguration(ProgramConfiguration::getInstance()),
-      _environmentVariables(environmentVariables) {}
+      _environmentVariables(environmentVariables),
+      _loaderOfProgramFiles(_logger) {}
 
 Start::~Start() {
   if (_logger) delete _logger;
@@ -53,12 +54,12 @@ Start::~Start() {
   if (_ssfd) delete _ssfd;
 }
 
-void Start::startTheProgram() {
+void Start::startTheProgram(int argc, char **argv) {
   createProgramConfiguration();
 
   startLog();
 
-  if (!loadMimetypeListFromFile(_logger)) {
+  if (!_loaderOfProgramFiles.loaderAllProgramThings(argc, argv)) {
     return;
   }
 
@@ -80,7 +81,8 @@ void Start::exitingFromProgram() {
 
 // deleted (this class MUST BE UNIQUE!)
 Start::Start(const Start &src)
-    : _programConfiguration(ProgramConfiguration::getInstance()) {
+    : _programConfiguration(ProgramConfiguration::getInstance()),
+      _loaderOfProgramFiles(src._logger) {
   (void)src;
   *this = src;
 }
@@ -95,7 +97,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setEnvironment(TEST);
   _programConfiguration.setTypeOfProtocol(HTTP);
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(5);
-  _programConfiguration.setLogLevel(Log::INFO);
+  _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
 }
 
@@ -104,24 +106,11 @@ void Start::startLog() {
   _logger->startLogger();
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 
-  if (!loggerGlobal) loggerGlobal = _logger;
-}
-
-bool Start::loadMimetypeListFromFile(Log *logger) {
-  CreateMimeTypeMap createMimetypeMap;
-
-  error::StatusOr<std::map<std::string, std::string> > mimeMap =
-      createMimetypeMap.loadMimetypeMap("conf/mime.types");
-
-  if (!mimeMap.ok()) {
-    logger->log(Log::FATAL, "Start", "loadMimetypeListFromFile",
-                "create the mimeType map", mimeMap.status().message());
-    return false;
+  if (!loggerGlobal) {
+    loggerGlobal = _logger;
   }
 
-  MimeType::setMimetypeMap(mimeMap.value());
-
-  return true;
+  _loaderOfProgramFiles.setLogger(_logger);
 }
 
 ServerSocketFileDescriptor *Start::startTheServerSocket() {

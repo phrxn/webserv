@@ -62,6 +62,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/VirtualHost.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
+		src/start/LoaderOfProgramFiles.cpp\
 		src/system/Errno.cpp\
 		src/system/SystemCalls.cpp\
 		src/time/Time.cpp\

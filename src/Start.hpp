@@ -7,6 +7,7 @@
 #include "error/LogDefault.hpp"
 #include "io/Poll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
+#include "start/LoaderOfProgramFiles.hpp"
 #include "system/SystemCalls.hpp"
 
 class Start {
@@ -17,7 +18,7 @@ class Start {
   Start(const char **environmentVariables);
   ~Start();
 
-  void startTheProgram();
+  void startTheProgram(int argc, char **argv);
 
  private:
   Start(const Start &src);
@@ -25,10 +26,10 @@ class Start {
 
   void createProgramConfiguration();
   void startLog();
-  bool loadMimetypeListFromFile(Log *logger);
   ServerSocketFileDescriptor *startTheServerSocket();
   bool startPoll(ServerSocketFileDescriptor *ssfd);
-  void startWebserver(Poll &poll, Log &logger, ProgramConfiguration &configuration);
+  void startWebserver(Poll &poll, Log &logger,
+                      ProgramConfiguration &configuration);
   void exitingFromProgram();
 
  private:
@@ -38,7 +39,7 @@ class Start {
   ServerSocketFileDescriptor *_ssfd;
   ProgramConfiguration &_programConfiguration;
   const char **_environmentVariables;
-
+  LoaderOfProgramFiles _loaderOfProgramFiles;
 };
 
 #endif
