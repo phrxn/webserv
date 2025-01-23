@@ -72,4 +72,156 @@ Interface CheckConfiguration:
         // Que possa existir para esse metodo, se nenhum caminho vai estabelecido
         // Ele deve retornar uma string vazia
 
+===================================================================================
+
+Como funciona a selecao do server pelo ngnix?
+
+    server_name:
+	list 80;
+
+    
+    server_name: B
+	list 80;
+
+1) Todos os blocos sao carregados
+	1) server_name:    list: 80
+    2) server_name: B  list: 80
+
+o que fazer um bloco server ser diferente do outro eh   [server_name && Porta]
+
+1) buscamos um server pelo tentando dar um match entre o host e um server name, 
+
+================== tabela da verdade ========================
+1)  1 host, soh com listen
+	    server {
+	      listen 80;
+	        location / {
+            root /var/www/html;
+		    index a.txt;
+	      }
+	    }
+    1.1) teste com um [GET / HTTP/1.1     Host: invalid] nesse caso o que valeu foi a porta
+
+2)  1 host, com um server_name
+	    server {
+	      listen 80;
+          server_name legal.com;
+	        location / {
+            root /var/www/html;
+		    index a.txt;
+	      }
+	    }
+    2.1) teste com um [GET / HTTP/1.1     Host: legal.com] returno o a.txt
+    2.1) teste com um [GET / HTTP/1.1     Host: invalid]   returno o a.txt
+
+
+
+=========================================================
+
+                TESTES
+
+1) Com 1 server
+
+    1) listen: 80 server_name:""
+	    1.1) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta)
+        1.2) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+
+    2) listen: 80 server_name:"abc.com"
+	    2.1) [GET / HTTP/1.1 Host: abc.com]         (retornou a.txt)
+        2.2) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+        2.3) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+
+2) Com 2 server e mesma porta
+
+    1) listen: 80 server_name:"" | listen: 80 server_name:""
+	    1.1) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta)
+		1.2) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+
+    2) listen: 80 server_name:"abc.com" | listen: 80 server_name:""
+        2.1) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta)
+        3.2) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+        2.2) [GET / HTTP/1.1 Host: abc.com]         (retornou a.txt | nesse caso o que valeu foi a server_name)
+        2.3) [GET / HTTP/1.1 Host: abc.com:8080]    (retornou a.txt | nesse caso o que valeu foi a server_name)
+
+    3) listen: 80 server_name:"" | listen: 80 server_name:"abc.com"
+        3.1) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta)
+        3.2) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO)
+        3.3) [GET / HTTP/1.1 Host: abc.com]         (retornou b.txt | nesse caso o que valeu foi o server_name)
+        3.4) [GET / HTTP/1.1 Host: abc.com:8080]    (retornou b.txt | nesse caso o que valeu foi o server_name)
+
+    4) listen: 80 server_name:"abc.com" | listen: 80 server_name:"abc.com"
+        3.1) [GET / HTTP/1.1 Host: invalid]         (retornou a.txt | nesse caso o que valeu foi a porta)
+        3.2) [GET / HTTP/1.1 Host: invalid:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+        3.3) [GET / HTTP/1.1 Host: abc.com]         (retornou a.txt | nesse caso o que valeu foi o server_name)
+        3.4) [GET / HTTP/1.1 Host: abc.com:8080]    (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+
+3) Com 2 server e portas diferentes
+	
+    1) listen: 80 server_name:"" | listen: 81 server_name:""
+	    1.1) [GET / HTTP/1.1 Host: invalid] (80)       (retornou a.txt | nesse caso o que valeu foi a porta)
+	    1.1) [GET / HTTP/1.1 Host: invalid:8080] (80)  (retornou a.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+	    1.1) [GET / HTTP/1.1 Host: invalid] (81)       (retornou b.txt | nesse caso o que valeu foi a porta)
+        1.1) [GET / HTTP/1.1 Host: invalid:8080] (81)  (retornou b.txt | nesse caso o que valeu foi a porta DA CONEXAO) ** pelo visto o que vale eh a porta da conexao
+
+    2) listen: 80 server_name:"abc.com" | listen: 80 server_name:""
+		1.1) [GET / HTTP/1.1 Host: invalid] (80)
+        1.1) [GET / HTTP/1.1 Host: invalid:8080] (80)
+
+
+
+
+
+
+
+
+
+
+
+
+1) A logica de busca de um VirtualHost/ServerConfig pelo visto é:
+	1) vamos pegar o Host do HTTPRequest
+	2) se tiver com a porta, vamos extrair a porta
+	3) vamos procurar um VirtualHost usando o host name e procurando pelo server_name
+    4) se nao achar nenhum server_name com o host name logo, vamos usar a porta e o que vale eh a primeira porta que parece
+
+2) A logica de leitura dos servers config do arquivo e inserção no programa é:
+	
+
+
+
+** Os virtuais são agrupados pela sua porta
+** O que faz um Server se igual ao outro eh a combinacao de [server_name && Porta]
+** Se um [server_name && Porta] ja existir, o proximo eh ignorado
+** server_name pode ser vazio, porta sempre existe!
+
+
+VirtualHostCluster
+	int port:
+	std::list<Virtual
+
+
+	Exemplo: agrupamento/cluster da porta 80
+		listen: 80 server_name:""
+        listen: 80 server_name:"manga"
+
+	Exemplo: agrupamento/cluster da porta 81
+		listen: 81 server_name:""
+        listen: 81 server_name:"manga.com"
+		listen: 81 server_name:"legal.br"
+
+
+** Ler tudo que vem do arquivo de configuracao e criar uma lista de virtualHost, apartir dessa lista, criar os clusters
+   (Pensar depois e como juntar tudo, talve usando um map com a key sendo a porta e um value sendo um ponteiro para um cluster)
+** Atualizar a fabrica para pedir alem do host name a porta tambem!
+
+
+
+
+
+
+
+
+
+
+
 
