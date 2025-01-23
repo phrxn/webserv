@@ -16,7 +16,7 @@ class HTTPRequest : public Request {
 		HTTPRequest(const HTTPRequest &src);
 		HTTPRequest &operator=(const HTTPRequest &src);
 		HTTPRequest();
-		map<std::string, std::string> parserHeader();
+		void parserHeader();
 		void headerValidation();
 		StateOfCreation headerRequest();
 

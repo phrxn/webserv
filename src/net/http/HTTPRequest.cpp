@@ -31,7 +31,7 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
   return REQUEST_CREATED;
 }
 
-map<std::string, std::string> HTTPRequest::parserHeader()
+void HTTPRequest::parserHeader()
 {
 	std::map<std::string, std::string> headers;
 	std::size_t pos = 0;
@@ -47,7 +47,6 @@ map<std::string, std::string> HTTPRequest::parserHeader()
     if (spacePos1 == std::string::npos || spacePos2 == std::string::npos) {
         _status = HTTPStatus::BAD_REQUEST;
         _logger->log(Log::ERROR, "HTTPRequest", "parserHeader", "Invalid request line", line);
-        return false;
     }
 
     headers["Method"] = line.substr(0, spacePos1);
@@ -102,22 +101,14 @@ void HTTPRequest::headerValidation()
 		_status = HTTPStatus::BAD_REQUEST;
 	}
 	else if (_header["HTTP-Version"] != "HTTP/1.1") {
-		_status = HTTPStatus::HTTP_VERSION_NOT_SUPPORTED;
+		_status = HTTPStatus::BAD_REQUEST;
 	}
 	else
 		_status = HTTPStatus::OK;
 }
 
-std::string HTTPRequest::getHost() { 
-	return ""; 
-}
-
-HTTPMethods::Method HTTPRequest::getMethod(){
-	return HTTPMethods::getStringToMethod(_header["Method"]);
-}
-
-std::string HTTPRequest::getURL(){
-	return _header["URL"];
+HTTPMethods::Method HTTPRequest::getAnythingFromHeader(std::string key){
+	return HTTPMethods::getStringToMethod(_header[key]);
 }
 
 HTTPStatus::Status HTTPRequest::getStatus(){
@@ -127,7 +118,7 @@ HTTPStatus::Status HTTPRequest::getStatus(){
 bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
 	if (_buffer.find("\r\n\r\n") != std::string::npos)
 		return true;
-	return false;	key = "URL";
+	return false;
 }
 
 HTTPStatus::Status  HTTPRequest::body();
