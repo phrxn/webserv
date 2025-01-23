@@ -2,33 +2,48 @@
 #define NET_HTTP_HTTP_REQUEST_HPP
 
 #include <string>
+#include <map>
 
 #include "../Request.hpp"
+#include "../../error/Log.hpp"
 #include "../SocketFileDescriptor.hpp"
 #include "HTTPStatus.hpp"
 #include "HTTPMethods.hpp"
+#include "URL.hpp"
 
 class HTTPRequest : public Request {
- public:
-  HTTPRequest(SocketFileDescriptor *socketFD);
-  ~HTTPRequest();
+	private:
+		HTTPRequest(const HTTPRequest &src);
+		HTTPRequest &operator=(const HTTPRequest &src);
+		HTTPRequest();
+		void parserHeader();
+		void headerValidation();
+		StateOfCreation headerRequest();
 
-  StateOfCreation createRequest();
+		SocketFileDescriptor *_socketFD;
+		map<std::string, std::string> _header;
+		std::string _body;
+		std::string _buffer;
+		HTTPStatus::Status _status;
+		log *_logger
 
-  std::string getHost();
+	public:
 
-  HTTPMethods::Method getMethod();
+		HTTPRequest(SocketFileDescriptor *socketFD, log *logger);
+		~HTTPRequest();
 
-  std::string getURL();
+		StateOfCreation createRequest();
 
-  HTTPStatus::Status getStatus();
+		std::string getHost();
 
- private:
-  HTTPRequest(const HTTPRequest &src);
-  HTTPRequest &operator=(const HTTPRequest &src);
+		HTTPMethods::Method getMethod();
 
-  SocketFileDescriptor *_socketFD;
-  std::string _buffer;
+		std::string getURL();
+
+		HTTPStatus::Status getStatus();
+
+		bool isTheHTTPHeaderComplete(std::string _buffer);
+
 };
 
-#endif
+	#endif

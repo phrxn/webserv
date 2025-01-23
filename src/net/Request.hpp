@@ -3,7 +3,7 @@
 
 class Request {
  public:
-  enum StateOfCreation { REQUEST_CREATED, REQUEST_CREATING };
+  enum StateOfCreation { REQUEST_CREATED, REQUEST_CREATING};
 
   virtual ~Request() = 0;
 
