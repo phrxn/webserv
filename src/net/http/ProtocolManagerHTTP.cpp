@@ -1,11 +1,12 @@
 #include "ProtocolManagerHTTP.hpp"
 
-ProtocolManagerHTTP::ProtocolManagerHTTP(SocketFileDescriptor *socket, Log *logger)
-    : _hTTPRequest(socket),
+ProtocolManagerHTTP::ProtocolManagerHTTP(SocketFileDescriptor *socket,
+                                         Log *logger)
+    : _logger(logger),
+      _hTTPRequest(socket, logger),
       _hTTPResponse(socket),
       _hTTPServletManager(socket, logger),
-      _socketFD(socket),
-	  _logger(logger) {}
+      _socketFD(socket) {}
 
 ProtocolManagerHTTP::~ProtocolManagerHTTP() {}
 
@@ -17,7 +18,7 @@ ProtocolManager::RequestCreationStatus ProtocolManagerHTTP::createRequest() {
 
 // deleted (this class MUST BE UNIQUE!)
 ProtocolManagerHTTP::ProtocolManagerHTTP(const ProtocolManagerHTTP &src)
-    : _hTTPRequest(src._socketFD),
+    : _hTTPRequest(src._socketFD, src._logger),
       _hTTPResponse(src._socketFD),
       _hTTPServletManager(src._socketFD, src._logger) {
   (void)src;

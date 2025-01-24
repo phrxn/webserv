@@ -4,12 +4,13 @@
 #include <string>
 #include <map>
 
+#include "../../error/Log.hpp"
 #include "../Request.hpp"
 #include "../../error/Log.hpp"
 #include "../SocketFileDescriptor.hpp"
 #include "HTTPStatus.hpp"
 #include "HTTPMethods.hpp"
-#include "URL.hpp"
+#include "../URL.hpp"
 
 class HTTPRequest : public Request {
 	private:
@@ -21,15 +22,15 @@ class HTTPRequest : public Request {
 		StateOfCreation headerRequest();
 
 		SocketFileDescriptor *_socketFD;
-		map<std::string, std::string> _header;
+		std::map<std::string, std::string> _header;
 		std::string _body;
 		std::string _buffer;
 		HTTPStatus::Status _status;
-		log *_logger
+		Log *_logger;
 
 	public:
 
-		HTTPRequest(SocketFileDescriptor *socketFD, log *logger);
+		HTTPRequest(SocketFileDescriptor *socketFD, Log *logger);
 		~HTTPRequest();
 
 		StateOfCreation createRequest();
@@ -43,6 +44,10 @@ class HTTPRequest : public Request {
 		HTTPStatus::Status getStatus();
 
 		bool isTheHTTPHeaderComplete(std::string _buffer);
+
+		HTTPMethods::Method getAnythingFromHeader(const std::string &key);
+
+		HTTPStatus::Status  body();
 
 };
 

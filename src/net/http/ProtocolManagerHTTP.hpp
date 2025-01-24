@@ -22,11 +22,11 @@ class ProtocolManagerHTTP : public ProtocolManager {
   ProtocolManagerHTTP(const ProtocolManagerHTTP &src);
   ProtocolManagerHTTP &operator=(const ProtocolManagerHTTP &src);
 
+  Log *_logger;
   HTTPRequest _hTTPRequest;
   HTTPResponse _hTTPResponse;
   HTTPServletManager _hTTPServletManager;
   SocketFileDescriptor *_socketFD;
-  Log *_logger;
 };
 
 #endif
