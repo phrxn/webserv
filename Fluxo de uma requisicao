@@ -1,0 +1,58 @@
+1) Criar a requisicao HTTP
+
+2) O HTTPRequest:
+  - Verificar se a sintaxe está correta ou não
+      - Verificar se o verbo é valido (escrita dele)         : 400 - BadRequest
+      - Verificar se a URL é valido ou não                   : 400 - BadRequest
+      - Verificar se a Versao é valido ou não                : 400 - BadRequest
+      - Se a primeira linha já nao for valida                : 400 - BadRequest
+  - Ver se tem a linha do Host
+      - Se nao tem a linha do do Host:                       : 400 - BadRequest
+  - Procura pelo VirtualHost no VirtualHostFactory usando o host
+      - Se nao existir:                                      : 400 - BadRequest
+  - Pegar o ConfigurationSingleton
+	  - Enquanto lendo os dados ir verificando se o tamanho nao passa do maximo permitido pelo servidor: 413 - Request Entity Too Large
+  - Ver se tem a linha Content-Lenght ou Chunck
+	  - Se o tamanho nao for OK: 413 - Request Entity Too Large
+-------------------------------------
+
+
+     
+
+3) Quando o HTTPRequest estiver pronto:
+
+	Pegar o Status da Requisicao
+
+		Para o diferente de Status 200
+			- Pegar o virtual Host usando o HostName e a porta (pelo menos a porta sempra vai dar match)
+			- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, procurar no servidor
+			- Tentar carregar o arquivo, se nao der certo
+				-- Se nao der certo
+				-- carregar o 500
+			Return o HTTPResponse
+	
+		Para o Status 200
+			- Pegar um VirtualHost Usando o Host e a Porta:
+
+			- Ver se o servidor implementa o verbo Vindo no HTTPRequest
+		  		Se nao implementa               : 501 - Not Implemented
+			- Ver se no VirtualHost se o verbo é implementado
+				Se nao implementa               : 405 - Method Not Allowed
+			- Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
+				Se ultrapassar o tamanho maximo : 413 - Request Entity Too Large
+
+             
+           
+
+  1) O caminho eh valido ou nao? (NOT_FOUND 404)
+  2) O caminho tem um redirecionamento? 
+  3) O caminho aceita o metodo HTTP ...? (NOT_ALLOWED 405)
+  4) O caminho eh um CGI?
+  5) Pegar o caminho absoluto a partir do caminhoURI.
+  6) Pode listar diretorios?
+
+
+
+
+
+

@@ -1,5 +1,27 @@
 -- Remover mais responsabilidade do HTTPRequest, pensar nisso quanto estiver refazendo o fluxo
 
+
+================================================================================================================================
+-- Recriar o HTTPStatus e o HTTPMethod, mas usando a classe e um mapa também, tipo ao invés de ser só um enum, criar os métodos de conversao dentro da própria classe
+   Além disso, criar o tipo INVALID para facilitar nos testes e nas checagem do próprio programa.
+      Exemplo:
+         map[HttpMethod::GET, "GET"]
+         map[HttpMethod::POST, "POST"]
+         ...
+
+
+      String methodToString(HTTP::Method){
+          return map.get(Method).string();
+      }
+
+      HttpMethod stringToMethod(String method){
+          String map.get(Method);
+          //se nao achou retornar HTTPMelhod::Invalid
+      }
+    
+    ** fazer a mesma coisa para o HTTPStatus
+================================================================================================================================
+
 -- Adicionar o getCaminhoCompleto no VirtualHost:  /home/user/foo/bar/site
 
 ** Fazer fazer logo o static, o cgi vamos deixar para depois
@@ -22,6 +44,12 @@ Static_GetMethodHTTP
                     para o diretorio, como ele é um arquivo html, o content-type foi: text/html mesmo
                     para o binario (usando o cat como exemplo) o tipo foi: application/octet-stream
                     parece que para o que nao eh identificado o tipo eh: application/octet-stream
+        Date da criacao HTTP
+        Date da criacao to arquivo
+		Versao do HTTP
+	    HTTPSatus
+
+
 
 	DirectoryFILe <====File
 
@@ -84,11 +112,7 @@ Static_DeleteMethodHTTP
 
 
 
-
-
-
-
-
+ 
 
 
 

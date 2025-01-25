@@ -1,0 +1,22 @@
+GET
+	Arquivo
+		Existe  | tem permissao de leitura | diretorio pode ser listado | RESULTADO |
+          0     |           0              |             0              |           |
+          0     |           0              |             1              |           |
+          0     |           1              |             0              |           |
+          0     |           1              |             1              |           |
+          1     |           0              |             0              |           |
+          1     |           0              |             1              |           |
+          1     |           1              |             0              |           |
+          1     |           1              |             1              |           |
+
+	Diretorio
+		Existe  | tem permissao de leitura | diretorio pode ser listado | RESULTADO |
+          0     |           0              |             0              |           |
+          0     |           0              |             1              |           |
+          0     |           1              |             0              |           |
+          0     |           1              |             1              |           |
+          1     |           0              |             0              |           |
+          1     |           0              |             1              |           |
+          1     |           1              |             0              |           |
+          1     |           1              |             1              |           |
