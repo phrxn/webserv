@@ -79,3 +79,11 @@ void ProgramConfiguration::setEnvironmentVariables(
     const char **environmentVariables) {
   _environmentVariables = environmentVariables;
 }
+
+std::size_t ProgramConfiguration::getMaxRequestSizeInBytes() const{
+	return _maxRequestSizeInBytes;
+}
+
+void ProgramConfiguration::setMaxRequestSizeInBytes(std::size_t maxSize){
+	_maxRequestSizeInBytes = maxSize;
+}

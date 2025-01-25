@@ -31,6 +31,9 @@ class ProgramConfiguration {
   void setEnvironmentVariables(
       const char **environmentVariables);
 
+  std::size_t getMaxRequestSizeInBytes() const;
+  void setMaxRequestSizeInBytes(std::size_t maxSize);
+
  protected:
   ProgramConfiguration();
   ProgramConfiguration(const ProgramConfiguration &src);
@@ -42,6 +45,8 @@ class ProgramConfiguration {
   Log::LogLevel _logLevel;
   std::list<HTTPMethods::Method> _listSupportedMethodsByServer;
   const char **_environmentVariables;
+  std::size_t _maxRequestSizeInBytes;
+
 };
 
 #endif

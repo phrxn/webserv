@@ -97,6 +97,9 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(5);
   _programConfiguration.setLogLevel(Log::INFO);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
+
+  //5MB
+  _programConfiguration.setMaxRequestSizeInBytes(5242880);
 }
 
 void Start::startLog() {
