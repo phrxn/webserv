@@ -6,11 +6,8 @@
 
 VirtualHostCluster VirtualHostFactory::virtualHostCluster;
 
-void VirtualHostFactory::fillTheFactory(const std::list<VirtualHost> &map) {
-  std::list<VirtualHost>::const_iterator it;
-  for (it = map.begin(); it != map.end(); ++it) {
-    virtualHostCluster.addVirtualHostToCluster(*it);
-  }
+void VirtualHostFactory::fillTheFactory(const VirtualHostCluster &virtualHostCluster) {
+  VirtualHostFactory::virtualHostCluster = virtualHostCluster;
 }
 
 void VirtualHostFactory::destroyFactory() {}

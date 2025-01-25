@@ -2,6 +2,7 @@
 #define START_HPP
 
 #include <csignal>
+#include <list>
 
 #include "config/ProgramConfiguration.hpp"
 #include "error/LogDefault.hpp"
@@ -26,8 +27,8 @@ class Start {
 
   void createProgramConfiguration();
   void startLog();
-  ServerSocketFileDescriptor *startTheServerSocket();
-  bool startPoll(ServerSocketFileDescriptor *ssfd);
+  bool startTheServerSockets();
+  bool startPoll();
   void startWebserver(Poll &poll, Log &logger,
                       ProgramConfiguration &configuration);
   void exitingFromProgram();
@@ -36,7 +37,7 @@ class Start {
   LogDefault *_logger;
   Poll *_poll;
   SystemCalls systemCalls;
-  ServerSocketFileDescriptor *_ssfd;
+  std::list<ServerSocketFileDescriptor*> _listServerSocketFileDescriptor;
   ProgramConfiguration &_programConfiguration;
   const char **_environmentVariables;
   LoaderOfProgramFiles _loaderOfProgramFiles;

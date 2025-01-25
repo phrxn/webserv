@@ -10,7 +10,7 @@
 
 class VirtualHostFactory {
  public:
-  static void fillTheFactory(const std::list<VirtualHost> &map);
+  static void fillTheFactory(const VirtualHostCluster &virtualHostCluster);
   static void destroyFactory();
 
   VirtualHostFactory();

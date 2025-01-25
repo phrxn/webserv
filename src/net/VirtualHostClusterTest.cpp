@@ -197,3 +197,50 @@ TEST(VirtualHostClusterTest, getVirtualHost_validPortButHostNameDoesntExists) {
 
   EXPECT_EQ(v, vhExist.value());
 }
+
+// ---------------------------------------------------------
+
+TEST(VirtualHostClusterTest, getAllPorts_emptyCluster){
+
+	VirtualHostCluster cluster;
+
+	std::list<int> listToCompare;
+
+	EXPECT_EQ(listToCompare, cluster.getAllPorts());
+
+}
+
+TEST(VirtualHostClusterTest, getAllPorts_cluterWithOneVirtualHost){
+
+	VirtualHostCluster cluster;
+	cluster.addVirtualHostToCluster(VirtualHost(80, "a"));
+
+	std::list<int> listToCompare{80};
+
+	EXPECT_EQ(listToCompare, cluster.getAllPorts());
+
+}
+
+TEST(VirtualHostClusterTest, getAllPorts_cluterWithTwoVirtualHostButSamePort){
+
+	VirtualHostCluster cluster;
+	cluster.addVirtualHostToCluster(VirtualHost(80, "bar"));
+	cluster.addVirtualHostToCluster(VirtualHost(80, "xxx"));
+
+	std::list<int> listToCompare{80};
+
+	EXPECT_EQ(listToCompare, cluster.getAllPorts());
+
+}
+
+TEST(VirtualHostClusterTest, getAllPorts_cluterWithTwoVirtualHostWithDifferentPorts){
+
+	VirtualHostCluster cluster;
+	cluster.addVirtualHostToCluster(VirtualHost(80, "bar"));
+	cluster.addVirtualHostToCluster(VirtualHost(8080, "xxx"));
+
+	std::list<int> listToCompare{80,8080};
+
+	EXPECT_EQ(listToCompare, cluster.getAllPorts());
+
+}
