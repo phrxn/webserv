@@ -34,6 +34,8 @@ class File {
 
   bool isExecutable() const;
 
+  time_t getModificationTime() const;
+
   const std::string &getPath() const;
 
   bool exist() const;
@@ -43,6 +45,7 @@ class File {
   std::vector<File> listFiles() const;
 
   void setSystemCalls(SystemCalls *systemCalls);
+
   void setLog(Log *log);
 
  private:

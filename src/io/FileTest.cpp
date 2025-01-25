@@ -453,6 +453,18 @@ TEST(FileTest, isExecutable){
 
 // ----------
 
+TEST(FileTest, getModificationTime){
+
+	File file("tests/integration/modification_time.txt");
+
+	time_t modificationTime = file.getModificationTime();
+
+	EXPECT_EQ(1738379045, modificationTime);
+
+}
+
+// ----------
+
 TEST(FileTest, exist_directory) {
 
 	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");

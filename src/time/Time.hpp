@@ -12,6 +12,9 @@ class Time {
   Time &operator=(const Time &src);
 
   virtual std::string getTimeToLog() const;
+
+ std::string convertTimeToHTTPRequestPattern(const time_t &time) const;
+
 };
 
 #endif

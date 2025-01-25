@@ -82,7 +82,8 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp\
-				src/start/CreateMimeTypeMapTest.cpp
+				src/start/CreateMimeTypeMapTest.cpp\
+				src/time/TimeTest.cpp
 
 ifeq ($(COMPILE), binary)
   SRC += src/Main.cpp

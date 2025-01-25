@@ -158,3 +158,9 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on file2"
     exit 1
 fi
+
+touch -m -t "$(date -d @1738379045 +%Y%m%d%H%M.%S)" modification_time.txt
+if [ $? -ne 0 ]; then
+    echo "Error: Couldn't create the date to file modification_time.txt"
+    exit 1
+fi

@@ -119,6 +119,18 @@ bool File::isExecutable() const {
   return false;
 }
 
+time_t File::getModificationTime() const{
+  struct stat file_information;
+
+  error::StatusOr<int> statWasFilledIn =
+      _systemCalls->stat(_path.c_str(), &file_information);
+
+  if (!statWasFilledIn.ok()){
+	return 0;
+  }
+  return file_information.st_mtim.tv_sec;
+}
+
 const std::string &File::getPath() const { return _path; }
 
 bool File::exist() const {

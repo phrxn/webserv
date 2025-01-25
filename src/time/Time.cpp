@@ -5,9 +5,7 @@
 
 Time::Time() {}
 
-Time::Time(const Time &src) {
-  *this = src;
-}
+Time::Time(const Time &src) { *this = src; }
 Time::~Time() {}
 
 Time &Time::operator=(const Time &src) {
@@ -21,4 +19,14 @@ std::string Time::getTimeToLog() const {
   char buffer[20];
   std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", nowTM);
   return buffer;
+}
+
+std::string Time::convertTimeToHTTPRequestPattern(const time_t &time) const {
+  struct tm *gmt = gmtime(&time);
+
+  char formattedDate[100];
+  strftime(formattedDate, sizeof(formattedDate), "%a, %d %b %Y %H:%M:%S GMT",
+           gmt);
+
+  return formattedDate;
 }
