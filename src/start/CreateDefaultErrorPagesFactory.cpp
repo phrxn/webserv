@@ -5,7 +5,7 @@
 #include "../Start.hpp"
 
 std::map<HTTPStatus::Status, DefaultErrorPage>
-      CreateDefaultErrorPagesFactory::mapWithDefaultPagesErrors;
+    CreateDefaultErrorPagesFactory::mapWithDefaultPagesErrors;
 
 void CreateDefaultErrorPagesFactory::fillTheFactory(
     const std::map<HTTPStatus::Status, DefaultErrorPage>
@@ -14,7 +14,8 @@ void CreateDefaultErrorPagesFactory::fillTheFactory(
       mapWithDefaultPagesErrors;
 }
 
-CreateDefaultErrorPagesFactory::CreateDefaultErrorPagesFactory() : _logger(Start::loggerGlobal) {}
+CreateDefaultErrorPagesFactory::CreateDefaultErrorPagesFactory()
+    : _logger(LogDefault::loggerGlobal) {}
 
 CreateDefaultErrorPagesFactory::~CreateDefaultErrorPagesFactory() {}
 
@@ -51,6 +52,6 @@ DefaultErrorPage CreateDefaultErrorPagesFactory::getDefaultErrorPages(
   return mapWithDefaultPagesErrors[HTTPStatus::SERVER_ERROR];
 }
 
-void CreateDefaultErrorPagesFactory::setLogger(Log *logger){
-	_logger = logger;
+void CreateDefaultErrorPagesFactory::setLogger(Log *logger) {
+  _logger = logger;
 }

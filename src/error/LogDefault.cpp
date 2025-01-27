@@ -2,10 +2,12 @@
 
 #include "LogWriteToConsole.hpp"
 
+LogDefault *LogDefault::loggerGlobal = NULL;
+
 LogDefault::LogDefault() : _logLevelFilter(DEBUG) {}
 
-LogDefault::LogDefault(LogLevel logLevelFilter) : _logLevelFilter(logLevelFilter){
-}
+LogDefault::LogDefault(LogLevel logLevelFilter)
+    : _logLevelFilter(logLevelFilter) {}
 
 LogDefault ::~LogDefault() { clearListLogListerns(); }
 

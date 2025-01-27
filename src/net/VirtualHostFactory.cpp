@@ -31,11 +31,11 @@ VirtualHost VirtualHostFactory::getVirtualHost(
   error::StatusOr<VirtualHost> vh =
       virtualHostCluster.getVirtualHost(port, hostName);
   if (!vh.ok()) {
-    if (Start::loggerGlobal) {
+    if (LogDefault::loggerGlobal) {
       std::stringstream errorMessage;
       errorMessage << "port: " << port << ", hostName: " << hostName;
 
-      Start::loggerGlobal->log(
+      LogDefault::loggerGlobal->log(
           Log::FATAL, "VirtualHostFactory", "getVirtualHost",
           "using default VirtualHost, the virtualhost wasn't found",
           errorMessage.str());

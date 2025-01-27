@@ -9,8 +9,6 @@
 #include "net/http/MimeType.hpp"
 #include "start/CreateMimeTypeMap.hpp"
 
-LogDefault *Start::loggerGlobal = NULL;
-
 void disableSignals() {
   signal(SIGINT, SIG_IGN);
   signal(SIGTERM, SIG_IGN);
@@ -31,15 +29,15 @@ void Start::handleSignal(int sig) {
 
   switch (sig) {
     case SIGINT:
-      loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Interrupt",
+      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Interrupt",
                         "closing the server");
       break;
     case SIGTERM:
-      loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Terminate",
+      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Terminate",
                         "closing the server");
       break;
     case SIGQUIT:
-      loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Quit",
+     LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Quit",
                         "closing the server");
       break;
     default:
@@ -128,10 +126,9 @@ void Start::startLog() {
   _logger->startLogger();
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 
-  if (!loggerGlobal) {
-    loggerGlobal = _logger;
+  if (!LogDefault::loggerGlobal) {
+    LogDefault::loggerGlobal = _logger;
   }
-
   _loaderOfProgramFiles.setLogger(_logger);
 }
 

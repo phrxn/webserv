@@ -7,6 +7,8 @@
 
 class LogDefault : public Log {
  public:
+  static LogDefault *loggerGlobal;
+
   LogDefault();
   LogDefault(LogLevel logLevelFilter);
   ~LogDefault();
