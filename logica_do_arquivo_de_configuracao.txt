@@ -39,7 +39,8 @@ Interface CheckConfiguration:
   bool oCaminhoEhValid(String caminhoURI);
         // Tem que checar no arquivo de configuracao se o caminhoURI eh valido ou nao.
         // Nesse caso o metodo deve retorna se o caminhoURI eh valido ou nao.
-        // Cabe a esse metodo fazer os "matches", e descobrir nos location a validade ou nao do caminho
+        // Cabe a esse metodo fazer os "matches", e descobrir nos location a validade ou nao do caminho!
+		// Pensar no caso do Conflict!
 
   string oCaminhoEhUmRedirecionamento(caminho URI);
         // Vai checar se o caminhoURI eh um redirecionamento, se for, esse metodo deve retornar o caminho
