@@ -19,6 +19,8 @@ public:
 
 	bool loadMimetypeListFromFile(Log *logger) const;
 
+	bool loadDefaultErrorPages(Log *logger) const;
+
 	bool loadConfigurarionFile(char **argv);
 
 	void setLogger(Log *logger);

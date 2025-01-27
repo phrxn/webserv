@@ -4,9 +4,11 @@
 
 #include "../error/StatusOr.hpp"
 #include "../net/VirtualHost.hpp"
-#include "../net/http/MimeType.hpp"
-#include "CreateMimeTypeMap.hpp"
 #include "../net/VirtualHostFactory.hpp"
+#include "../net/http/MimeType.hpp"
+#include "CreateDefaultErrorPages.hpp"
+#include "CreateDefaultErrorPagesFactory.hpp"
+#include "CreateMimeTypeMap.hpp"
 
 LoaderOfProgramFiles::LoaderOfProgramFiles(Log *logger) : _logger(logger) {}
 
@@ -22,21 +24,25 @@ LoaderOfProgramFiles &LoaderOfProgramFiles::operator=(
     return *this;
   }
   _logger = src._logger;
+  _allVirtualHostPorts = src._allVirtualHostPorts;
   return *this;
 }
 
-bool LoaderOfProgramFiles::loaderAllProgramThings(int argc, char **argv){
-  (void)argv;
+bool LoaderOfProgramFiles::loaderAllProgramThings(int argc, char **argv) {
   if (!loadMimetypeListFromFile(_logger)) {
     return false;
+  }
+
+  if (!loadDefaultErrorPages(_logger)){
+	return false;
   }
 
   if (!checkParameters(argc)) {
     return false;
   }
 
-  if (!loadConfigurarionFile(argv)){
-	return false;
+  if (!loadConfigurarionFile(argv)) {
+    return false;
   }
 
   return true;
@@ -59,6 +65,23 @@ bool LoaderOfProgramFiles::loadMimetypeListFromFile(Log *logger) const {
   return true;
 }
 
+bool LoaderOfProgramFiles::loadDefaultErrorPages(Log *logger) const {
+  CreateDefaultErrorPages createDefaultErrorPages;
+
+  error::StatusOr<std::map<HTTPStatus::Status, DefaultErrorPage> > allDefaultErrorPages =
+      createDefaultErrorPages.loadDefaultPageErrorsMap();
+
+  if (!allDefaultErrorPages.ok()) {
+    logger->log(Log::FATAL, "LoaderOfProgramFiles", "loadDefaultErrorPages",
+                "Unable to load all server error pages", allDefaultErrorPages.status().message());
+    return false;
+  }
+
+  CreateDefaultErrorPagesFactory::fillTheFactory(allDefaultErrorPages.value());
+
+  return true;
+}
+
 bool LoaderOfProgramFiles::checkParameters(int argc) const {
   if (argc < 2) {
     _logger->log(Log::FATAL, "LoaderOfProgramFiles", "checkParameters",
@@ -75,15 +98,14 @@ bool LoaderOfProgramFiles::checkParameters(int argc) const {
   return true;
 }
 
-bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv){
-
+bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv) {
   std::list<VirtualHost> virtualHostsFromFile;
   VirtualHost a(8111, "abc");
   VirtualHost b(8110, "xyz");
   virtualHostsFromFile.push_back(a);
   virtualHostsFromFile.push_back(b);
 
-  std::list<VirtualHost>::const_iterator it  = virtualHostsFromFile.begin();
+  std::list<VirtualHost>::const_iterator it = virtualHostsFromFile.begin();
   std::list<VirtualHost>::const_iterator end = virtualHostsFromFile.end();
 
   VirtualHostCluster virtualHostCluster;
@@ -103,6 +125,7 @@ bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv){
 
 void LoaderOfProgramFiles::setLogger(Log *logger) { _logger = logger; }
 
-const std::list<int> &LoaderOfProgramFiles::getListOfAllVirtualHostPorts() const{
-	return _allVirtualHostPorts;
+const std::list<int> &LoaderOfProgramFiles::getListOfAllVirtualHostPorts()
+    const {
+  return _allVirtualHostPorts;
 }

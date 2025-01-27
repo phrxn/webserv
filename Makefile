@@ -34,6 +34,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/io/Poll.cpp\
 		src/error/LogWriter.cpp\
 		src/error/LogWriteToConsole.cpp\
+		src/net/http/DefaultErrorPage.cpp\
 		src/net/http/HTTPMethods.cpp\
 		src/net/http/HTTPRequest.cpp\
 		src/net/http/HTTPRequestFake.cpp\
@@ -62,6 +63,8 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/VirtualHost.cpp\
 		src/net/VirtualHostCluster.cpp\
 		src/net/VirtualHostFactory.cpp\
+		src/start/CreateDefaultErrorPages.cpp\
+		src/start/CreateDefaultErrorPagesFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
 		src/start/LoaderOfProgramFiles.cpp\
 		src/system/Errno.cpp\
@@ -85,6 +88,8 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/URLTest.cpp\
 				src/net/VirtualHostClusterTest.cpp\
 				src/net/VirtualHostTest.cpp\
+				src/start/CreateDefaultErrorPagesFactoryTest.cpp\
+				src/start/CreateDefaultErrorPagesTest.cpp\
 				src/start/CreateMimeTypeMapTest.cpp\
 				src/time/TimeTest.cpp
 
