@@ -140,3 +140,7 @@ HTTPMethods::Method HTTPRequest::getMethod(){
 std::string HTTPRequest::getURL(){
     return "";
 }
+
+int HTTPRequest::getPort(){
+	return _socketFD->getServerPort();
+}

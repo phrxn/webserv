@@ -7,7 +7,7 @@
 
 class HTTPServletStatic : public HTTPServlet {
  public:
-  HTTPServletStatic(const VirtualHost *_virtualHost);
+  HTTPServletStatic(const VirtualHost virtualHost);
   ~HTTPServletStatic();
 
   void doGet(HTTPRequest &request, HTTPResponse &response);
@@ -18,7 +18,7 @@ class HTTPServletStatic : public HTTPServlet {
   HTTPServletStatic(const HTTPServletStatic &src);
   HTTPServletStatic &operator=(const HTTPServletStatic &src);
 
-  const VirtualHost *_virtualHost;
+  const VirtualHost _virtualHost;
 };
 
 #endif

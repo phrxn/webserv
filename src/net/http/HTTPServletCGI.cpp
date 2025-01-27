@@ -1,6 +1,6 @@
 #include "HTTPServletCGI.hpp"
 
-HTTPServletCGI::HTTPServletCGI(const VirtualHost *virtualHost)
+HTTPServletCGI::HTTPServletCGI(const VirtualHost virtualHost)
     : _virtualHost(virtualHost) {
   (void)_virtualHost;
 }

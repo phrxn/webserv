@@ -8,7 +8,6 @@
 HTTPServletManager::HTTPServletManager(SocketFileDescriptor *socketFD,
                                        Log *logger)
     : _hTTPServlet(NULL),
-      _virtualHost(NULL),
       _socketFD(socketFD),
       _logger(logger) {}
 
@@ -31,13 +30,13 @@ HTTPServletManager &HTTPServletManager::operator=(
 void HTTPServletManager::doService(HTTPRequest &request,
                                    HTTPResponse &response) {
   VirtualHostFactory vhf;
-  _virtualHost = vhf.createVirtualHost(request.getHost());
+  _virtualHost = vhf.getVirtualHost(request.getPort(), request.getHost());
 
   if (request.getStatus() != HTTPStatus::OK) {
     return doError(request.getStatus(), response);
   }
 
-  if (_virtualHost->isUrlAPathToCGI(request.getURL())) {
+  if (_virtualHost.isUrlAPathToCGI(request.getURL())) {
     _hTTPServlet = new HTTPServletCGI(_virtualHost);
   } else {
     _hTTPServlet = new HTTPServletStatic(_virtualHost);

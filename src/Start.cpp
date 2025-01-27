@@ -11,6 +11,13 @@
 
 LogDefault *Start::loggerGlobal = NULL;
 
+void disableSignals() {
+  signal(SIGINT, SIG_IGN);
+  signal(SIGTERM, SIG_IGN);
+  signal(SIGQUIT, SIG_IGN);
+  signal(SIGPIPE, SIG_IGN);
+}
+
 void setupSignal(void (*handleSignal)(int)) {
   signal(SIGINT, handleSignal);
   signal(SIGTERM, handleSignal);
@@ -43,29 +50,42 @@ void Start::handleSignal(int sig) {
 Start::Start(const char **environmentVariables)
     : _logger(NULL),
       _poll(NULL),
-	  _ssfd(NULL),
       _programConfiguration(ProgramConfiguration::getInstance()),
-      _environmentVariables(environmentVariables) {}
+      _environmentVariables(environmentVariables),
+      _loaderOfProgramFiles(_logger) {}
 
 Start::~Start() {
   if (_logger) delete _logger;
   if (_poll) delete _poll;
-  if (_ssfd) delete _ssfd;
+
+  std::list<ServerSocketFileDescriptor *>::const_iterator it =
+      _listServerSocketFileDescriptor.begin();
+  std::list<ServerSocketFileDescriptor *>::const_iterator end =
+      _listServerSocketFileDescriptor.end();
+
+  for (; it != end; ++it) {
+    delete *it;
+  }
 }
 
-void Start::startTheProgram() {
+void Start::startTheProgram(int argc, char **argv) {
+  disableSignals();
+
   createProgramConfiguration();
 
   startLog();
 
-  if (!loadMimetypeListFromFile(_logger)) {
+  if (!_loaderOfProgramFiles.loaderAllProgramThings(argc, argv)) {
     return;
   }
 
-  _ssfd = startTheServerSocket();
-  if (!_ssfd) return;
+  if (!startTheServerSockets()) {
+    return;
+  }
 
-  if (!startPoll(_ssfd)) return;
+  if (!startPoll()) {
+    return;
+  }
 
   setupSignal(handleSignal);
 
@@ -80,7 +100,8 @@ void Start::exitingFromProgram() {
 
 // deleted (this class MUST BE UNIQUE!)
 Start::Start(const Start &src)
-    : _programConfiguration(ProgramConfiguration::getInstance()) {
+    : _programConfiguration(ProgramConfiguration::getInstance()),
+      _loaderOfProgramFiles(src._logger) {
   (void)src;
   *this = src;
 }
@@ -95,7 +116,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setEnvironment(TEST);
   _programConfiguration.setTypeOfProtocol(HTTP);
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(5);
-  _programConfiguration.setLogLevel(Log::INFO);
+  _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
 
   //5MB
@@ -107,48 +128,39 @@ void Start::startLog() {
   _logger->startLogger();
   _logger->log(Log::INFO, "Start", "startLog", "create log default", "");
 
-  if (!loggerGlobal) loggerGlobal = _logger;
-}
-
-bool Start::loadMimetypeListFromFile(Log *logger) {
-  CreateMimeTypeMap createMimetypeMap;
-
-  error::StatusOr<std::map<std::string, std::string> > mimeMap =
-      createMimetypeMap.loadMimetypeMap("conf/mime.types");
-
-  if (!mimeMap.ok()) {
-    logger->log(Log::FATAL, "Start", "loadMimetypeListFromFile",
-                "create the mimeType map", mimeMap.status().message());
-    return false;
+  if (!loggerGlobal) {
+    loggerGlobal = _logger;
   }
 
-  MimeType::setMimetypeMap(mimeMap.value());
+  _loaderOfProgramFiles.setLogger(_logger);
+}
 
+bool Start::startTheServerSockets() {
+  const std::list<int> &allServerPortsNeed =
+      _loaderOfProgramFiles.getListOfAllVirtualHostPorts();
+
+  std::list<int>::const_iterator it = allServerPortsNeed.begin();
+  std::list<int>::const_iterator end = allServerPortsNeed.end();
+
+  if (allServerPortsNeed.size() == 0){
+    _logger->log(Log::FATAL, "Start", "startTheServerSocket",
+                 "the configuration file must have at least one port", "");
+	return false;
+  }
+
+  for (; it != end; ++it) {
+    ServerSocketFileDescriptor *ssd = new ServerSocketFileDescriptor(_logger);
+	_listServerSocketFileDescriptor.push_back(ssd);
+    if (!ssd->createSocketServer(*it)) {
+      return false;
+    }
+    _logger->log(Log::INFO, "Start", "startTheServerSocket",
+                 "waiting for clients on port:", *it);
+  }
   return true;
 }
 
-ServerSocketFileDescriptor *Start::startTheServerSocket() {
-  bool serverSocketWasCreated = false;
-  int port = 8080;
-
-  _logger->log(Log::INFO, "Start", "startTheServerSocket",
-               "create the server sockets", "");
-
-  ServerSocketFileDescriptor *ssfd = new ServerSocketFileDescriptor(_logger);
-
-  serverSocketWasCreated = ssfd->createSocketServer(port);
-  if (!serverSocketWasCreated) {
-    delete ssfd;
-    ssfd = NULL;
-  }
-
-  _logger->log(Log::INFO, "Start", "startTheServerSocket",
-               "waiting for clients on port:", port);
-
-  return ssfd;
-}
-
-bool Start::startPoll(ServerSocketFileDescriptor *ssfd) {
+bool Start::startPoll() {
   _logger->log(Log::INFO, "Start", "startPoll",
                "start the poll to wait clients", "");
 
@@ -156,7 +168,16 @@ bool Start::startPoll(ServerSocketFileDescriptor *ssfd) {
 
   if (!_poll->createPoll()) return false;
 
-  if (!_poll->addFileDescriptor(ssfd, Poll::INPUT)) return false;
+  std::list<ServerSocketFileDescriptor *>::const_iterator it =
+      _listServerSocketFileDescriptor.begin();
+  std::list<ServerSocketFileDescriptor *>::const_iterator end =
+      _listServerSocketFileDescriptor.end();
+
+  for (; it != end; ++it) {
+    if (!_poll->addFileDescriptor(*it, Poll::INPUT)) {
+      return false;
+    }
+  }
 
   return true;
 }

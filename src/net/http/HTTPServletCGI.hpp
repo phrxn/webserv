@@ -6,7 +6,7 @@
 
 class HTTPServletCGI : public HTTPServlet {
  public:
-  HTTPServletCGI(const VirtualHost *_virtualHost);
+  HTTPServletCGI(const VirtualHost virtualHost);
   ~HTTPServletCGI();
 
   void doGet(HTTPRequest &request, HTTPResponse &response);
@@ -17,7 +17,7 @@ class HTTPServletCGI : public HTTPServlet {
   HTTPServletCGI(const HTTPServletCGI &src);
   HTTPServletCGI &operator=(const HTTPServletCGI &src);
 
-  const VirtualHost *_virtualHost;
+  const VirtualHost _virtualHost;
 };
 
 #endif

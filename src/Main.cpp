@@ -8,7 +8,7 @@ int main(int argc, char **argv, const char **env) {
 
   Start s(env);
 
-  s.startTheProgram();
+  s.startTheProgram(argc, argv);
 
   return 0;
 }

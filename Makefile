@@ -60,8 +60,10 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/SocketFileDescriptorImpl.cpp\
 		src/net/URL.cpp\
 		src/net/VirtualHost.cpp\
+		src/net/VirtualHostCluster.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
+		src/start/LoaderOfProgramFiles.cpp\
 		src/system/Errno.cpp\
 		src/system/SystemCalls.cpp\
 		src/time/Time.cpp\
@@ -81,7 +83,8 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
-				src/net/VirtualHostFactoryTest.cpp\
+				src/net/VirtualHostClusterTest.cpp\
+				src/net/VirtualHostTest.cpp\
 				src/start/CreateMimeTypeMapTest.cpp\
 				src/time/TimeTest.cpp
 

@@ -6,7 +6,7 @@
 namespace error {
 class Status {
  public:
-  enum Code { OK = 0, SystemCall = 2, FileOpen = 3};
+  enum Code { OK = 0, SystemCall = 2, FileOpen = 3, ObjectDoesnotExit = 4 };
 
   Status();
   Status(Code code);

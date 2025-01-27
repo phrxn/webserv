@@ -6,10 +6,11 @@
 
 #include "../error/StatusOr.hpp"
 #include "VirtualHost.hpp"
+#include "VirtualHostCluster.hpp"
 
 class VirtualHostFactory {
  public:
-  static void fillTheFactory(const std::map<std::string, const VirtualHost *> &map);
+  static void fillTheFactory(const VirtualHostCluster &virtualHostCluster);
   static void destroyFactory();
 
   VirtualHostFactory();
@@ -17,10 +18,10 @@ class VirtualHostFactory {
   VirtualHostFactory(const VirtualHostFactory &src);
   VirtualHostFactory &operator=(const VirtualHostFactory &src);
 
-  const VirtualHost *createVirtualHost(const std::string &hostName) const;
+  VirtualHost getVirtualHost(int port, const std::string &hostName) const;
 
  private:
-  static std::map<std::string, const VirtualHost *> mapOfVirtualHost;
+  static VirtualHostCluster virtualHostCluster;
 };
 
 #endif
