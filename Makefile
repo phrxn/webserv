@@ -87,6 +87,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
 				src/net/VirtualHostClusterTest.cpp\
+				src/net/VirtualHostFactoryTest.cpp\
 				src/net/VirtualHostTest.cpp\
 				src/start/CreateDefaultErrorPagesFactoryTest.cpp\
 				src/start/CreateDefaultErrorPagesTest.cpp\

@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 
+#include "../error/Log.hpp"
 #include "../error/StatusOr.hpp"
 #include "VirtualHost.hpp"
 #include "VirtualHostCluster.hpp"
@@ -11,7 +12,6 @@
 class VirtualHostFactory {
  public:
   static void fillTheFactory(const VirtualHostCluster &virtualHostCluster);
-  static void destroyFactory();
 
   VirtualHostFactory();
   ~VirtualHostFactory();
@@ -19,9 +19,11 @@ class VirtualHostFactory {
   VirtualHostFactory &operator=(const VirtualHostFactory &src);
 
   VirtualHost getVirtualHost(int port, const std::string &hostName) const;
+  void setLogger(Log *logger);
 
  private:
   static VirtualHostCluster virtualHostCluster;
+  Log *_logger;
 };
 
 #endif

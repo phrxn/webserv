@@ -15,7 +15,7 @@ class VirtualHostCluster {
   VirtualHostCluster &operator=(const VirtualHostCluster &src);
 
   bool addVirtualHostToCluster(const VirtualHost &VirtualHost);
-  error::StatusOr<VirtualHost> getVirtualHost(
+  virtual error::StatusOr<VirtualHost> getVirtualHost(
       int port, const std::string &serverName) const;
   std::list<int> getAllPorts() const;
 
