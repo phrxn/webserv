@@ -6,46 +6,29 @@
 #include <cerrno>
 #include <cstring>
 
-int isAndDirectory(const char *arquivo, bool podeListarDiretorios){
+int isAndDirectory(const char *arquivo){
 
     struct stat info;
     std::string errorMessage;
-	int retorno = -1;
+	int retorno = 200;
 
     if (stat(arquivo, &info) == -1) {
 	int errorCode = errno;
 	errorMessage = strerror(errorCode);
-	//std::cout << "stat: " << errorMessage << std::endl;
 	if (errorMessage == "Not a directory" || errorMessage == "No such file or directory")
 	   retorno = 404;
 	if (errorMessage == "Permission denied")
 	   retorno = 403;
     }
-
-	if (podeListarDiretorios && retorno == 403){
-		retorno = 404;
-	}
-
-	if (retorno != -1){
-		return retorno;
-	}
-
-    if (S_ISDIR(info.st_mode)) {
-	    return 1;
-    } else if (S_ISREG(info.st_mode)) {
-	    return 0;
-    } else {
-        printf("O caminho não é nem um diretório, nem um arquivo regular.\n");
-    }
-    return -1;
+	return retorno;
 }
 
 int main(int argc, char **argv) {
     const char *arquivo = argv[1];
 	bool isToListDirectories = (std::string(argv[2]) == std::string("y"));
 
-    int retorno = isAndDirectory(arquivo, isToListDirectories);
-    if (retorno > 2){
+    int retorno = isAndDirectory(arquivo);
+    if (retorno != 200){
        std::stringstream ss;
        ss << retorno;
        std::cout << ss.str() << std::endl;
