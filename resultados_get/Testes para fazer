@@ -1,0 +1,23 @@
+curl coisas uteis:
+	curl -X POST -F "file=@arquivo.txt" http://exemplo.com/upload
+		(-F "file=@arquivo.txt"): Envia um arquivo chamado arquivo.txt no campo file do formulário.
+    curl -X POST -d "chave1=valor1&chave2=valor2" http://exemplo.com/api
+		(-X POST): Especifica que a requisição será do tipo POST. Essa opção é opcional se você usar -d, pois o curl já entende que você está enviando dados.
+		(-d "chave1=valor1&chave2=valor2"): Define os dados que você deseja enviar no corpo da requisição. O formato geralmente é chave=valor, separado por & para múltiplos parâmetros.
+	curl -X POST -H "Content-Type: application/json" -d '{"chave1":"valor1", "chave2":"valor2"}' http://exemplo.com/api
+	    (-H "Content-Type: application/json"): Define o cabeçalho da requisição para informar ao servidor que os dados estão no formato JSON.
+
+
+request na porta 80 nao pode listar
+request na porta 81     pode listar
+
+
+ARQUIVO
+	arquivo existe | dir pai pode ser listado | dir pai pode ser lido	| tem barra no fim do caminho | pode ser lido | RESULTADO
+	      0        |             0            |           0             |            0                |       0       |   
+ 	      0        |             0            |           0             |            0                |       1       |
+		  
+		  
+
+
+curl -X GET -I localhost:80/dir_000/not_exist.txt | grep "HTTP/1.1" | cut -d ' ' -f 2

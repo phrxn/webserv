@@ -1,0 +1,16 @@
+server {
+    listen 80;
+
+    location /var/www/html {
+        alias /var/www/html;
+    }
+}
+
+server {
+    listen 81;
+
+    location /var/www/html {
+        alias /var/www/html;
+	autoindex on;
+    }
+}
