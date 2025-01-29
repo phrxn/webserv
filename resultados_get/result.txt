@@ -1,4 +1,0 @@
-ARQUIVO
-  GET
-    arquivo existe | dir pai pode ser listado | dir pai pode ser lido | tem barra no fim do caminho | pode ser lido | RESULTADO (nginx) | (myProgram) |
-          0        |             0            |           0           |             0               |       0       |        403        |     403     |
