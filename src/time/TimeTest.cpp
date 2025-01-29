@@ -5,11 +5,19 @@
 
 #include <iostream>
 
-TEST(TimeTest, convertTimeToHTTPRequestPattern){
+TEST(TimeTest, convertTimeToHTTPHeaderPattern){
 
 	Time time;
 
-	std::string timez = time.convertTimeToHTTPRequestPattern(1737763200);
+	std::string timez = time.convertTimeToHTTPHeaderPattern(1112486462);
 
-	EXPECT_EQ("Sat, 25 Jan 2025 00:00:00 GMT", timez);
+	EXPECT_EQ("Sun, 03 Apr 2005 00:01:02 GMT", timez);
+}
+
+TEST(TimeTest, convertTimeToItemDirectoryHTML){
+	Time time;
+
+	std::string timez = time.convertTimeToItemDirectoryHTML(1112486462);
+
+	EXPECT_EQ("03-Apr-2005 00:01", timez);
 }

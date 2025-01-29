@@ -14,7 +14,8 @@ class Time {
 
   virtual std::string getTimeToLog() const;
 
- std::string convertTimeToHTTPRequestPattern(const time_t &time) const;
+ std::string convertTimeToHTTPHeaderPattern(const time_t &time) const;
+ std::string convertTimeToItemDirectoryHTML(const time_t &time) const;
 
 };
 

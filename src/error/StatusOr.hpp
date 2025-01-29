@@ -11,7 +11,9 @@ class StatusOr {
   StatusOr(T value) : _value(value), _status(Status::OK) {}
   StatusOr(Status status) : _status(status) {}
 
-  StatusOr(const StatusOr &src) { *this = src; }
+  StatusOr(const StatusOr &src) : _value(src._value), _status(src._status){
+
+  }
 
   StatusOr &operator=(const StatusOr &src) {
     if (this == &src) return *this;

@@ -3,27 +3,27 @@
 #include <sys/stat.h>
 
 File::File()
-    : _systemCalls(new SystemCalls),
-      _path("/"),
+    : _path("/"),
+  	  _systemCalls(new SystemCalls),
       _logger(NULL),
       _directoryListing(new DirectoryListing(_path)) {}
 
 File::File(const std::string &path)
-    : _systemCalls(new SystemCalls),
-      _path(path),
+    : _path(path),
+  	  _systemCalls(new SystemCalls),
       _logger(NULL),
       _directoryListing(new DirectoryListing(_path)) {}
 
 File::File(const std::string &path, Log *logger)
-    : _systemCalls(new SystemCalls),
-      _path(path),
+    : _path(path),
+  	  _systemCalls(new SystemCalls),
       _logger(logger),
       _directoryListing(new DirectoryListing(_path)) {}
 
 File::File(const std::string &path, Log *logger,
            DirectoryListing *directoryListing)
-    : _systemCalls(new SystemCalls),
-      _path(path),
+    : _path(path),
+  	  _systemCalls(new SystemCalls),
       _logger(logger),
       _directoryListing(directoryListing) {}
 
@@ -37,8 +37,8 @@ File::~File() {
 }
 
 File::File(const File &src)
-    : _systemCalls(new SystemCalls(*src._systemCalls)),
-	  _path(src._path),
+    : _path(src._path),
+	  _systemCalls(new SystemCalls(*src._systemCalls)),
       _logger(src._logger),
       _directoryListing(new DirectoryListing(*src._directoryListing)) {}
 
@@ -64,7 +64,15 @@ bool File::operator==(const File &src) const {
   return (_path == src._path);
 }
 
-bool File::operator<(const File &src) const { return _path < src._path; }
+bool File::operator<(const File &src) const {
+  if (!isDirectory() && src.isDirectory()){
+	return false;
+  }
+  if (isDirectory() && !src.isDirectory()) {
+    return true;
+  }
+  return _path < src._path;
+}
 
 bool File::isFile() const {
   struct stat file_information;
@@ -119,19 +127,19 @@ bool File::isExecutable() const {
   return false;
 }
 
-time_t File::getModificationTime() const{
+time_t File::getModificationTime() const {
   struct stat file_information;
 
   error::StatusOr<int> statWasFilledIn =
       _systemCalls->stat(_path.c_str(), &file_information);
 
-  if (!statWasFilledIn.ok()){
-	return 0;
+  if (!statWasFilledIn.ok()) {
+    return 0;
   }
   return file_information.st_mtim.tv_sec;
 }
 
-const std::string &File::getPath() const { return _path; }
+std::string File::getPath() const { return _path; }
 
 bool File::exist() const {
   error::StatusOr<int> isReadable = _systemCalls->access(_path.c_str(), F_OK);

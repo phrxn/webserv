@@ -2,6 +2,17 @@
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
 #include "CreateDefaultErrorPagesFactory.hpp"
 
+class ErrorPageFileHTMLDocumentMock : public ErrorPageFileHTMLDocument {
+ public:
+  ErrorPageFileHTMLDocumentMock(const std::string &data) : _data(data) {}
+  std::string getData() const {
+    return _data;
+  }
+
+ private:
+  std::string _data;
+};
+
 class LogMock : public Log {
  public:
   MOCK_METHOD(void, log,
@@ -19,8 +30,8 @@ class LogMock : public Log {
 
 TEST(CreateDefaultErrorPagesFactoryTest,
      getDefaulErrorPage_theHTTPStatusDoesntExistInTheFactoryMap) {
-  std::map<HTTPStatus::Status, DefaultErrorPage> mapToFilTheFactory = {
-      {HTTPStatus::SERVER_ERROR, DefaultErrorPage("500")}};
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *> mapToFilTheFactory =
+      {{HTTPStatus::SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")}};
 
   LogMock *logMock = new LogMock;
 
@@ -36,17 +47,19 @@ TEST(CreateDefaultErrorPagesFactoryTest,
   cFactory.fillTheFactory(mapToFilTheFactory);
   cFactory.setLogger(logMock);
 
-  DefaultErrorPage dep = cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
+  cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
+
+  // free things in the map.
+  cFactory.destroyFactory();
 
   delete logMock;
 }
 
 TEST(CreateDefaultErrorPagesFactoryTest,
      getDefaulErrorPage_theHTTPStatusExistsInTheFactoryMap) {
-
-  std::map<HTTPStatus::Status, DefaultErrorPage> mapToFilTheFactory = {
-      {HTTPStatus::SERVER_ERROR, DefaultErrorPage("500")},
-      {HTTPStatus::NOT_FOUND, DefaultErrorPage("404")}};
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *> mapToFilTheFactory =
+      {{HTTPStatus::SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")},
+       {HTTPStatus::NOT_FOUND, new ErrorPageFileHTMLDocumentMock("404")}};
 
   LogMock *logMock = new LogMock;
 
@@ -61,9 +74,13 @@ TEST(CreateDefaultErrorPagesFactoryTest,
   cFactory.fillTheFactory(mapToFilTheFactory);
   cFactory.setLogger(logMock);
 
-  DefaultErrorPage dep = cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
+  ErrorPageFileHTMLDocument *dep =
+      cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
 
-  EXPECT_EQ("404", dep.getData());
+  EXPECT_EQ("404", dep->getData());
+
+  // free things in the map
+  cFactory.destroyFactory();
 
   delete logMock;
 }

@@ -75,6 +75,7 @@ if [ -z "$1" ]; then
 	echo -e "        compile"
 	echo -e "        clean"
 	echo -e "        tests"
+	echo -e "        re"
     exit 1
 fi
 
@@ -102,4 +103,9 @@ if [ "$USER_OPTION" == "tests" ]; then
 		fi
 	fi
 
+fi
+
+if [ "$USER_OPTION" == "re" ]; then
+	make fclean
+	make COMPILE=binary -j$(nproc)
 fi

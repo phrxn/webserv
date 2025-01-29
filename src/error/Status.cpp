@@ -6,7 +6,8 @@ Status::Status() : _code(OK){};
 Status::Status(Code code) : _code(code), _message("") {}
 Status::Status(Code code, const std::string &message)
     : _code(code), _message(message) {}
-Status::Status(const Status &src) { *this = src; }
+
+Status::Status(const Status &src) : _code(src._code), _message(src._message){}
 
 Status::~Status() {}
 

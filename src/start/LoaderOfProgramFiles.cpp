@@ -33,8 +33,8 @@ bool LoaderOfProgramFiles::loaderAllProgramThings(int argc, char **argv) {
     return false;
   }
 
-  if (!loadDefaultErrorPages(_logger)){
-	return false;
+  if (!loadDefaultErrorPages(_logger)) {
+    return false;
   }
 
   if (!checkParameters(argc)) {
@@ -68,12 +68,13 @@ bool LoaderOfProgramFiles::loadMimetypeListFromFile(Log *logger) const {
 bool LoaderOfProgramFiles::loadDefaultErrorPages(Log *logger) const {
   CreateDefaultErrorPages createDefaultErrorPages;
 
-  error::StatusOr<std::map<HTTPStatus::Status, DefaultErrorPage> > allDefaultErrorPages =
-      createDefaultErrorPages.loadDefaultPageErrorsMap();
+  error::StatusOr<std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *> >
+      allDefaultErrorPages = createDefaultErrorPages.loadDefaultPageErrorsMap();
 
   if (!allDefaultErrorPages.ok()) {
     logger->log(Log::FATAL, "LoaderOfProgramFiles", "loadDefaultErrorPages",
-                "Unable to load all server error pages", allDefaultErrorPages.status().message());
+                "Unable to load all server error pages",
+                allDefaultErrorPages.status().message());
     return false;
   }
 

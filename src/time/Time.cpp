@@ -21,12 +21,21 @@ std::string Time::getTimeToLog() const {
   return buffer;
 }
 
-std::string Time::convertTimeToHTTPRequestPattern(const time_t &time) const {
+std::string Time::convertTimeToHTTPHeaderPattern(const time_t &time) const {
   struct tm *gmt = gmtime(&time);
 
   char formattedDate[100];
   strftime(formattedDate, sizeof(formattedDate), "%a, %d %b %Y %H:%M:%S GMT",
            gmt);
+
+  return formattedDate;
+}
+
+std::string Time::convertTimeToItemDirectoryHTML(const time_t &time) const {
+  struct tm *gmt = gmtime(&time);
+
+  char formattedDate[100];
+  strftime(formattedDate, sizeof(formattedDate), "%d-%b-%Y %H:%M", gmt);
 
   return formattedDate;
 }

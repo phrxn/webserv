@@ -1,9 +1,9 @@
+#include <string>
+#include <vector>
+
 #include "../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
 #include "File.hpp"
-
-#include <string>
-#include <vector>
 
 class SystemCallsMock : public SystemCalls {
  public:
@@ -26,59 +26,103 @@ class LogMock : public Log {
               (override));
 };
 
-class DirectoryListingMock : public DirectoryListing{
-  public:
-    DirectoryListingMock() : DirectoryListing("/"){}
-    MOCK_METHOD(std::vector<std::string>, listFiles, (), (const override));
+class DirectoryListingMock : public DirectoryListing {
+ public:
+  DirectoryListingMock() : DirectoryListing("/") {}
+  MOCK_METHOD(std::vector<std::string>, listFiles, (), (const override));
+};
 
+class FileMock : public File {
+ public:
+  FileMock() {}
+  FileMock(bool isDirectory, const std::string &path)
+      : File(path), _isDirectory(isDirectory) {}
+  FileMock(const std::string &path) : File(path) {}
+  FileMock(const std::string &path, Log *logger) : File(path, logger) {}
+  FileMock(const std::string &path, Log *logger,
+           DirectoryListing *directoryListing)
+      : File(path, logger, directoryListing) {}
+
+  bool isDirectory() const { return _isDirectory; }
+
+ private:
+  bool _isDirectory;
 };
 
 // ------------------------------------------------------------------------
 
-TEST(FileTest, copy_operator){
+TEST(FileTest, copy_operator) {
+  File a("abc");
 
-	File a("abc");
+  File b = a;
 
-	File b = a;
-
-	EXPECT_EQ("abc", b.getPath());
+  EXPECT_EQ("abc", b.getPath());
 }
 
 // ------------------------------------------------------------------------
 
-TEST(FileTest, assignment_operator){
+TEST(FileTest, assignment_operator) {
+  File a("abc");
+  File b("zzz");
 
-	File a("abc");
-	File b("zzz");
+  b = a;
 
-	b = a;
-
-	EXPECT_EQ("abc", b.getPath());
+  EXPECT_EQ("abc", b.getPath());
 }
 
 // ------------------------------------------------------------------------
 
-TEST(FileTest, equals_operator){
+TEST(FileTest, equals_operator) {
+  File a("a");
+  File b("a");
+  File c("c");
 
-	File a("a");
-	File b("a");
-	File c("c");
-
-	EXPECT_TRUE((a == b));
-	EXPECT_FALSE((a == c));
+  EXPECT_TRUE((a == b));
+  EXPECT_FALSE((a == c));
 }
 
 // ------------------------------------------------------------------------
 
-TEST(FileTest, minor_operator){
+TEST(FileTest, minorOperator_onlyFiles) {
+  FileMock a(false, "a");
+  FileMock b(false, "a");
+  FileMock c(false, "b");
 
-	File a("a");
-	File b("a");
-	File c("b");
-
-	EXPECT_FALSE((a < b));
-	EXPECT_TRUE((a < c));
+  EXPECT_FALSE((a < b));
+  EXPECT_TRUE((a < c));
+  EXPECT_FALSE((c < a));
 }
+
+TEST(FileTest, minorOperator_onlyDirectories) {
+  FileMock a(true, "a");
+  FileMock b(true, "a");
+  FileMock c(true, "b");
+
+  EXPECT_FALSE((a < b));
+  EXPECT_TRUE((a < c));
+  EXPECT_FALSE((c < a));
+}
+
+TEST(
+    FileTest,
+    minorOperator_mixFileAndDirectoryOneOfEach_fileNameIsAandDirectoryNameIsB) {
+  FileMock a(false, "a");
+  FileMock b(true, "b");
+
+  EXPECT_FALSE((a < b));
+  EXPECT_TRUE((b < a));
+}
+
+TEST(
+    FileTest,
+    minorOperator_mixFileAndDirectoryOneOfEach_fileNameIsBandDirectoryNameIsA) {
+  FileMock a(false, "b");
+  FileMock b(true, "a");
+
+  EXPECT_FALSE((a < b));
+  EXPECT_TRUE((b < a));
+}
+
 
 // ------------------------------------------------------------------------
 
@@ -103,12 +147,11 @@ TEST(FileTest, isFile_statReturnDirectory) {
 
   EXPECT_CALL(*systemCallMock,
               stat(::testing::A<const char *>(), ::testing::A<struct stat *>()))
-      .WillOnce(::testing::Invoke(
-          [](const char *_file, struct stat *_buf) {
-			 (void)_file;
-			 _buf->st_mode = 16877;
-			 return 0;
-		  }));
+      .WillOnce(::testing::Invoke([](const char *_file, struct stat *_buf) {
+        (void)_file;
+        _buf->st_mode = 16877;
+        return 0;
+      }));
 
   File file;
   file.setSystemCalls(systemCallMock);
@@ -123,12 +166,11 @@ TEST(FileTest, isFile_statReturnRegularFile) {
 
   EXPECT_CALL(*systemCallMock,
               stat(::testing::A<const char *>(), ::testing::A<struct stat *>()))
-      .WillOnce(::testing::Invoke(
-          [](const char *_file, struct stat *_buf) {
-			 (void)_file;
-			 _buf->st_mode = 33188;
-			 return 0;
-		  }));
+      .WillOnce(::testing::Invoke([](const char *_file, struct stat *_buf) {
+        (void)_file;
+        _buf->st_mode = 33188;
+        return 0;
+      }));
 
   File file;
   file.setSystemCalls(systemCallMock);
@@ -160,12 +202,11 @@ TEST(FileTest, isDirectory_statReturnFile) {
 
   EXPECT_CALL(*systemCallMock,
               stat(::testing::A<const char *>(), ::testing::A<struct stat *>()))
-      .WillOnce(::testing::Invoke(
-          [](const char *_file, struct stat *_buf) {
-			 (void)_file;
-			 _buf->st_mode = 33188;
-			 return 0;
-		  }));
+      .WillOnce(::testing::Invoke([](const char *_file, struct stat *_buf) {
+        (void)_file;
+        _buf->st_mode = 33188;
+        return 0;
+      }));
 
   File file;
   file.setSystemCalls(systemCallMock);
@@ -180,12 +221,11 @@ TEST(FileTest, isDirectory_statReturnRegularFile) {
 
   EXPECT_CALL(*systemCallMock,
               stat(::testing::A<const char *>(), ::testing::A<struct stat *>()))
-      .WillOnce(::testing::Invoke(
-          [](const char *_file, struct stat *_buf) {
-			 (void)_file;
-			 _buf->st_mode = 16877;
-			 return 0;
-		  }));
+      .WillOnce(::testing::Invoke([](const char *_file, struct stat *_buf) {
+        (void)_file;
+        _buf->st_mode = 16877;
+        return 0;
+      }));
 
   File file;
   file.setSystemCalls(systemCallMock);
@@ -198,7 +238,6 @@ TEST(FileTest, isDirectory_statReturnRegularFile) {
 // ------------------------------------------------------------------------
 
 TEST(FileTest, getPath) {
-
   File file("abc");
 
   std::string thePath = file.getPath();
@@ -236,14 +275,12 @@ TEST(FileTest, size_systemCallOk) {
 
   EXPECT_CALL(*systemCallMock,
               stat(::testing::A<const char *>(), ::testing::A<struct stat *>()))
-      .WillOnce(::testing::Invoke(
-          [](const char *_file, struct stat *_buf) {
-			(void)_file;
-			_buf->st_size = 42;
-			return 1; }));
-  EXPECT_CALL(*loggerMock,
-              log(Log::ERROR, "", "", "", ""))
-      .Times(0);
+      .WillOnce(::testing::Invoke([](const char *_file, struct stat *_buf) {
+        (void)_file;
+        _buf->st_size = 42;
+        return 1;
+      }));
+  EXPECT_CALL(*loggerMock, log(Log::ERROR, "", "", "", "")).Times(0);
 
   File file;
   file.setSystemCalls(systemCallMock);
@@ -258,17 +295,17 @@ TEST(FileTest, size_systemCallOk) {
 // ------------------------------------------------------------------------
 
 TEST(FileTest, listFiles) {
-
   DirectoryListingMock *directoryListingMock = new DirectoryListingMock;
 
-  EXPECT_CALL(*directoryListingMock, listFiles()).WillOnce(::testing::Invoke([](void){
-	std::vector<std::string> listOfFiles;
+  EXPECT_CALL(*directoryListingMock, listFiles())
+      .WillOnce(::testing::Invoke([](void) {
+        std::vector<std::string> listOfFiles;
 
-	listOfFiles.push_back("file1");
-	listOfFiles.push_back("dir1");
+        listOfFiles.push_back("file1");
+        listOfFiles.push_back("dir1");
 
-	return listOfFiles;
-  }));
+        return listOfFiles;
+      }));
   File file("/", NULL, directoryListingMock);
 
   std::vector<File> listToCompare;
@@ -283,240 +320,323 @@ TEST(FileTest, listFiles) {
   EXPECT_EQ(listToCompare, listFromDirectory);
 }
 
-
-
-
 // -------------------------------------------------------------------------- //
 // ------------------------- INTEGRATION TESTS ------------------------------ //
 // -------------------------------------------------------------------------- //
 
 TEST(FileTest, isFile_testWithFile) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  bool isAFile = file.isFile();
 
-	bool isAFile = file.isFile();
-
-	EXPECT_TRUE(isAFile);
+  EXPECT_TRUE(isAFile);
 }
 
 TEST(FileTest, isFile_testWithDirectory) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
+  bool isAFile = file.isFile();
 
-	bool isAFile = file.isFile();
-
-	EXPECT_FALSE(isAFile);
+  EXPECT_FALSE(isAFile);
 }
 
 // ----------
 
 TEST(FileTest, isDirectory_testWithFile) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  bool isADirectory = file.isDirectory();
 
-	bool isADirectory = file.isDirectory();
-
-	EXPECT_FALSE(isADirectory);
+  EXPECT_FALSE(isADirectory);
 }
 
 TEST(FileTest, isDirectory_testWithDirectory) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
+  bool isADirectory = file.isDirectory();
 
-	bool isADirectory = file.isDirectory();
-
-	EXPECT_TRUE(isADirectory);
+  EXPECT_TRUE(isADirectory);
 }
 
 // ----------
 
-TEST(FileTest, isReadable){
+TEST(FileTest, isReadable) {
+  File directory(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
+  File directory_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_r");
+  File directory_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rw");
+  File directory_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rwx");
+  File directory_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rx");
+  File directory_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_w");
+  File directory_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_wx");
+  File directory_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_x");
 
-	File directory  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
-	File directory_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_r");
-	File directory_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rw");
-	File directory_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rwx");
-	File directory_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rx");
-	File directory_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_w");
-	File directory_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_wx");
-	File directory_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_x");
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  File file_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
+  File file_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rw");
+  File file_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rwx");
+  File file_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rx");
+  File file_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
+  File file_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_wx");
+  File file_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
 
-	File file  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
-	File file_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
-	File file_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rw");
-	File file_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rwx");
-	File file_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rx");
-	File file_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
-	File file_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_wx");
-	File file_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
+  EXPECT_TRUE(directory_r.isReadable());
+  EXPECT_TRUE(directory_rw.isReadable());
+  EXPECT_TRUE(directory_rwx.isReadable());
+  EXPECT_TRUE(directory_rx.isReadable());
+  EXPECT_TRUE(file_r.isReadable());
+  EXPECT_TRUE(file_rw.isReadable());
+  EXPECT_TRUE(file_rwx.isReadable());
+  EXPECT_TRUE(file_rx.isReadable());
 
-	EXPECT_TRUE(directory_r.isReadable());
-	EXPECT_TRUE(directory_rw.isReadable());
-	EXPECT_TRUE(directory_rwx.isReadable());
-	EXPECT_TRUE(directory_rx.isReadable());
-	EXPECT_TRUE(file_r.isReadable());
-	EXPECT_TRUE(file_rw.isReadable());
-	EXPECT_TRUE(file_rwx.isReadable());
-	EXPECT_TRUE(file_rx.isReadable());
-
-	EXPECT_FALSE(directory.isReadable());
-	EXPECT_FALSE(directory_w.isReadable());
-	EXPECT_FALSE(directory_wx.isReadable());
-	EXPECT_FALSE(directory_x.isReadable());
-	EXPECT_FALSE(file.isReadable());
-	EXPECT_FALSE(file_w.isReadable());
-	EXPECT_FALSE(file_wx.isReadable());
-	EXPECT_FALSE(file_x.isReadable());
+  EXPECT_FALSE(directory.isReadable());
+  EXPECT_FALSE(directory_w.isReadable());
+  EXPECT_FALSE(directory_wx.isReadable());
+  EXPECT_FALSE(directory_x.isReadable());
+  EXPECT_FALSE(file.isReadable());
+  EXPECT_FALSE(file_w.isReadable());
+  EXPECT_FALSE(file_wx.isReadable());
+  EXPECT_FALSE(file_x.isReadable());
 }
 
 // ----------
 
-TEST(FileTest, isWritable){
+TEST(FileTest, isWritable) {
+  File directory(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
+  File directory_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_r");
+  File directory_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rw");
+  File directory_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rwx");
+  File directory_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rx");
+  File directory_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_w");
+  File directory_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_wx");
+  File directory_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_x");
 
-	File directory  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
-	File directory_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_r");
-	File directory_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rw");
-	File directory_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rwx");
-	File directory_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rx");
-	File directory_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_w");
-	File directory_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_wx");
-	File directory_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_x");
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  File file_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
+  File file_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rw");
+  File file_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rwx");
+  File file_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rx");
+  File file_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
+  File file_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_wx");
+  File file_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
 
-	File file  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
-	File file_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
-	File file_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rw");
-	File file_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rwx");
-	File file_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rx");
-	File file_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
-	File file_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_wx");
-	File file_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
+  EXPECT_TRUE(directory_rw.isWritable());
+  EXPECT_TRUE(directory_rwx.isWritable());
+  EXPECT_TRUE(directory_w.isWritable());
+  EXPECT_TRUE(directory_wx.isWritable());
+  EXPECT_TRUE(file_rw.isWritable());
+  EXPECT_TRUE(file_rwx.isWritable());
+  EXPECT_TRUE(file_w.isWritable());
+  EXPECT_TRUE(file_wx.isWritable());
 
-	EXPECT_TRUE(directory_rw.isWritable());
-	EXPECT_TRUE(directory_rwx.isWritable());
-	EXPECT_TRUE(directory_w.isWritable());
-	EXPECT_TRUE(directory_wx.isWritable());
-	EXPECT_TRUE(file_rw.isWritable());
-	EXPECT_TRUE(file_rwx.isWritable());
-	EXPECT_TRUE(file_w.isWritable());
-	EXPECT_TRUE(file_wx.isWritable());
-
-	EXPECT_FALSE(directory.isWritable());
-	EXPECT_FALSE(directory_r.isWritable());
-	EXPECT_FALSE(directory_rx.isWritable());
-	EXPECT_FALSE(directory_x.isWritable());
-	EXPECT_FALSE(file.isWritable());
-	EXPECT_FALSE(file_r.isWritable());
-	EXPECT_FALSE(file_rx.isWritable());
-	EXPECT_FALSE(file_x.isWritable());
+  EXPECT_FALSE(directory.isWritable());
+  EXPECT_FALSE(directory_r.isWritable());
+  EXPECT_FALSE(directory_rx.isWritable());
+  EXPECT_FALSE(directory_x.isWritable());
+  EXPECT_FALSE(file.isWritable());
+  EXPECT_FALSE(file_r.isWritable());
+  EXPECT_FALSE(file_rx.isWritable());
+  EXPECT_FALSE(file_x.isWritable());
 }
 
 // ----------
 
-TEST(FileTest, isExecutable){
+TEST(FileTest, isExecutable) {
+  File directory(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
+  File directory_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_r");
+  File directory_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rw");
+  File directory_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rwx");
+  File directory_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_rx");
+  File directory_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_w");
+  File directory_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_wx");
+  File directory_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory_x");
 
-	File directory  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
-	File directory_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_r");
-	File directory_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rw");
-	File directory_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rwx");
-	File directory_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_rx");
-	File directory_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_w");
-	File directory_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_wx");
-	File directory_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory_x");
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  File file_r(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
+  File file_rw(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rw");
+  File file_rwx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rwx");
+  File file_rx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_rx");
+  File file_w(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
+  File file_wx(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "file_wx");
+  File file_x(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
 
-	File file  ("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
-	File file_r("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_r");
-	File file_rw("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rw");
-	File file_rwx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rwx");
-	File file_rx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_rx");
-	File file_w("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_w");
-	File file_wx("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_wx");
-	File file_x("tests/integration/folder_with_things_to_test_the_class_File-cpp/file_x");
+  EXPECT_TRUE(directory_rwx.isExecutable());
+  EXPECT_TRUE(directory_rx.isExecutable());
+  EXPECT_TRUE(directory_wx.isExecutable());
+  EXPECT_TRUE(directory_x.isExecutable());
+  EXPECT_TRUE(file_rwx.isExecutable());
+  EXPECT_TRUE(file_rx.isExecutable());
+  EXPECT_TRUE(file_wx.isExecutable());
+  EXPECT_TRUE(file_x.isExecutable());
 
-	EXPECT_TRUE(directory_rwx.isExecutable());
-	EXPECT_TRUE(directory_rx.isExecutable());
-	EXPECT_TRUE(directory_wx.isExecutable());
-	EXPECT_TRUE(directory_x.isExecutable());
-	EXPECT_TRUE(file_rwx.isExecutable());
-	EXPECT_TRUE(file_rx.isExecutable());
-	EXPECT_TRUE(file_wx.isExecutable());
-	EXPECT_TRUE(file_x.isExecutable());
-
-	EXPECT_FALSE(directory.isExecutable());
-	EXPECT_FALSE(directory_r.isExecutable());
-	EXPECT_FALSE(directory_rw.isExecutable());
-	EXPECT_FALSE(directory_w.isExecutable());
-	EXPECT_FALSE(file.isExecutable());
-	EXPECT_FALSE(file_r.isExecutable());
-	EXPECT_FALSE(file_rw.isExecutable());
-	EXPECT_FALSE(file_w.isExecutable());
+  EXPECT_FALSE(directory.isExecutable());
+  EXPECT_FALSE(directory_r.isExecutable());
+  EXPECT_FALSE(directory_rw.isExecutable());
+  EXPECT_FALSE(directory_w.isExecutable());
+  EXPECT_FALSE(file.isExecutable());
+  EXPECT_FALSE(file_r.isExecutable());
+  EXPECT_FALSE(file_rw.isExecutable());
+  EXPECT_FALSE(file_w.isExecutable());
 }
 
 // ----------
 
-TEST(FileTest, getModificationTime){
+TEST(FileTest, getModificationTime) {
+  File file("tests/integration/modification_time.txt");
 
-	File file("tests/integration/modification_time.txt");
+  time_t modificationTime = file.getModificationTime();
 
-	time_t modificationTime = file.getModificationTime();
-
-	EXPECT_EQ(1738379045, modificationTime);
-
+  EXPECT_EQ(1738379045, modificationTime);
 }
 
 // ----------
 
 TEST(FileTest, exist_directory) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "directory");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/directory");
+  bool exist = file.exist();
 
-    bool exist = file.exist();
-
-	EXPECT_TRUE(exist);
+  EXPECT_TRUE(exist);
 }
 
 TEST(FileTest, exist_file) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/file");
+  bool exist = file.exist();
 
-    bool exist = file.exist();
-
-	EXPECT_TRUE(exist);
+  EXPECT_TRUE(exist);
 }
 
 // ----------
 
 TEST(FileTest, size_z_file_10_bytes) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "z_file_10_bytes");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/z_file_10_bytes");
+  ssize_t theSize = file.size();
 
-    ssize_t theSize = file.size();
-
-	EXPECT_EQ(10, theSize);
+  EXPECT_EQ(10, theSize);
 }
 
 TEST(FileTest, size_z_file_empty) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "z_file_empty");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/z_file_empty");
+  ssize_t theSize = file.size();
 
-    ssize_t theSize = file.size();
-
-	EXPECT_EQ(0, theSize);
+  EXPECT_EQ(0, theSize);
 }
 
 TEST(FileTest, size_z_dir_10_bytes) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "z_dir_10_bytes");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/z_dir_10_bytes");
+  ssize_t theSize = file.size();
 
-    ssize_t theSize = file.size();
-
-	EXPECT_EQ(4096, theSize);
+  EXPECT_EQ(4096, theSize);
 }
 
 TEST(FileTest, size_z_dir_empty) {
+  File file(
+      "tests/integration/folder_with_things_to_test_the_class_File-cpp/"
+      "z_dir_empty");
 
-	File file("tests/integration/folder_with_things_to_test_the_class_File-cpp/z_dir_empty");
+  ssize_t theSize = file.size();
 
-    ssize_t theSize = file.size();
-
-	EXPECT_EQ(4096, theSize);
+  EXPECT_EQ(4096, theSize);
 }

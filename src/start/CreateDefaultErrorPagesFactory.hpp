@@ -4,14 +4,15 @@
 #include <map>
 
 #include "../error/Log.hpp"
-#include "../net/http/DefaultErrorPage.hpp"
+#include "../net/http/html/ErrorPageFileHTMLDocument.hpp"
 #include "../net/http/HTTPStatus.hpp"
 
 class CreateDefaultErrorPagesFactory {
  public:
   static void fillTheFactory(
-      const std::map<HTTPStatus::Status, DefaultErrorPage>
+      const std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*>
           &mapWithDefaultPagesErrors);
+  static void destroyFactory();
 
   CreateDefaultErrorPagesFactory();
   ~CreateDefaultErrorPagesFactory();
@@ -19,12 +20,12 @@ class CreateDefaultErrorPagesFactory {
   CreateDefaultErrorPagesFactory &operator=(
       const CreateDefaultErrorPagesFactory &src);
 
-  DefaultErrorPage getDefaultErrorPages(HTTPStatus::Status codeStatus);
+  ErrorPageFileHTMLDocument* getDefaultErrorPages(HTTPStatus::Status codeStatus);
 
   void setLogger(Log *logger);
 
  private:
-  static std::map<HTTPStatus::Status, DefaultErrorPage>
+  static std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*>
       mapWithDefaultPagesErrors;
   Log *_logger;
 };

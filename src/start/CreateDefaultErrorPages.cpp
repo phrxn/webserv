@@ -29,7 +29,7 @@ CreateDefaultErrorPages &CreateDefaultErrorPages::operator=(
   return *this;
 }
 
-error::StatusOr<std::map<HTTPStatus::Status, DefaultErrorPage> >
+error::StatusOr<std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*> >
 CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   std::list<HTTPStatus::Status> listStatusWithPage;
 
@@ -47,14 +47,13 @@ CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   listStatusWithPage.push_back(HTTPStatus::NOT_IMPLEMENTED);
   listStatusWithPage.push_back(HTTPStatus::SERVICE_UNAVAILABLE);
 
-  std::map<HTTPStatus::Status, DefaultErrorPage> map;
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*> map;
 
   std::list<HTTPStatus::Status>::const_iterator it = listStatusWithPage.begin();
   std::list<HTTPStatus::Status>::const_iterator end = listStatusWithPage.end();
 
   for (; it != end; ++it) {
-    error::StatusOr<DefaultErrorPage> defaultErroPage =
-        loadDefaultDefaultErrorPage(*it);
+    error::StatusOr<ErrorPageFileHTMLDocument*> defaultErroPage = loadDefaultDefaultErrorPage(*it);
     if (!defaultErroPage.ok()) {
       return defaultErroPage.status();
     }
@@ -63,14 +62,14 @@ CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   return map;
 }
 
-error::StatusOr<DefaultErrorPage>
+error::StatusOr<ErrorPageFileHTMLDocument*>
 CreateDefaultErrorPages::loadDefaultDefaultErrorPage(
     HTTPStatus::Status codeStatus) const {
   std::string fullPathToFile = createFullPathToErroPage(codeStatus);
   return loadDefaultDefaultErrorPage(fullPathToFile);
 }
 
-error::StatusOr<DefaultErrorPage>
+error::StatusOr<ErrorPageFileHTMLDocument*>
 CreateDefaultErrorPages::loadDefaultDefaultErrorPage(
     std::string fullPathToFile) const {
 
@@ -83,16 +82,9 @@ CreateDefaultErrorPages::loadDefaultDefaultErrorPage(
     return error::Status(error::Status::FileOpen, ssErrorMessage.str());
   }
 
-  std::string allBytes = readAllTheStream(pageDateStream);
+ ErrorPageFileHTMLDocument* epf = new ErrorPageFileHTMLDocument(fullPathToFile, pageDateStream);
 
-  DefaultErrorPage defaultPageError(allBytes);
-
-  return defaultPageError;
-}
-
-DefaultErrorPage loadDefaultDefaultErrorPage(HTTPStatus codeStatus) {
-  (void)codeStatus;
-  return DefaultErrorPage();
+  return epf;
 }
 
 std::string CreateDefaultErrorPages::createFullPathToErroPage(
@@ -107,12 +99,4 @@ void CreateDefaultErrorPages::setErrno(Errno *newErrno) {
     delete _theErrno;
   }
   _theErrno = newErrno;
-}
-
-std::string CreateDefaultErrorPages::readAllTheStream(
-    std::istream &inputStream) const {
-  std::stringstream buffer;
-  buffer << inputStream.rdbuf();
-
-  return buffer.str();
 }

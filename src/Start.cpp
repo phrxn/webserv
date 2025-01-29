@@ -7,6 +7,7 @@
 #include "io/Epoll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
 #include "net/http/GetMimeType.hpp"
+#include "start/CreateDefaultErrorPagesFactory.hpp"
 #include "start/CreateMimeTypeMap.hpp"
 
 void disableSignals() {
@@ -29,16 +30,16 @@ void Start::handleSignal(int sig) {
 
   switch (sig) {
     case SIGINT:
-      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Interrupt",
-                        "closing the server");
+      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal",
+                                    "Interrupt", "closing the server");
       break;
     case SIGTERM:
-      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Terminate",
-                        "closing the server");
+      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal",
+                                    "Terminate", "closing the server");
       break;
     case SIGQUIT:
-     LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal", "Quit",
-                        "closing the server");
+      LogDefault::loggerGlobal->log(Log::WARNING, "Start", "handleSignal",
+                                    "Quit", "closing the server");
       break;
     default:
       break;
@@ -64,6 +65,9 @@ Start::~Start() {
   for (; it != end; ++it) {
     delete *it;
   }
+
+  // free the map in the CreateDefaultErrorPagesFactory
+  CreateDefaultErrorPagesFactory::destroyFactory();
 }
 
 void Start::startTheProgram(int argc, char **argv) {
@@ -117,7 +121,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
 
-  //5MB
+  // 5MB
   _programConfiguration.setMaxRequestSizeInBytes(5242880);
 }
 
@@ -139,15 +143,15 @@ bool Start::startTheServerSockets() {
   std::list<int>::const_iterator it = allServerPortsNeed.begin();
   std::list<int>::const_iterator end = allServerPortsNeed.end();
 
-  if (allServerPortsNeed.size() == 0){
+  if (allServerPortsNeed.size() == 0) {
     _logger->log(Log::FATAL, "Start", "startTheServerSocket",
                  "the configuration file must have at least one port", "");
-	return false;
+    return false;
   }
 
   for (; it != end; ++it) {
     ServerSocketFileDescriptor *ssd = new ServerSocketFileDescriptor(_logger);
-	_listServerSocketFileDescriptor.push_back(ssd);
+    _listServerSocketFileDescriptor.push_back(ssd);
     if (!ssd->createSocketServer(*it)) {
       return false;
     }

@@ -4,14 +4,27 @@
 
 #include "../Start.hpp"
 
-std::map<HTTPStatus::Status, DefaultErrorPage>
+std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>
     CreateDefaultErrorPagesFactory::mapWithDefaultPagesErrors;
 
 void CreateDefaultErrorPagesFactory::fillTheFactory(
-    const std::map<HTTPStatus::Status, DefaultErrorPage>
+    const std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>
         &mapWithDefaultPagesErrors) {
   CreateDefaultErrorPagesFactory::mapWithDefaultPagesErrors =
       mapWithDefaultPagesErrors;
+}
+
+void CreateDefaultErrorPagesFactory::destroyFactory() {
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>::const_iterator it =
+      mapWithDefaultPagesErrors.begin();
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>::const_iterator
+      end = mapWithDefaultPagesErrors.end();
+
+  for (; it != end; ++it) {
+    if (it->second) {
+      delete it->second;
+    }
+  }
 }
 
 CreateDefaultErrorPagesFactory::CreateDefaultErrorPagesFactory()
@@ -30,12 +43,12 @@ CreateDefaultErrorPagesFactory &CreateDefaultErrorPagesFactory::operator=(
   return *this;
 }
 
-DefaultErrorPage CreateDefaultErrorPagesFactory::getDefaultErrorPages(
+ErrorPageFileHTMLDocument *CreateDefaultErrorPagesFactory::getDefaultErrorPages(
     HTTPStatus::Status codeStatus) {
-  std::map<HTTPStatus::Status, DefaultErrorPage>::const_iterator end =
-      mapWithDefaultPagesErrors.end();
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>::const_iterator
+      end = mapWithDefaultPagesErrors.end();
 
-  std::map<HTTPStatus::Status, DefaultErrorPage>::const_iterator it =
+  std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>::const_iterator it =
       mapWithDefaultPagesErrors.find(codeStatus);
   if (it != end) {
     return it->second;

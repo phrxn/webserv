@@ -18,7 +18,7 @@ class File {
   File(const std::string &path);
   File(const std::string &path, Log *logger);
   File(const std::string &path, Log *logger, DirectoryListing *directoryListing);
-  ~File();
+  virtual ~File();
   File(const File &src);
   File &operator=(const File &src);
   bool operator==(const File &src) const;
@@ -26,7 +26,7 @@ class File {
 
   bool isFile() const;
 
-  bool isDirectory() const;
+  virtual bool isDirectory() const;
 
   bool isReadable() const;
 
@@ -36,7 +36,7 @@ class File {
 
   time_t getModificationTime() const;
 
-  const std::string &getPath() const;
+  std::string getPath() const;
 
   bool exist() const;
 
@@ -47,10 +47,11 @@ class File {
   void setSystemCalls(SystemCalls *systemCalls);
 
   void setLog(Log *log);
+ protected:
+  std::string _path;
 
  private:
   SystemCalls *_systemCalls;
-  std::string _path;
   Log *_logger;
   DirectoryListing *_directoryListing;
 };
