@@ -1,6 +1,7 @@
 #ifndef TIME_TIME_HPP
 #define TIME_TIME_HPP
 
+#include <ctime>
 #include <string>
 
 class Time {
