@@ -5,7 +5,7 @@
 #include "../error/StatusOr.hpp"
 #include "../net/VirtualHost.hpp"
 #include "../net/VirtualHostFactory.hpp"
-#include "../net/http/MimeType.hpp"
+#include "../net/http/GetMimeType.hpp"
 #include "CreateDefaultErrorPages.hpp"
 #include "CreateDefaultErrorPagesFactory.hpp"
 #include "CreateMimeTypeMap.hpp"
@@ -60,7 +60,7 @@ bool LoaderOfProgramFiles::loadMimetypeListFromFile(Log *logger) const {
     return false;
   }
 
-  MimeType::setMimetypeMap(mimeMap.value());
+  GetMimeType::setMimetypeMap(mimeMap.value());
 
   return true;
 }

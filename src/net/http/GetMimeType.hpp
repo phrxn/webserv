@@ -4,14 +4,14 @@
 #include <map>
 #include <string>
 
-class MimeType {
+class GetMimeType {
  public:
   static void setMimetypeMap(const std::map<std::string, std::string> &mimeTypeMap);
 
-  MimeType();
-  ~MimeType();
-  MimeType(const MimeType &src);
-  MimeType &operator=(const MimeType &src);
+  GetMimeType();
+  ~GetMimeType();
+  GetMimeType(const GetMimeType &src);
+  GetMimeType &operator=(const GetMimeType &src);
 
   std::string getExtensionFromPath(const std::string &path) const;
 

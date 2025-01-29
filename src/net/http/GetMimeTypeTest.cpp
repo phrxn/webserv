@@ -1,49 +1,49 @@
 #include "../../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../../libs/googletest/googletest/include/gtest/gtest.h"
-#include "MimeType.hpp"
+#include "GetMimeType.hpp"
 
-TEST(MimeTypeTest, getExtensionFromPath_emptyPath) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_emptyPath) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath("");
 
   EXPECT_EQ("", theExtesion);
 }
 
-TEST(MimeTypeTest, getExtensionFromPath_emptyHasOnlyADot) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_emptyHasOnlyADot) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath(".");
 
   EXPECT_EQ("", theExtesion);
 }
 
-TEST(MimeTypeTest, getExtensionFromPath_pathWithoutDot) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_pathWithoutDot) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath("a");
 
   EXPECT_EQ("a", theExtesion);
 }
 
-TEST(MimeTypeTest, getExtensionFromPath_pathStartWithADot) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_pathStartWithADot) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath(".f");
 
   EXPECT_EQ("f", theExtesion);
 }
 
-TEST(MimeTypeTest, getExtensionFromPath_pathEndsWithADot) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_pathEndsWithADot) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath("f.");
 
   EXPECT_EQ("", theExtesion);
 }
 
-TEST(MimeTypeTest, getExtensionFromPath_pathHasADotInItsMiddel) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getExtensionFromPath_pathHasADotInItsMiddel) {
+  GetMimeType mime;
 
   std::string theExtesion = mime.getExtensionFromPath("a.b");
 
@@ -52,36 +52,36 @@ TEST(MimeTypeTest, getExtensionFromPath_pathHasADotInItsMiddel) {
 
 // -------------------------------------------------------------
 
-TEST(MimeTypeTest, getMimeTypeByFileExtesion_mimeTypeMapIsEmpty) {
-  MimeType mime;
+TEST(GetMimeTypeTest, getMimeTypeByFileExtesion_mimeTypeMapIsEmpty) {
+  GetMimeType mime;
   std::map<std::string, std::string> fakeGlobalMimetypeMap;
-  MimeType::setMimetypeMap(fakeGlobalMimetypeMap);
+  GetMimeType::setMimetypeMap(fakeGlobalMimetypeMap);
 
   std::string mimeType = mime.getMimeTypeByFileExtesion("file.pdf");
 
   EXPECT_EQ("application/octet-stream", mimeType);
 }
 
-TEST(MimeTypeTest,
+TEST(GetMimeTypeTest,
      getMimeTypeByFileExtesion_mimeTypeMapWithOneExtesionAndWithOneMatch) {
-  MimeType mime;
+  GetMimeType mime;
   std::map<std::string, std::string> fakeGlobalMimetypeMap;
   fakeGlobalMimetypeMap.insert(std::make_pair("pdf", "application/pdf"));
 
-  MimeType::setMimetypeMap(fakeGlobalMimetypeMap);
+  GetMimeType::setMimetypeMap(fakeGlobalMimetypeMap);
 
   std::string mimeType = mime.getMimeTypeByFileExtesion("file.pdf");
 
   EXPECT_EQ("application/pdf", mimeType);
 }
 
-TEST(MimeTypeTest,
+TEST(GetMimeTypeTest,
      getMimeTypeByFileExtesion_mimeTypeMapWithOneExtesionButWithoutMatch) {
-  MimeType mime;
+  GetMimeType mime;
   std::map<std::string, std::string> fakeGlobalMimetypeMap;
   fakeGlobalMimetypeMap.insert(std::make_pair("pdf", "application/pdf"));
 
-  MimeType::setMimetypeMap(fakeGlobalMimetypeMap);
+  GetMimeType::setMimetypeMap(fakeGlobalMimetypeMap);
 
   std::string mimeType = mime.getMimeTypeByFileExtesion("file.xxx");
 

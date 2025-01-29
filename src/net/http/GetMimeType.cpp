@@ -1,21 +1,21 @@
-#include "MimeType.hpp"
+#include "GetMimeType.hpp"
 
-std::map<std::string, std::string> MimeType::_mimeTypeMap;
+std::map<std::string, std::string> GetMimeType::_mimeTypeMap;
 
-MimeType::MimeType() {}
+GetMimeType::GetMimeType() {}
 
-MimeType::~MimeType() {}
+GetMimeType::~GetMimeType() {}
 
-MimeType::MimeType(const MimeType &src) { *this = src; }
+GetMimeType::GetMimeType(const GetMimeType &src) { *this = src; }
 
-MimeType &MimeType::operator=(const MimeType &src) {
+GetMimeType &GetMimeType::operator=(const GetMimeType &src) {
   (void)src;
   return *this;
 }
 
 // this function extract the part after dot from a string.
 // If
-std::string MimeType::getExtensionFromPath(const std::string &path) const {
+std::string GetMimeType::getExtensionFromPath(const std::string &path) const {
   std::string::size_type dotPosition = path.find_last_of(".");
   if (dotPosition == std::string::npos) {
     return path;
@@ -26,7 +26,7 @@ std::string MimeType::getExtensionFromPath(const std::string &path) const {
   return path.substr(dotPosition + 1);
 }
 
-std::string MimeType::getMimeTypeByFileExtesion(
+std::string GetMimeType::getMimeTypeByFileExtesion(
     const std::string &fileExtension) {
   std::string theFileExtesion = getExtensionFromPath(fileExtension);
 
@@ -39,7 +39,7 @@ std::string MimeType::getMimeTypeByFileExtesion(
   return "application/octet-stream";
 }
 
-void MimeType::setMimetypeMap(
+void GetMimeType::setMimetypeMap(
     const std::map<std::string, std::string> &mimeTypeMap) {
   _mimeTypeMap = mimeTypeMap;
 }

@@ -6,7 +6,7 @@
 #include "error/LogDefault.hpp"
 #include "io/Epoll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
-#include "net/http/MimeType.hpp"
+#include "net/http/GetMimeType.hpp"
 #include "start/CreateMimeTypeMap.hpp"
 
 void disableSignals() {
