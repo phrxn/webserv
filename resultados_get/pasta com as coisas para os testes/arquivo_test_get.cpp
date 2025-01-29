@@ -8,9 +8,8 @@
 
 
 //deu certo para o GET!
-int pathIsValid(const char *absolutePath)
+int pathIsValid(const char *absolutePath, int defaultValue)
 {
-
 	struct stat info;
 	std::string errorMessage;
 
@@ -30,14 +29,37 @@ int pathIsValid(const char *absolutePath)
 		return 403;
 	}
 
-	return 200;
+	return defaultValue;
 }
+
+int pathIsValidGet(const char *absolutePath){
+	return pathIsValid(absolutePath, 200);
+}
+
+int pathIsValidPost(const char *absolutePath){
+	return pathIsValid(absolutePath, 405);
+}
+
+int pathIsValidDelete(const char *absolutePath){
+	return 405;
+}
+
+
 
 int main(int argc, char **argv)
 {
 	const char *absolutePath = argv[1];
+	std::string httpVerb = argv[2];
 
-	int retorno = pathIsValid(absolutePath);
+	int retorno = 0;
+
+	if (httpVerb == "GET"){
+		retorno = pathIsValidGet(absolutePath);
+	}else if (httpVerb == "POST"){
+		retorno = pathIsValidPost(absolutePath);
+	}else if (httpVerb == "DELETE"){
+		retorno = pathIsValidDelete(absolutePath);
+	}
 
 	std::stringstream ss;
 	ss << retorno;
