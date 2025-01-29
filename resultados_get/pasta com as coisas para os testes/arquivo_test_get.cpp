@@ -68,11 +68,11 @@ int pathIsValidGet(const std::string absolutePath, bool canListDirectoryIfPathPo
 	return 200;
 }
 
-int pathIsValidPost(const char *absolutePath){
+int pathIsValidPost(const std::string absolutePath){
 	struct stat info;
 	std::string errorMessage;
 
-	if (stat(absolutePath, &info) == -1)
+	if (stat(absolutePath.c_str(), &info) == -1)
 	{
 		int errorCode = errno;
 		errorMessage = strerror(errorCode);
@@ -84,9 +84,16 @@ int pathIsValidPost(const char *absolutePath){
 		}
 	}
 
-	if (access(absolutePath, F_OK | R_OK) != 0){
+	if (access(absolutePath.c_str(), F_OK | R_OK) != 0){
 		return 403;
 	}
+
+	if (S_ISDIR(info.st_mode)) {
+		if (!absolutePath.empty() && absolutePath[absolutePath.size() - 1] != '/'){
+			return 301;
+		}
+		return 403;
+    }
 
 	return 405;
 }
