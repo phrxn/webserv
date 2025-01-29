@@ -13,46 +13,101 @@
   - Pegar o ConfigurationSingleton
 	  - Enquanto lendo os dados ir verificando se o tamanho nao passa do maximo permitido pelo servidor: 413 - Request Entity Too Large
   - Ver se tem a linha Content-Lenght ou Chunck
-	  - Se o tamanho nao for OK: 413 - Request Entity Too Large
+    - Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
+	  Se ultrapassar o tamanho maximo : 413 - Request Entity Too Large
 -------------------------------------
 
 
-     
+3) Quando o HTTPRequest estiver pronto, validar o status e se o HTTP pode prosseguir
 
-3) Quando o HTTPRequest estiver pronto:
+	Pegar o virtual Host usando o HostName e a porta (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
 
 	Pegar o Status da Requisicao
-
-		Para o diferente de Status 200
-			- Pegar o virtual Host usando o HostName e a porta (pelo menos a porta sempra vai dar match)
-			- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, procurar no servidor
-			- Tentar carregar o arquivo, se nao der certo
-				-- Se nao der certo
-				-- carregar o 500
-			Return o HTTPResponse
 	
-		Para o Status 200
-			- Pegar um VirtualHost Usando o Host e a Porta:
+	Para o diferente de Status 200
+		- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, procurar no servidor
+		- Tentar carregar o arquivo baseado no codigo de erro
+			-- Se nao der certo
+			-- carregar o 500
+		- Criar o HTTPRequest com a resposta
+		- Retornar o HTTPRequest
+	Para o Status 200:
+		- Ver se o servidor implementa o verbo Vindo no HTTPRequest
+	  		Se nao implementa               : 501 - Not Implemented
 
-			- Ver se o servidor implementa o verbo Vindo no HTTPRequest
-		  		Se nao implementa               : 501 - Not Implemented
-			- Ver se no VirtualHost se o verbo é implementado
-				Se nao implementa               : 405 - Method Not Allowed
-			- Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
-				Se ultrapassar o tamanho maximo : 413 - Request Entity Too Large
-
-             
-           
-
-  1) O caminho eh valido ou nao? (NOT_FOUND 404)
-  2) O caminho tem um redirecionamento? 
-  3) O caminho aceita o metodo HTTP ...? (NOT_ALLOWED 405)
-  4) O caminho eh um CGI?
-  5) Pegar o caminho absoluto a partir do caminhoURI.
-  6) Pode listar diretorios?
+4) Criar um HTTPResponse novo
 
 
+5) Se o HTTPRequest for valido e puder prosseguir, pegar o seu VirtualHost e Fazer algumas verificoes com o arquivos
 
+  #HTTPRequest;
+  #HTTPResponse;
+  #VirtualHost;
+  #HTTPServlet httpServlet;
 
+	Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
 
+	- O caminhoURI eh valido ou nao (ou seja, ele existe)? (NOT_FOUND 404)
+	
+	- O caminhoURI tem um redirecionamento? (Se Sim: 301)
+	
+	- O caminhoURI aceita o metodo HTTP ...? (Se nao: NOT_ALLOWED 405)
+	
+	- O caminhoURI eh um CGI? : boleano
+	
+	- Pegar o caminho absoluto a partir do caminhoURI. std::string
+	
+	- O caminhoURI Pode listar diretorios? boleano
 
+	- Se for CGI:
+		httpServlet = HTTPServletCGI
+	- Se for STATIC
+		httpServlet = HTTPServletStatic
+	
+	- Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: httpServlet;
+		HTTPStatus httpStatus = httpServlet.doXXXX(HTTPRequest, HTTPResponse);
+
+	- Se o httpStatus for diferente de 200, algum erro aconteceu, logo, criar a pagina de erro:
+	
+
+HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
+
+  #PhysicalPathChecker;
+  #HTMLDocument;
+	
+	HTTPStatus doGet(HTTPRequest  &, HTTPResponse &)
+		- Com o caminho absolute em maos
+		- PathVerifier.pathToGetInvalid(
+			-Se for diferente de 200, retornar o HTTPStatus;
+		- caminhoFisicoReal eh para um diretorio:
+			HTMLDocument; ...
+		- caminhoFisicoReal eh para um arquivo:
+		
+	HTTPStatus doPost(HTTPRequest &, HTTPResponse &){
+		- PathVerifier.pathToGetInvalid(
+			- O valor vai ser diferente de 200, logo retornar ele
+		- Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
+	}
+	
+	HTTPStatus doDelete(HTTPRequest &, HTTPResponse &){
+		- PathVerifier.pathToGetInvalid(
+			- O valor vai ser diferente de 200, logo retornar ele
+		- Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
+	}
+}
+
+HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
+
+  #PhysicalPathChecker;
+
+  HTTPStatus doGet(HTTPRequest  &, HTTPResponse &);
+  HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
+  HTTPStatus doDelete(HTTPRequest &, HTTPResponse &);
+
+}	
+
+#PhysicalPathChecker : interface{
+
+	
+	
+}

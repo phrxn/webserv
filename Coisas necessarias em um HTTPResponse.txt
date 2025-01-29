@@ -1,0 +1,11 @@
+O HTTPResponse SEMPRE vai precisar possuir:
+
+[Versao do HTTP]     [Número do Status]    [Texto do Status]
+Server: [Nome do servidor]
+Date: [A data da requisicao quando ele for montada]
+Content-Type: [O Mime type baseado na extensão do arquivo, para listagem de diretório é sempre: text/html]
+Content-Length: [O tamanho do corpo do HTTPResponse]
+Connection: [Dizendo se a conexao deve ser mantinda ou nao, ter dois valores:  keep-alive   ou close]
+
+O HTTPResponse for resultado de um arquivo, ele vai precisar possuir:
+Last-Modified: [A data de modificicao do arquivo]
