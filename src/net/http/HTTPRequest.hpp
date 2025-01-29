@@ -16,8 +16,7 @@ class HTTPRequest : public Request {
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
   HTTPRequest();
-  void parserHeader();
-  void headerValidation();
+  
   StateOfCreation headerRequest();
 
   SocketFileDescriptor *_socketFD;
