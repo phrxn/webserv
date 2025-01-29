@@ -69,6 +69,11 @@
 
 	- Se o httpStatus for diferente de 200, algum erro aconteceu, logo, criar a pagina de erro:
 	
+	- carimbar as coisas finais no HTTPResponse:
+		- Nome do servidor:                 HTTPResponse.server("webserver");
+		- Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
+		- Manter ou não a conexão aberta:   HTTPResponse.setConnection("keep-alive");
+
 
 HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 
@@ -94,6 +99,17 @@ HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 			- O valor vai ser diferente de 200, logo retornar ele
 		- Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
 	}
+	
+	//metodo proprio da classe
+	void fillHTTPResponseWithHTMLDocument(HTMLDocument &, HTTPResponse &){
+
+		HTTPResponse.setStatus(200);
+		HTTPResponse.setBody(HTMLDocument.getData());
+		HTTPResponse.setBodySize(HTMLDocument.size());
+		HTTPResponse.setContentType(HTMLDocument.getMimeType());
+		HTTPResponse.setLastModified(HTMLDocument.getlastModified());
+		
+	}
 }
 
 HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
@@ -106,8 +122,6 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 }	
 
-#PhysicalPathChecker : interface{
+#PhysicalPathChecker : interface;
 
-	
-	
-}
+#HTMLDocument: interface;
