@@ -41,6 +41,7 @@ DELETE:
 	testes: se o caminho for para um diretorio, mas nao existir
 	testes: se o caminho for para um diretorio, mas nao existir
 
+-- criar uma subpasta com chmod 0, e listart a pasta pai para ver como se comporta
 
 -- fazer o teste bit a bit nos sites para ver como os webservers se comportam
 
