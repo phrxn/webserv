@@ -57,7 +57,7 @@ void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
     }
 }
 
-void HTTPRequestTool::parseRequest(const std::string& buffer) {
+void HTTPRequestTool::parserHeader(const std::string& buffer) {
     pos = 0;
     std::string tmp = buffer.substr(0, buffer.find("\r\n"));
     splitFirstLine(tmp);
@@ -68,4 +68,16 @@ void HTTPRequestTool::parseRequest(const std::string& buffer) {
 
 std::map<std::string, std::string> HTTPRequestTool::getHeaders() {
     return _header;
+}
+
+std::string HTTPRequestTool::getBody() {
+    return _body;
+}
+
+void HTTPRequestTool::setBody(const std::string& body, const std::string& contentLength) {
+    if (contentLength.empty()) {
+        _body = body;
+    } else {
+        _body = body.substr(0, std::stoi(contentLength));
+    }
 }

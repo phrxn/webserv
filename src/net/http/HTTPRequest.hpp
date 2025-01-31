@@ -10,8 +10,9 @@
 #include "../URL.hpp"
 #include "HTTPMethods.hpp"
 #include "HTTPStatus.hpp"
+#include "HTTPRequestTool.hpp"
 
-class HTTPRequest : public Request {
+class HTTPRequest : public Request, public HTTPRequestTool{
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
@@ -43,8 +44,6 @@ class HTTPRequest : public Request {
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
   HTTPMethods::Method getAnythingFromHeader(const std::string &key);
-
-  HTTPStatus::Status body();
 
   int getPort();
 };

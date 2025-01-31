@@ -14,11 +14,16 @@ public:
     // Destructor
     ~HTTPRequestTool();
 
+    // Getters
+    std::map<std::string, std::string> getHeaders();
+    std::string getBody();
     // Split the first line of the HTTP request
     void splitFirstLine(const std::string& buffer);
     void splitOtherLines(const std::string& buffer);
-    void parseRequest(const std::string& buffer);
-    std::map<std::string, std::string> getHeaders();
+    //parse the HTTP request
+    void parserHeader (const std::string& buffer);
+    //set body
+    void setBody(const std::string& body, const std::string& contentLength);
 
 private:
 
@@ -29,6 +34,7 @@ private:
     int _status;
     std::string line;
     std::size_t pos;
+    std::string _body;
 };
 
 #endif // HTTPREQUESTTOOL_HPP
