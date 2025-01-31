@@ -85,8 +85,10 @@ HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 		- PathVerifier.pathToGetInvalid(
 			-Se for diferente de 200, retornar o HTTPStatus;
 		- caminhoFisicoReal eh para um diretorio:
-			HTMLDocument; ...
+			HTMLDocument = FileHTMLDocument
 		- caminhoFisicoReal eh para um arquivo:
+		    HTMLDocument = DirectoryDocument
+		
 		
 	HTTPStatus doPost(HTTPRequest &, HTTPResponse &){
 		- PathVerifier.pathToGetInvalid(
