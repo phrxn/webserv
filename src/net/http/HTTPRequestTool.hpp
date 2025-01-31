@@ -26,9 +26,9 @@ private:
     HTTPRequestTool(const HTTPRequestTool& other);
 
     std::map<std::string, std::string> _header;
-    int _status = 1;
+    int _status;
     std::string line;
-    std::size_t pos = 0;
+    std::size_t pos;
 };
 
 #endif // HTTPREQUESTTOOL_HPP
