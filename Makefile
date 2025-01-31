@@ -51,8 +51,10 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/HTTPServletManager.cpp\
 		src/net/http/HTTPServletStatic.cpp\
 		src/net/http/HTTPStatus.cpp\
+		src/net/http/PhysicalPathChecker.cpp\
 		src/net/http/ProtocolManagerHTTP.cpp\
 		src/net/http/ProtocolManagerHTTPFake.cpp\
+		src/net/http/StaticPagesPhysicalPathChecker.cpp\
 		src/net/FileDescriptorVisitor.cpp\
 		src/net/GenericServer.cpp\
 		src/net/GenericServerRequestManager.cpp\
@@ -90,6 +92,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
+				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
