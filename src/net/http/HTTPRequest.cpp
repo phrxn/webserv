@@ -26,7 +26,7 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 
-	if(headerRequest() == REQUEST_CREATING){
+	if(HTTPRequestTool::parserHeader() == REQUEST_CREATING && ){
 		return REQUEST_CREATING;
 	}
 
@@ -82,9 +82,6 @@ bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
 	return false;
 }
 
-HTTPStatus::Status  HTTPRequest::body(){
-return HTTPStatus::OK;
-}
 
 std::string HTTPRequest::getHost(){
 	return "";

@@ -12,7 +12,7 @@
 #include "HTTPStatus.hpp"
 #include "HTTPRequestTool.hpp"
 
-class HTTPRequest : public Request, public HTTPRequestTool{
+class HTTPRequest : public Request {
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
