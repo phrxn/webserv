@@ -5,7 +5,9 @@
 #include "CreateDirectoryHTMLPage.hpp"
 
 DirectoryHTMLDocument::DirectoryHTMLDocument(const std::string &pathToDirectory)
-    : _directory(new File(pathToDirectory)) {}
+    : _directory(new File(pathToDirectory)) {
+	createDirectoryListFileHTML(_directory);
+}
 
 DirectoryHTMLDocument::DirectoryHTMLDocument(File *directoryToCreateList)
     : _directory(directoryToCreateList) {}
@@ -36,6 +38,11 @@ std::string DirectoryHTMLDocument::getLastModified() const { return ""; }
 
 HTTPStatus::Status DirectoryHTMLDocument::getStatus() const { return _status; }
 
+
+HTMLDocument* DirectoryHTMLDocument::clone() const{
+	return new DirectoryHTMLDocument(*this);
+}
+
 void DirectoryHTMLDocument::createDirectoryListFileHTML(
     File *directoryToCreateList) {
   if (!directoryToCreateList->isDirectory()) {
@@ -44,7 +51,19 @@ void DirectoryHTMLDocument::createDirectoryListFileHTML(
   }
 
   std::vector<File> filesInsideOfDirectory = directoryToCreateList->listFiles();
+
   removeDotAndDotDotDirectoriesFromDirectoryList(filesInsideOfDirectory);
+
+
+  //add fullpath
+  std::vector<File>::iterator it1 = filesInsideOfDirectory.begin();
+  std::vector<File>::iterator end1 = filesInsideOfDirectory.end();
+
+  for (; it1 != end1; ++it1) {
+   std::string fullPath = _directory->getPath() + it1->getPath();
+   it1->setPath(fullPath);
+  }
+
   sortDirectoryFiles(filesInsideOfDirectory);
 
   std::vector<ItemDirectoryHTMLDocument> listAllDirectoryItems =
@@ -91,13 +110,13 @@ void DirectoryHTMLDocument::removeDotAndDotDotDirectoriesFromDirectoryList(
 std::vector<ItemDirectoryHTMLDocument>
 DirectoryHTMLDocument::createItemDirectoryHTMLDocumentList(
     std::vector<File> &listFilesInsideDirectory) {
-  std::vector<File>::const_iterator it = listFilesInsideDirectory.begin();
-  std::vector<File>::const_iterator end = listFilesInsideDirectory.end();
+  std::vector<File>::iterator it = listFilesInsideDirectory.begin();
+  std::vector<File>::iterator end = listFilesInsideDirectory.end();
 
   std::vector<ItemDirectoryHTMLDocument> itemList;
 
   for (; it != end; ++it) {
-    itemList.push_back(ItemDirectoryHTMLDocument(*it));
+    itemList.push_back(ItemDirectoryHTMLDocument(*it, _directory->getPath()));
   }
   return itemList;
 }

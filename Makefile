@@ -38,9 +38,11 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
 		src/net/http/html/FileHTMLDocument.cpp\
+		src/net/http/html/FillHTTPResponse.cpp\
 		src/net/http/html/HTMLDocument.cpp\
 		src/net/http/html/ItemDirectoryHTMLDocument.cpp\
 		src/net/http/GetMimeType.cpp\
+		src/net/http/HandlerHTTPStatus.cpp\
 		src/net/http/HTTPMethods.cpp\
 		src/net/http/HTTPRequest.cpp\
 		src/net/http/HTTPRequestFake.cpp\
@@ -67,7 +69,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/SocketFileDescriptor.cpp\
 		src/net/SocketFileDescriptorImpl.cpp\
 		src/net/URL.cpp\
-		src/net/VirtualHost.cpp\
+		src/net/VirtualHostDefault.cpp\
 		src/net/VirtualHostCluster.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateDefaultErrorPages.cpp\
@@ -91,6 +93,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/GetMimeTypeTest.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
+				src/net/http/HTTPResponseTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
 				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\
 				src/net/GenericServerTest.cpp\
@@ -99,7 +102,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/URLTest.cpp\
 				src/net/VirtualHostClusterTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp\
-				src/net/VirtualHostTest.cpp\
+				src/net/VirtualHostDefaultTest.cpp\
 				src/start/CreateDefaultErrorPagesFactoryTest.cpp\
 				src/start/CreateDefaultErrorPagesTest.cpp\
 				src/start/CreateMimeTypeMapTest.cpp\

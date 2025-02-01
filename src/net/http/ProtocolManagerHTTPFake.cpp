@@ -2,7 +2,8 @@
 
 ProtocolManagerHTTPFake::ProtocolManagerHTTPFake(SocketFileDescriptor *socket,
                                                  Log *logger)
-    : _hTTPRequestFake(socket, logger),
+    : _hTTPServletManager(socket, logger),
+      _hTTPRequestFake(socket, logger),
       _hTTPResponseFake(socket, logger),
       _socketFD(socket),
       _logger(logger) {}
@@ -12,7 +13,8 @@ ProtocolManagerHTTPFake::~ProtocolManagerHTTPFake() {}
 // deleted (this class MUST BE UNIQUE!)
 ProtocolManagerHTTPFake::ProtocolManagerHTTPFake(
     const ProtocolManagerHTTPFake &src)
-    : _hTTPRequestFake(src._socketFD, src._logger),
+    : _hTTPServletManager(src._socketFD, src._logger),
+      _hTTPRequestFake(src._socketFD, src._logger),
       _hTTPResponseFake(src._socketFD, src._logger),
       _logger(src._logger) {
   (void)src;
@@ -32,10 +34,15 @@ ProtocolManagerHTTPFake::createRequest() {
   return REQUEST_CREATED;
 }
 
-void ProtocolManagerHTTPFake::servlet() {}
+void ProtocolManagerHTTPFake::servlet() {
+  _hTTPServletManager.doService(_hTTPRequestFake, _hTTPResponseFake);
+}
 
 void ProtocolManagerHTTPFake::createResponse() {
   _hTTPResponseFake.createResponse();
 }
 
-void ProtocolManagerHTTPFake::connectionHitTheTimeout() {}
+void ProtocolManagerHTTPFake::connectionHitTheTimeout() {
+   _hTTPServletManager.doError(HTTPStatus::TIMEOUT, _hTTPResponseFake);
+   _hTTPResponseFake.createResponse();
+}

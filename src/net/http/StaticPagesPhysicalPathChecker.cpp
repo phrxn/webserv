@@ -36,11 +36,12 @@ StaticPagesPhysicalPathChecker::isThePathValidForTheGetMethod(
 
   if (!statWasFilledIn.ok()) {
     errorMessage = statWasFilledIn.status().message();
-    if (errorMessage == "Not a directory" ||
-        errorMessage == "No such file or directory") {
+
+    if (errorMessage.find("Not a directory") != std::string::npos ||
+        errorMessage.find("No such file or directory") != std::string::npos) {
       return HTTPStatus::NOT_FOUND;
     }
-    if (errorMessage == "Permission denied") {
+    if (errorMessage.find("Permission denied") != std::string::npos) {
       return HTTPStatus::FORBIDDEN;
     }
   }
@@ -75,11 +76,12 @@ StaticPagesPhysicalPathChecker::isThePathValidForThePostMethod(
 
   if (!statWasFilledIn.ok()) {
     errorMessage = statWasFilledIn.status().message();
-    if (errorMessage == "Not a directory" ||
-        errorMessage == "No such file or directory") {
+
+    if (errorMessage.find("Not a directory") != std::string::npos ||
+        errorMessage.find("No such file or directory") != std::string::npos) {
       return HTTPStatus::NOT_FOUND;
     }
-    if (errorMessage == "Permission denied") {
+    if (errorMessage.find("Permission denied") != std::string::npos) {
       return HTTPStatus::FORBIDDEN;
     }
   }

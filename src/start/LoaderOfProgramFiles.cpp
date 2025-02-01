@@ -3,7 +3,7 @@
 #include <list>
 
 #include "../error/StatusOr.hpp"
-#include "../net/VirtualHost.hpp"
+#include "../net/VirtualHostDefault.hpp"
 #include "../net/VirtualHostFactory.hpp"
 #include "../net/http/GetMimeType.hpp"
 #include "CreateDefaultErrorPages.hpp"
@@ -100,14 +100,14 @@ bool LoaderOfProgramFiles::checkParameters(int argc) const {
 }
 
 bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv) {
-  std::list<VirtualHost> virtualHostsFromFile;
-  VirtualHost a(8111, "abc");
-  VirtualHost b(8110, "xyz");
+  std::list<VirtualHostDefault> virtualHostsFromFile;
+  VirtualHostDefault a(8111, "abc");
+  VirtualHostDefault b(8110, "xyz");
   virtualHostsFromFile.push_back(a);
   virtualHostsFromFile.push_back(b);
 
-  std::list<VirtualHost>::const_iterator it = virtualHostsFromFile.begin();
-  std::list<VirtualHost>::const_iterator end = virtualHostsFromFile.end();
+  std::list<VirtualHostDefault>::const_iterator it = virtualHostsFromFile.begin();
+  std::list<VirtualHostDefault>::const_iterator end = virtualHostsFromFile.end();
 
   VirtualHostCluster virtualHostCluster;
 

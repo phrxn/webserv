@@ -22,6 +22,7 @@ CreateDefaultErrorPages::CreateDefaultErrorPages(
 
 CreateDefaultErrorPages &CreateDefaultErrorPages::operator=(
     const CreateDefaultErrorPages &src) {
+  if (this == &src) return *this;
   if (_theErrno) {
     delete _theErrno;
   }
@@ -32,6 +33,9 @@ CreateDefaultErrorPages &CreateDefaultErrorPages::operator=(
 error::StatusOr<std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*> >
 CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   std::list<HTTPStatus::Status> listStatusWithPage;
+
+  // 300 family
+  listStatusWithPage.push_back(HTTPStatus::MOVED_PERMANENTLY);
 
   // 400 family
   listStatusWithPage.push_back(HTTPStatus::BAD_REQUEST);

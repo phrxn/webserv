@@ -37,7 +37,7 @@ HTTPMethods &HTTPMethods::operator=(const HTTPMethods &src){
 	return *this;
 }
 
-HTTPMethods::Method HTTPMethods::getStringToMethod(std::string status){
+HTTPMethods::Method HTTPMethods::getStringToMethod(const std::string &status){
 	std::map<HTTPMethods::Method, std::string>::const_iterator start = mapMethods.begin();
 	std::map<HTTPMethods::Method, std::string>::const_iterator end = mapMethods.end();
 

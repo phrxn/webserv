@@ -6,7 +6,7 @@
 
 #include "../error/Log.hpp"
 #include "../error/StatusOr.hpp"
-#include "VirtualHost.hpp"
+#include "VirtualHostDefault.hpp"
 #include "VirtualHostCluster.hpp"
 
 class VirtualHostFactory {
@@ -18,7 +18,8 @@ class VirtualHostFactory {
   VirtualHostFactory(const VirtualHostFactory &src);
   VirtualHostFactory &operator=(const VirtualHostFactory &src);
 
-  VirtualHost getVirtualHost(int port, const std::string &hostName) const;
+  VirtualHostDefault getVirtualHost(int port, const std::string &hostName) const;
+  VirtualHostDefault getDefaultVirtualHost() const;
   void setLogger(Log *logger);
 
  private:

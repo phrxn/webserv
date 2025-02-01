@@ -1,24 +1,31 @@
 #ifndef NET_HTTP_HTTP_SERVLET_STATIC_HPP
 #define NET_HTTP_HTTP_SERVLET_STATIC_HPP
 
+#include "../VirtualHostDefault.hpp"
 #include "HTTPServlet.hpp"
-
-#include "../VirtualHost.hpp"
+#include "PhysicalPathChecker.hpp"
+#include "html/FillHTTPResponse.hpp"
+#include "html/HTMLDocument.hpp"
 
 class HTTPServletStatic : public HTTPServlet {
  public:
-  HTTPServletStatic(const VirtualHost virtualHost);
+  HTTPServletStatic(const std::string &physicalPathToResource,
+                    bool canListDirectory);
   ~HTTPServletStatic();
 
-  void doGet(HTTPRequest &request, HTTPResponse &response);
-  void doPost(HTTPRequest &request, HTTPResponse &response);
-  void doDelete(HTTPRequest &request, HTTPResponse &response);
+  HTTPStatus::Status doGet(HTTPRequest &request, HTTPResponse &response);
+  HTTPStatus::Status doPost(HTTPRequest &request, HTTPResponse &response);
+  HTTPStatus::Status doDelete(HTTPRequest &request, HTTPResponse &response);
 
  private:
   HTTPServletStatic(const HTTPServletStatic &src);
   HTTPServletStatic &operator=(const HTTPServletStatic &src);
 
-  const VirtualHost _virtualHost;
+  std::string _physicalPathToResource;
+  bool _canListDirectory;
+  PhysicalPathChecker *_physicalPathChecker;
+  HTMLDocument *_htmlDocument;
+  FillHTTPResponse _fillHTTPResponse;
 };
 
 #endif

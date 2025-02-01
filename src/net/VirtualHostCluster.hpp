@@ -5,7 +5,7 @@
 #include <map>
 
 #include "../error/StatusOr.hpp"
-#include "VirtualHost.hpp"
+#include "VirtualHostDefault.hpp"
 
 class VirtualHostCluster {
  public:
@@ -14,15 +14,15 @@ class VirtualHostCluster {
   VirtualHostCluster(const VirtualHostCluster &src);
   VirtualHostCluster &operator=(const VirtualHostCluster &src);
 
-  bool addVirtualHostToCluster(const VirtualHost &VirtualHost);
-  virtual error::StatusOr<VirtualHost> getVirtualHost(
+  bool addVirtualHostToCluster(const VirtualHostDefault &VirtualHostDefault);
+  virtual error::StatusOr<VirtualHostDefault> getVirtualHost(
       int port, const std::string &serverName) const;
   std::list<int> getAllPorts() const;
 
-  const std::map<int, std::list<VirtualHost> > &getMap() const;
+  const std::map<int, std::list<VirtualHostDefault> > &getMap() const;
 
  private:
-  std::map<int, std::list<VirtualHost> > _mapTheCluster;
+  std::map<int, std::list<VirtualHostDefault> > _mapTheCluster;
 
 };
 

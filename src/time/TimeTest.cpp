@@ -3,8 +3,6 @@
 
 #include "Time.hpp"
 
-#include <iostream>
-
 TEST(TimeTest, convertTimeToHTTPHeaderPattern){
 
 	Time time;

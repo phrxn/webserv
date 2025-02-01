@@ -3,14 +3,18 @@
 
 #include "HTTPRequest.hpp"
 #include "HTTPResponse.hpp"
+#include "HTTPStatus.hpp"
 
 class HTTPServlet {
  public:
   virtual ~HTTPServlet() = 0;
 
-  virtual void doGet(HTTPRequest &request, HTTPResponse &response) = 0;
-  virtual void doPost(HTTPRequest &request, HTTPResponse &response) = 0;
-  virtual void doDelete(HTTPRequest &request, HTTPResponse &response) = 0;
+  virtual HTTPStatus::Status doGet(HTTPRequest &request,
+                                   HTTPResponse &response) = 0;
+  virtual HTTPStatus::Status doPost(HTTPRequest &request,
+                                    HTTPResponse &response) = 0;
+  virtual HTTPStatus::Status doDelete(HTTPRequest &request,
+                                      HTTPResponse &response) = 0;
 };
 
 #endif

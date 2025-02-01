@@ -2,21 +2,19 @@
 
 #include <sstream>
 
-FileHTMLDocument::FileHTMLDocument(): _status(HTTPStatus::NOT_FOUND),
+FileHTMLDocument::FileHTMLDocument()
+    : _status(HTTPStatus::NOT_FOUND),
       _file(new File),
       _time(new Time),
-      _getMimeType(new GetMimeType) {
-}
+      _getMimeType(new GetMimeType) {}
 
 FileHTMLDocument::FileHTMLDocument(const std::string &pathToFile)
     : _status(HTTPStatus::NOT_FOUND),
       _file(new File(pathToFile)),
       _time(new Time),
       _getMimeType(new GetMimeType) {
-
-	std::ifstream file(pathToFile.c_str());
-	init(pathToFile, file);
-
+  std::ifstream file(pathToFile.c_str());
+  init(pathToFile, file);
 }
 
 FileHTMLDocument::FileHTMLDocument(const std::string &pathToFile,
@@ -25,66 +23,54 @@ FileHTMLDocument::FileHTMLDocument(const std::string &pathToFile,
       _file(new File(pathToFile)),
       _time(new Time),
       _getMimeType(new GetMimeType) {
-
-	init(pathToFile, fileToRead);
+  init(pathToFile, fileToRead);
 }
 
-FileHTMLDocument::~FileHTMLDocument() {
-	freeThings();
-}
+FileHTMLDocument::~FileHTMLDocument() { freeThings(); }
 
-FileHTMLDocument::FileHTMLDocument(const FileHTMLDocument &src):
-	  _status(src._status),
+FileHTMLDocument::FileHTMLDocument(const FileHTMLDocument &src)
+    : _status(src._status),
       _file(new File(*src._file)),
       _time(new Time(*src._time)),
       _getMimeType(new GetMimeType(*src._getMimeType)) {
-
-	_pathToFile = src._pathToFile;
-	_data = src._data;
-	_mimeType = src._mimeType;
-	_lastModified = src._lastModified;
+  _pathToFile = src._pathToFile;
+  _data = src._data;
+  _mimeType = src._mimeType;
+  _lastModified = src._lastModified;
 }
 
 FileHTMLDocument &FileHTMLDocument::operator=(const FileHTMLDocument &src) {
-	if (this == &src) return *this;
-	freeThings();
+  if (this == &src) return *this;
+  freeThings();
 
-	_status = src._status;
-    _file = new File(*src._file);
-    _time = new Time(*src._time);
-    _getMimeType = new GetMimeType(*src._getMimeType);
+  _status = src._status;
+  _file = new File(*src._file);
+  _time = new Time(*src._time);
+  _getMimeType = new GetMimeType(*src._getMimeType);
 
-	_pathToFile = src._pathToFile;
-	_data = src._data;
-	_mimeType = src._mimeType;
-	_lastModified = src._lastModified;
+  _pathToFile = src._pathToFile;
+  _data = src._data;
+  _mimeType = src._mimeType;
+  _lastModified = src._lastModified;
 
-	return *this;
+  return *this;
 }
 
-std::string FileHTMLDocument::getData() const {
-	return _data;
+std::string FileHTMLDocument::getData() const { return _data; }
+
+std::size_t FileHTMLDocument::getSize() const { return _data.size(); }
+
+std::string FileHTMLDocument::getMimeType() const { return _mimeType; }
+
+std::string FileHTMLDocument::getLastModified() const { return _lastModified; }
+
+HTTPStatus::Status FileHTMLDocument::getStatus() const { return _status; }
+
+HTMLDocument* FileHTMLDocument::clone() const{
+	return new FileHTMLDocument(*this);
 }
 
-std::size_t FileHTMLDocument::getSize() const {
-	return _data.size();
-}
-
-std::string FileHTMLDocument::getMimeType() const {
-	return _mimeType;
-}
-
-std::string FileHTMLDocument::getLastModified() const {
-	return _lastModified;
-}
-
-HTTPStatus::Status FileHTMLDocument::getStatus() const{
-	return _status;
-}
-
-std::string FileHTMLDocument::getPathToFile() const {
-	return _pathToFile;
-}
+std::string FileHTMLDocument::getPathToFile() const { return _pathToFile; }
 
 void FileHTMLDocument::setFile(File *file) {
   if (_file) {
@@ -124,12 +110,12 @@ void FileHTMLDocument::init(const std::string &pathToFile,
   ss << fileToRead.rdbuf();
 
   _data = ss.str();
-  _mimeType = _getMimeType->getExtensionFromPath(pathToFile);
+  _mimeType = _getMimeType->getMimeTypeByFileExtesion(pathToFile);
   _lastModified =
       _time->convertTimeToHTTPHeaderPattern(_file->getModificationTime());
 }
 
-void FileHTMLDocument::freeThings() const{
+void FileHTMLDocument::freeThings() const {
   if (_file) {
     delete _file;
   }

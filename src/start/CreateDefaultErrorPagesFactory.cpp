@@ -50,8 +50,9 @@ ErrorPageFileHTMLDocument *CreateDefaultErrorPagesFactory::getDefaultErrorPages(
 
   std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *>::const_iterator it =
       mapWithDefaultPagesErrors.find(codeStatus);
+
   if (it != end) {
-    return it->second;
+    return dynamic_cast<ErrorPageFileHTMLDocument *>(it->second->clone());
   }
 
   if (_logger) {
@@ -62,7 +63,10 @@ ErrorPageFileHTMLDocument *CreateDefaultErrorPagesFactory::getDefaultErrorPages(
         codeStatus);
   }
 
-  return mapWithDefaultPagesErrors[HTTPStatus::SERVER_ERROR];
+  ErrorPageFileHTMLDocument *pageErro =
+      mapWithDefaultPagesErrors[HTTPStatus::SERVER_ERROR];
+
+  return dynamic_cast<ErrorPageFileHTMLDocument *>(pageErro->clone());
 }
 
 void CreateDefaultErrorPagesFactory::setLogger(Log *logger) {

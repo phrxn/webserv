@@ -5,8 +5,13 @@
 class ErrorPageFileHTMLDocumentMock : public ErrorPageFileHTMLDocument {
  public:
   ErrorPageFileHTMLDocumentMock(const std::string &data) : _data(data) {}
-  std::string getData() const {
-    return _data;
+  std::string getData() const { return _data; }
+
+  ErrorPageFileHTMLDocumentMock(const ErrorPageFileHTMLDocumentMock &src)
+      : _data(src._data) {}
+
+  HTMLDocument *clone() const {
+    return new ErrorPageFileHTMLDocumentMock(*this);
   }
 
  private:

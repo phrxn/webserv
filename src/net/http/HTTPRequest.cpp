@@ -144,3 +144,7 @@ std::string HTTPRequest::getURL(){
 int HTTPRequest::getPort(){
 	return _socketFD->getServerPort();
 }
+
+std::string HTTPRequest::isToKeepTheConnection(){
+	return _header["Connection"];
+}

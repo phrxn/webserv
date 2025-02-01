@@ -34,6 +34,9 @@ class ProgramConfiguration {
   std::size_t getMaxRequestSizeInBytes() const;
   void setMaxRequestSizeInBytes(std::size_t maxSize);
 
+  std::string getServerName() const;
+  void setServerName(const std::string &serverName);
+
  protected:
   ProgramConfiguration();
   ProgramConfiguration(const ProgramConfiguration &src);
@@ -46,6 +49,7 @@ class ProgramConfiguration {
   std::list<HTTPMethods::Method> _listSupportedMethodsByServer;
   const char **_environmentVariables;
   std::size_t _maxRequestSizeInBytes;
+  std::string _serverName;
 
 };
 

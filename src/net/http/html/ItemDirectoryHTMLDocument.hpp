@@ -8,8 +8,8 @@
 
 class ItemDirectoryHTMLDocument {
  public:
-  ItemDirectoryHTMLDocument();
-  ItemDirectoryHTMLDocument(const File &file);
+  //ItemDirectoryHTMLDocument();
+  ItemDirectoryHTMLDocument(const File &file, const std::string &dirParent);
   ItemDirectoryHTMLDocument(const std::string &path, time_t modificationTime,
                             ssize_t sizeInBytes, bool isDirectory);
   ~ItemDirectoryHTMLDocument();
@@ -27,6 +27,7 @@ class ItemDirectoryHTMLDocument {
   void init(const std::string &path, time_t modificationTime,
             ssize_t sizeInBytes, bool isDirectory);
 
+  std::string _dirParent;
   std::string _path;
   time_t _modificationTime;
   ssize_t _sizeInBytes;

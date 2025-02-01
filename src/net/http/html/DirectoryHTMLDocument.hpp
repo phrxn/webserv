@@ -20,6 +20,7 @@ class DirectoryHTMLDocument : public HTMLDocument {
   std::string getMimeType() const;
   std::string getLastModified() const;
   HTTPStatus::Status getStatus() const;
+  virtual HTMLDocument* clone() const;
 
   void createDirectoryListFileHTML(File *directoryToCreateList);
 

@@ -117,9 +117,10 @@ Start &Start::operator=(const Start &src) {
 void Start::createProgramConfiguration() {
   _programConfiguration.setEnvironment(TEST);
   _programConfiguration.setTypeOfProtocol(HTTP);
-  _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(5);
+  _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(15);
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
+  _programConfiguration.setServerName("Webserv");
 
   // 5MB
   _programConfiguration.setMaxRequestSizeInBytes(5242880);

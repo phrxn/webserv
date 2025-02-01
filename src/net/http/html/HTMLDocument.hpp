@@ -14,6 +14,7 @@ class HTMLDocument {
   virtual std::string getLastModified() const = 0;
   virtual HTTPStatus::Status getStatus() const = 0;
 
+  virtual HTMLDocument* clone() const = 0;
 
 };
 

@@ -38,6 +38,8 @@ class File {
 
   std::string getPath() const;
 
+  void setPath(const std::string &path);
+
   bool exist() const;
 
   ssize_t size() const;

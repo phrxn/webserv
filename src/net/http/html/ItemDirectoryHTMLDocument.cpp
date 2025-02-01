@@ -2,11 +2,7 @@
 
 #include <sstream>
 
-ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument() {
-  init("", 0, 0, false);
-}
-
-ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument(const File &file) {
+ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument(const File &file, const std::string &dirParent) : _dirParent(dirParent){
   init(file.getPath(), file.getModificationTime(), file.size(),
        file.isDirectory());
 }
@@ -21,17 +17,19 @@ ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument(const std::string &path,
 ItemDirectoryHTMLDocument::~ItemDirectoryHTMLDocument() {}
 
 ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument(
-    const ItemDirectoryHTMLDocument &src) {
+    const ItemDirectoryHTMLDocument &src)  {
   *this = src;
 }
 
 ItemDirectoryHTMLDocument &ItemDirectoryHTMLDocument::operator=(
     const ItemDirectoryHTMLDocument &src) {
   if (this == &src) return *this;
+  _dirParent = src._dirParent;
   _path = src._path;
   _modificationTime = src._modificationTime;
   _sizeInBytes = src._sizeInBytes;
   _isDirectory = src._isDirectory;
+  _time = src._time;
   return *this;
 }
 
@@ -51,13 +49,16 @@ bool ItemDirectoryHTMLDocument::operator<(
   return _path < src._path;
 }
 
+
 std::string ItemDirectoryHTMLDocument::getPath() const {
 
+  std::string _pathFile = _path.substr(_dirParent.size());
+
   //if the path is a directory and does not end with a slash, add it
-  if (_isDirectory && (!_path.empty() && _path[_path.length() - 1] != '/')) {
-    return (_path + "/");
+  if (_isDirectory && (!_pathFile.empty() && _pathFile[_pathFile.length() - 1] != '/')) {
+    return (_pathFile + "/");
   }
-  return _path;
+  return _pathFile;
 }
 
 std::string ItemDirectoryHTMLDocument::getModificationTime() const {

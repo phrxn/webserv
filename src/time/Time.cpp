@@ -39,3 +39,8 @@ std::string Time::convertTimeToItemDirectoryHTML(const time_t &time) const {
 
   return formattedDate;
 }
+
+std::string Time::getCurrentTimeToStampAHTTPHeader() {
+  std::time_t now = std::time(0);
+  return convertTimeToHTTPHeaderPattern(now);
+}

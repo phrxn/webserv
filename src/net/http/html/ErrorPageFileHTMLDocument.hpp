@@ -16,6 +16,7 @@ class ErrorPageFileHTMLDocument : public FileHTMLDocument {
 
   std::string getMimeType() const;
   std::string getLastModified() const;
+  HTMLDocument* clone() const;
 
 };
 

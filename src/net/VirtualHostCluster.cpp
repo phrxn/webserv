@@ -19,21 +19,21 @@ VirtualHostCluster &VirtualHostCluster::operator=(
 }
 
 bool VirtualHostCluster::addVirtualHostToCluster(
-    const VirtualHost &virtualHost) {
-  std::map<int, std::list<VirtualHost> >::iterator itPortAndItsList =
+    const VirtualHostDefault &virtualHost) {
+  std::map<int, std::list<VirtualHostDefault> >::iterator itPortAndItsList =
       _mapTheCluster.find(virtualHost.getPort());
 
   // if the port doesn't have its list, let's create one
   if (itPortAndItsList == _mapTheCluster.end()) {
-    std::list<VirtualHost> listNewPort;
+    std::list<VirtualHostDefault> listNewPort;
     listNewPort.push_back(virtualHost);
     _mapTheCluster[virtualHost.getPort()] = listNewPort;
     return true;
   }
 
-  std::list<VirtualHost> &list = itPortAndItsList->second;
+  std::list<VirtualHostDefault> &list = itPortAndItsList->second;
 
-  std::list<VirtualHost>::iterator itVirtualHost =
+  std::list<VirtualHostDefault>::iterator itVirtualHost =
       std::find(list.begin(), list.end(), virtualHost);
 
   // if the virtual host already exist in the list it cannot be inserted again
@@ -45,11 +45,11 @@ bool VirtualHostCluster::addVirtualHostToCluster(
   return true;
 }
 
-error::StatusOr<VirtualHost> VirtualHostCluster::getVirtualHost(
+error::StatusOr<VirtualHostDefault> VirtualHostCluster::getVirtualHost(
     int port, const std::string &serverName) const {
   std::stringstream ss;
 
-  std::map<int, std::list<VirtualHost> >::const_iterator it =
+  std::map<int, std::list<VirtualHostDefault> >::const_iterator it =
       _mapTheCluster.find(port);
 
   if (it == _mapTheCluster.end()) {
@@ -57,11 +57,11 @@ error::StatusOr<VirtualHost> VirtualHostCluster::getVirtualHost(
     return error::Status(error::Status::ObjectDoesnotExit, ss.str());
   }
 
-  VirtualHost toFind(port, serverName);
+  VirtualHostDefault toFind(port, serverName);
 
-  const std::list<VirtualHost> &listHostWithPortEquals = it->second;
+  const std::list<VirtualHostDefault> &listHostWithPortEquals = it->second;
 
-  std::list<VirtualHost>::const_iterator itList = std::find(
+  std::list<VirtualHostDefault>::const_iterator itList = std::find(
       listHostWithPortEquals.begin(), listHostWithPortEquals.end(), toFind);
   if (itList != listHostWithPortEquals.end()) {
     return *itList;
@@ -72,9 +72,9 @@ error::StatusOr<VirtualHost> VirtualHostCluster::getVirtualHost(
 std::list<int> VirtualHostCluster::getAllPorts() const {
   std::list<int> allPorts;
 
-  std::map<int, std::list<VirtualHost> >::const_iterator it =
+  std::map<int, std::list<VirtualHostDefault> >::const_iterator it =
       _mapTheCluster.begin();
-  std::map<int, std::list<VirtualHost> >::const_iterator end =
+  std::map<int, std::list<VirtualHostDefault> >::const_iterator end =
       _mapTheCluster.end();
 
   for (; it != end; ++it) {
@@ -83,7 +83,7 @@ std::list<int> VirtualHostCluster::getAllPorts() const {
   return allPorts;
 }
 
-const std::map<int, std::list<VirtualHost> > &VirtualHostCluster::getMap()
+const std::map<int, std::list<VirtualHostDefault> > &VirtualHostCluster::getMap()
     const {
   return _mapTheCluster;
 }

@@ -149,6 +149,10 @@ bool File::exist() const {
   return false;
 }
 
+void File::setPath(const std::string &path){
+	_path = path;
+}
+
 std::vector<File> File::listFiles() const {
   std::vector<File> fileInsideDirectory;
 

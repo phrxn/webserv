@@ -34,7 +34,7 @@ class HTTPMethods {
   HTTPMethods(const HTTPMethods &src);
   HTTPMethods &operator=(const HTTPMethods &src);
 
-  HTTPMethods::Method getStringToMethod(std::string status);
+  HTTPMethods::Method getStringToMethod(const std::string &status);
   std::string getMethodToString(HTTPMethods::Method status);
 
   private:

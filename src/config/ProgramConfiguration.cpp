@@ -87,3 +87,11 @@ std::size_t ProgramConfiguration::getMaxRequestSizeInBytes() const{
 void ProgramConfiguration::setMaxRequestSizeInBytes(std::size_t maxSize){
 	_maxRequestSizeInBytes = maxSize;
 }
+
+std::string ProgramConfiguration::getServerName() const{
+	return _serverName;
+}
+
+void ProgramConfiguration::setServerName(const std::string &serverName){
+	_serverName = serverName;
+}

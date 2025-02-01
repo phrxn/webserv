@@ -4,10 +4,10 @@
 #include <string>
 
 #include "../../error/Log.hpp"
-#include "../Request.hpp"
+#include "HTTPRequest.hpp"
 #include "../SocketFileDescriptor.hpp"
 
-class HTTPRequestFake : public Request {
+class HTTPRequestFake : public HTTPRequest {
  public:
   HTTPRequestFake(SocketFileDescriptor *socketFD, Log *logger);
   ~HTTPRequestFake();
@@ -16,6 +16,12 @@ class HTTPRequestFake : public Request {
 
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
+  HTTPMethods::Method getMethod();
+
+  std::string getURL();
+
+  HTTPStatus::Status getStatus();
+
  private:
   HTTPRequestFake(const HTTPRequestFake &src);
   HTTPRequestFake &operator=(const HTTPRequestFake &src);
@@ -23,6 +29,12 @@ class HTTPRequestFake : public Request {
   SocketFileDescriptor *_socketFD;
   std::string _buffer;
   Log *_logger;
+
+  std::string _method;
+  std::string _url;
+  HTTPStatus::Status _status;
+
+
 };
 
 #endif

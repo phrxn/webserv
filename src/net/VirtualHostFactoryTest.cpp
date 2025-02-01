@@ -19,7 +19,7 @@ class LogMock : public Log {
 
 class VirtualHostClusterMock : public VirtualHostCluster {
  public:
-  MOCK_METHOD(error::StatusOr<VirtualHost>, getVirtualHost,
+  MOCK_METHOD(error::StatusOr<VirtualHostDefault>, getVirtualHost,
               (int port, const std::string &serverName), (const override));
 };
 
@@ -30,15 +30,15 @@ TEST(VirtualHostFactoryTest, getVirtualHost_virtualHostDoesntExists) {
 
   EXPECT_CALL(*logMock,
               log(Log::FATAL, "VirtualHostFactory", "getVirtualHost",
-                  "using default VirtualHost, the virtualhost wasn't found",
+                  "using default VirtualHostDefault, the virtualhost wasn't found",
                   "port: 80, hostname: foo"))
       .Times(1);
   VirtualHostFactory vFactory;
   vFactory.setLogger(logMock);
 
-  VirtualHost vh = vFactory.getVirtualHost(80, "foo");
+  VirtualHostDefault vh = vFactory.getVirtualHost(80, "foo");
 
-  VirtualHost toCompare(-1, "");
+  VirtualHostDefault toCompare(-1, "");
 
   EXPECT_EQ(toCompare, vh);
 

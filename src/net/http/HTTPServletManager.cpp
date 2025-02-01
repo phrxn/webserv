@@ -7,9 +7,7 @@
 
 HTTPServletManager::HTTPServletManager(SocketFileDescriptor *socketFD,
                                        Log *logger)
-    : _hTTPServlet(NULL),
-      _socketFD(socketFD),
-      _logger(logger) {}
+    : _hTTPServlet(NULL), _socketFD(socketFD), _logger(logger) {}
 
 HTTPServletManager::~HTTPServletManager() {
   if (_hTTPServlet) delete _hTTPServlet;
@@ -30,45 +28,91 @@ HTTPServletManager &HTTPServletManager::operator=(
 void HTTPServletManager::doService(HTTPRequest &request,
                                    HTTPResponse &response) {
   VirtualHostFactory vhf;
+
   _virtualHost = vhf.getVirtualHost(request.getPort(), request.getHost());
 
+  HandlerHTTPStatus _handlerHTTPStatus(_virtualHost);
+
   if (request.getStatus() != HTTPStatus::OK) {
-    return doError(request.getStatus(), response);
+    return _handlerHTTPStatus.doStatusError(response, request.getStatus());
   }
 
-  if (_virtualHost.isUrlAPathToCGI(request.getURL())) {
+  URL url;
+  url.parserStringToURL(request.getURL());
+
+  if (!_virtualHost.isPathValid(url)) {
+    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
+  }
+
+  std::string pathRedirection = _virtualHost.isPathARedirection(url);
+  if (pathRedirection != "") {
+    return _handlerHTTPStatus.doStatusFamily300(
+        response, HTTPStatus::MOVED_PERMANENTLY, pathRedirection);
+  }
+
+  if (!_virtualHost.isTheMethodAllowedForThisPath(url, request.getMethod())) {
+    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_ALLOWED);
+  }
+
+  bool pathPointsToCGI = _virtualHost.isUrlAPathToCGI(url);
+  std::string absolutePathToResource = _virtualHost.getThePhysicalPath(url);
+  _logger->log(Log::DEBUG, "HTTPServletManager", "doService",
+                   "absolute path to resource", absolutePathToResource);
+
+  bool canListDirectory =
+      _virtualHost.isDirectoryListingAllowedForThisPath(url);
+
+  if (pathPointsToCGI) {
     _hTTPServlet = new HTTPServletCGI(_virtualHost);
   } else {
-    _hTTPServlet = new HTTPServletStatic(_virtualHost);
+    _hTTPServlet =
+        new HTTPServletStatic(absolutePathToResource, canListDirectory);
   }
 
+  HTTPStatus::Status methodReturn = HTTPStatus::SERVER_ERROR;
+  // based on the http verb call the corresponding method
   switch (request.getMethod()) {
     case HTTPMethods::GET:
-      _hTTPServlet->doGet(request, response);
+      methodReturn = _hTTPServlet->doGet(request, response);
       break;
     case HTTPMethods::POST:
-      _hTTPServlet->doPost(request, response);
+      methodReturn = _hTTPServlet->doPost(request, response);
       break;
     case HTTPMethods::DELETE:
-      _hTTPServlet->doDelete(request, response);
+      methodReturn = _hTTPServlet->doDelete(request, response);
       break;
     default:
       _logger->log(Log::FATAL, "HTTPServletManager", "doService",
                    "an HTTP verb passed through the filters on the fd",
                    _socketFD->getFileDescriptor());
-	  _logger->log(Log::FATAL, "HTTPServletManager", "doService",
+      _logger->log(Log::FATAL, "HTTPServletManager", "doService",
                    "the verb value", request.getMethod());
-      response.setStatus(HTTPStatus::NOT_IMPLEMENTED);
+      methodReturn = HTTPStatus::NOT_IMPLEMENTED;
       break;
   }
 
-  if (response.getStatus() != HTTPStatus::OK) {
-    doError(response.getStatus(), response);
+  if (methodReturn == HTTPStatus::OK) {
+    return _handlerHTTPStatus.doStatusFamily200(request, response,
+                                                methodReturn);
   }
+
+  // If the return was 301, at this point in the code, it means that the
+  // redirection is due to the lack of a slash in some path to a directory
+  if (methodReturn == HTTPStatus::MOVED_PERMANENTLY) {
+    return _handlerHTTPStatus.doStatusFamily300(response, methodReturn,
+                                                url.getPath() + "/");
+  }
+
+  _handlerHTTPStatus.doStatusError(response, methodReturn);
 }
 
-void HTTPServletManager::doError(HTTPStatus::Status httpStatus,
-                                 HTTPResponse &response) {
-  (void)httpStatus;
-  (void)response;
+void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &response){
+
+  VirtualHostFactory vhf;
+
+  VirtualHostDefault _virtualHost = vhf.getDefaultVirtualHost();
+
+  HandlerHTTPStatus _handlerHTTPStatus(_virtualHost);
+
+  _handlerHTTPStatus.doStatusError(response, status);
 }

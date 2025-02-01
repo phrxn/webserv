@@ -28,3 +28,7 @@ std::string ErrorPageFileHTMLDocument::getMimeType() const {
 }
 
 std::string ErrorPageFileHTMLDocument::getLastModified() const { return ""; }
+
+HTMLDocument* ErrorPageFileHTMLDocument::clone() const{
+	return new ErrorPageFileHTMLDocument(*this);
+}

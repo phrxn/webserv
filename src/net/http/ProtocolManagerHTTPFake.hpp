@@ -4,6 +4,7 @@
 #include "../../error/Log.hpp"
 #include "../ProtocolManager.hpp"
 #include "../SocketFileDescriptor.hpp"
+#include "HTTPServletManager.hpp"
 #include "HTTPRequestFake.hpp"
 #include "HTTPResponseFake.hpp"
 
@@ -21,6 +22,7 @@ class ProtocolManagerHTTPFake : public ProtocolManager {
   ProtocolManagerHTTPFake(const ProtocolManagerHTTPFake &src);
   ProtocolManagerHTTPFake &operator=(const ProtocolManagerHTTPFake &src);
 
+  HTTPServletManager _hTTPServletManager;
   HTTPRequestFake _hTTPRequestFake;
   HTTPResponseFake _hTTPResponseFake;
   SocketFileDescriptor *_socketFD;

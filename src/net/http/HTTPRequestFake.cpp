@@ -1,17 +1,15 @@
 #include "HTTPRequestFake.hpp"
 
-#include <iostream>
-
 #include "../SocketFileDescriptorImpl.hpp"
 
 HTTPRequestFake::HTTPRequestFake(SocketFileDescriptor *socketFD, Log *logger)
-    : _socketFD(socketFD), _logger(logger) {}
+    : HTTPRequest(socketFD, logger), _socketFD(socketFD), _logger(logger), _status(HTTPStatus::INVALID) {}
 
 HTTPRequestFake::~HTTPRequestFake() {}
 
 // deleted (this class MUST BE UNIQUE!)
 HTTPRequestFake::HTTPRequestFake(const HTTPRequestFake &src)
-    : _logger(src._logger) {
+    : HTTPRequest(src._socketFD, src._logger), _logger(src._logger) {
   (void)src;
 }
 
@@ -21,6 +19,8 @@ HTTPRequestFake &HTTPRequestFake::operator=(const HTTPRequestFake &src) {
   return *this;
 }
 
+
+#include <sstream>
 HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
   std::vector<char> &date = _socketFD->getInputStream();
 
@@ -32,13 +32,32 @@ HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
 
   if (!isTheHTTPHeaderComplete(_buffer)) return REQUEST_CREATING;
 
+  std::stringstream ss(_buffer);
+
+  ss >> _method;
+  ss >> _url;
+
+  _status = HTTPStatus::OK;
+
   _logger->log(Log::DEBUG, "HTTPRequestFake", "createRequest", _buffer, "");
 
   return REQUEST_CREATED;
 }
 
-bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer){
-	if (_buffer.find("\r\n\r\n") != std::string::npos)
-		return true;
-	return false;
+bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer) {
+  if (_buffer.find("\r\n\r\n") != std::string::npos) return true;
+  return false;
+}
+
+HTTPMethods::Method HTTPRequestFake::getMethod(){
+	HTTPMethods convert;
+	return convert.getStringToMethod(_method);
+}
+
+std::string HTTPRequestFake::getURL(){
+	return _url;
+}
+
+HTTPStatus::Status HTTPRequestFake::getStatus(){
+	return _status;
 }

@@ -22,6 +22,7 @@ class FileHTMLDocument : public HTMLDocument {
   std::string getMimeType() const;
   std::string getLastModified() const;
   HTTPStatus::Status getStatus() const;
+  HTMLDocument* clone() const;
 
   std::string getPathToFile() const;
 

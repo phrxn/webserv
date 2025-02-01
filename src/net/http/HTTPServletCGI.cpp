@@ -1,6 +1,6 @@
 #include "HTTPServletCGI.hpp"
 
-HTTPServletCGI::HTTPServletCGI(const VirtualHost virtualHost)
+HTTPServletCGI::HTTPServletCGI(const VirtualHostDefault virtualHost)
     : _virtualHost(virtualHost) {
   (void)_virtualHost;
 }
@@ -16,17 +16,23 @@ HTTPServletCGI &HTTPServletCGI::operator=(const HTTPServletCGI &src) {
   return *this;
 }
 
-void HTTPServletCGI::doGet(HTTPRequest &request, HTTPResponse &response) {
+HTTPStatus::Status HTTPServletCGI::doGet(HTTPRequest &request,
+                                         HTTPResponse &response) {
   (void)request;
   (void)response;
+  return HTTPStatus::OK;
 }
 
-void HTTPServletCGI::doPost(HTTPRequest &request, HTTPResponse &response) {
+HTTPStatus::Status HTTPServletCGI::doPost(HTTPRequest &request,
+                                          HTTPResponse &response) {
   (void)request;
   (void)response;
+  return HTTPStatus::OK;
 }
 
-void HTTPServletCGI::doDelete(HTTPRequest &request, HTTPResponse &response) {
+HTTPStatus::Status HTTPServletCGI::doDelete(HTTPRequest &request,
+                                            HTTPResponse &response) {
   (void)request;
   (void)response;
+  return HTTPStatus::OK;
 }

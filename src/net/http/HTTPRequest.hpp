@@ -35,11 +35,11 @@ class HTTPRequest : public Request {
 
   std::string getHost();
 
-  HTTPMethods::Method getMethod();
+  virtual HTTPMethods::Method getMethod();
 
-  std::string getURL();
+  virtual std::string getURL();
 
-  HTTPStatus::Status getStatus();
+  virtual HTTPStatus::Status getStatus();
 
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
@@ -48,6 +48,8 @@ class HTTPRequest : public Request {
   HTTPStatus::Status body();
 
   int getPort();
+
+  std::string isToKeepTheConnection();
 };
 
 #endif

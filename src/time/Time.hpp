@@ -16,6 +16,7 @@ class Time {
 
  std::string convertTimeToHTTPHeaderPattern(const time_t &time) const;
  std::string convertTimeToItemDirectoryHTML(const time_t &time) const;
+ std::string getCurrentTimeToStampAHTTPHeader();
 
 };
 
