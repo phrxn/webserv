@@ -1,0 +1,15 @@
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.22.1
+Date: Sat, 01 Feb 2025 06:37:25 GMT
+Content-Type: text/html
+Content-Length: 169
+Location: http://manga/var/www/html/dir_777/
+Connection: keep-alive
+
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx/1.22.1</center>
+</body>
+</html>

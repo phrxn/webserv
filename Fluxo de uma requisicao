@@ -1,42 +1,25 @@
 1) Criar a requisicao HTTP
 
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
 2) O HTTPRequest:
   - Verificar se a sintaxe está correta ou não
-      - Verificar se o verbo é valido (escrita dele)         : 400 - BadRequest
-      - Verificar se a URL é valido ou não                   : 400 - BadRequest
-      - Verificar se a Versao é valido ou não                : 400 - BadRequest
-      - Se a primeira linha já nao for valida                : 400 - BadRequest
+      - Verificar se o verbo é valido (escrita dele)          : 400 - BadRequest
+      - Verificar se a URL é valido ou não                    : 400 - BadRequest
+      - Verificar se a Versao é valido ou não                 : 400 - BadRequest
+      - Se a primeira linha já nao for valida                 : 400 - BadRequest
   - Ver se tem a linha do Host
-      - Se nao tem a linha do do Host:                       : 400 - BadRequest
+      - Se nao tem a linha do do Host:                        : 400 - BadRequest
   - Procura pelo VirtualHost no VirtualHostFactory usando o host
-      - Se nao existir:                                      : 400 - BadRequest
+      - Se nao existir:                                       : 400 - BadRequest
   - Pegar o ConfigurationSingleton
 	  - Enquanto lendo os dados ir verificando se o tamanho nao passa do maximo permitido pelo servidor: 413 - Request Entity Too Large
   - Ver se tem a linha Content-Lenght ou Chunck
     - Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
-	  Se ultrapassar o tamanho maximo : 413 - Request Entity Too Large
--------------------------------------
+	  Se ultrapassar o tamanho maximo                         : 413 - Request Entity Too Large
+  - Verifica se o verbo eh permitido pelo servidor, se nao for: 501 - Not Implemented
 
-
-3) Quando o HTTPRequest estiver pronto, validar o status e se o HTTP pode prosseguir
-
-	Pegar o virtual Host usando o HostName e a porta (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
-
-	Pegar o Status da Requisicao
-	
-	Para o diferente de Status 200
-		- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, procurar no servidor
-		- Tentar carregar o arquivo baseado no codigo de erro
-			-- Se nao der certo
-			-- carregar o 500
-		- Criar o HTTPRequest com a resposta
-		- Retornar o HTTPRequest
-	Para o Status 200:
-		- Ver se o servidor implementa o verbo Vindo no HTTPRequest
-	  		Se nao implementa               : 501 - Not Implemented
-
-4) Criar um HTTPResponse novo
-
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 5) Se o HTTPRequest for valido e puder prosseguir, pegar o seu VirtualHost e Fazer algumas verificoes com o arquivos
 
@@ -44,20 +27,45 @@
   #HTTPResponse;
   #VirtualHost;
   #HTTPServlet httpServlet;
+  #PhysicalPathChecker  physicalPathChecker 
 
-	Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
+	- Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
 
-	- O caminhoURI eh valido ou nao (ou seja, ele existe)? (NOT_FOUND 404)
+    - Checar: O Status da Requisicao (Se ele for diferente de 200, algum erro ocorreu)
+			- return doError(request.getStatus(), response);
+
+	- Checar: O caminhoURI eh valido ou nao (ou seja, ele existe)?
+            - return doError(NOT_FOUND 404, response);
 	
-	- O caminhoURI tem um redirecionamento? (Se Sim: 301)
+	- Checar: O caminhoURI tem um redirecionamento?
+			- pegar o caminho adicionar o header especial de redirecionamento ao response
+              ** aqui o codigo eh 301;
+            - return;
 	
-	- O caminhoURI aceita o metodo HTTP ...? (Se nao: NOT_ALLOWED 405)
+	- Checar: O caminhoURI aceita o metodo HTTP que está no request?  (Se nao: NOT_ALLOWED 405)
+			- return doError(NOT_ALLOWED 405, response);	
 	
-	- O caminhoURI eh um CGI? : boleano
-	
-	- Pegar o caminho absoluto a partir do caminhoURI. std::string
-	
-	- O caminhoURI Pode listar diretorios? boleano
+	>> Pegar: O caminhoURI eh um CGI?                    | bool
+    >> Pegar: O caminho absoluto a partir do caminhoURI  | std::string
+    >> Pegar: O caminhoURI Pode listar diretorios?       | bool
+    >> Pegar: O verbo HTTP                               | HTTPMethod
+
+    - Se for CGI:
+		physicalPathChecker = DinamicPagesPhysicalPathChecker
+    - Se for STATIC
+        physicalPathChecker = StaticPagesPhysicalPathChecker
+
+    - Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: physicalPathChecker;
+	   HTTPStatus httpStatus = physicalPathChecker.isPathXXXXXXX();
+
+    
+
+
+
+    - Checar: Com o Verbo do HTTPRequest,
+
+
+
 
 	- Se for CGI:
 		httpServlet = HTTPServletCGI
@@ -67,13 +75,30 @@
 	- Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: httpServlet;
 		HTTPStatus httpStatus = httpServlet.doXXXX(HTTPRequest, HTTPResponse);
 
-	- Se o httpStatus for diferente de 200, algum erro aconteceu, logo, criar a pagina de erro:
-	
+	- Pegar o httpStatus retornado pelo metodo que foi chamado do httpServlet, se for diferente de 200, algum erro aconteceu:
+			** Adicionar a logica para o 301 aqui! pois ele pode ter vindo sem o /
+			-return doError(httpStatus, response);
+
+    ** Se chegou aqui, eh por que tudo deu certo, logo, basta adicionar as coisas para o HTTPResponse:
+
 	- carimbar as coisas finais no HTTPResponse:
 		- Nome do servidor:                 HTTPResponse.server("webserver");
 		- Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
 		- Manter ou não a conexão aberta:   HTTPResponse.setConnection("keep-alive");
 
+	_______________________________________________________________________
+	void doError(){
+		- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, usar a padrao do servidor
+		- Tentar carregar o arquivo baseado no codigo de erro
+			-- Se nao der certo
+			-- carregar o 500
+		- Criar o HTTPRequest com a resposta
+		- Retornar o HTTPRequest
+	}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+6) Aqui sao as coisas quando o HTTPRequest passou pelo batalhao de coisas no passo 5
 
 HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 
@@ -125,3 +150,6 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 #PhysicalPathChecker : interface;
 
 #HTMLDocument: interface;
+
+#fillHTTPResponse classe para preencher o HTTPResponse;
+

@@ -36,25 +36,30 @@ Perguntas:
 
 Interface CheckConfiguration:
 
+  C++ -> virtual bool isPathValid(URL url) const;
   bool oCaminhoEhValid(String caminhoURI);
         // Tem que checar no arquivo de configuracao se o caminhoURI eh valido ou nao.
         // Nesse caso o metodo deve retorna se o caminhoURI eh valido ou nao.
         // Cabe a esse metodo fazer os "matches", e descobrir nos location a validade ou nao do caminho!
 		// Pensar no caso do Conflict!
 
+  C++ -> virtual std::string isPathARedirection(URL url) const;
   string oCaminhoEhUmRedirecionamento(caminho URI);
         // Vai checar se o caminhoURI eh um redirecionamento, se for, esse metodo deve retornar o caminho
         // "verdeiro" para o recurso, exemplo se: /a/b deve ser redirecionado para www.google.com
         // Esse metodo deve retornar www.google.com
         // Se nao houver nenhum redirecionamento, deve retornar um string vazia
 
+  C++ -> virtual bool isTheMethodAllowedForThisPath(URL url, HTTPMethods::Method method) const;
   bool oMetodoHTTPEhPermitido(HTTP_METHOD method, String caminhoURI);
         // Deve checar se um o caminho dado, aceita o metodo HTTP ou ano
         // Deve retornar: true se sim, e false se nao
 
+  C++ -> virtual bool isUrlAPathToCGI(URL url) const;
   bool oCaminhoApontaParaUmCGI(String caminhoURI);
         // Deve dizer se o caminho aponta para um CGI, a classe URL pode ajudar nisso
 
+  C++ -> virtual std::string getThePhysicalPath(URL url) const;
   string obterOCaminhoAbsolutoDoCaminhoURI(String caminhoURI);
         // Como se sabe, a URI nao eh de fato a representacao para o caminho absoluto, logo,
         // esse metodo deve "converter", ou seja, pegar a URI, pesquisar nas location e retornar o caminho absoluto
@@ -63,15 +68,18 @@ Interface CheckConfiguration:
         // E por obvio, se a URI apontar para um caminho fisico mesmo, esse metodo deve retornar a URI
         // Enfim esse metodo deve converter o caminho URI para o caminho verdadeiro
 
+  C++ -> virtual bool isDirectoryListingAllowedForThisPath(URL url) const;
   bool  aListagemDeDiretorioEstaHabilitadaParaEsseCaminho(CaminhoURI);
         // Nesse caso o Chamador deve garantir que o caminhoURL eh um caminho para um diretorio
         // Esse metodo deve retornar se a listagem de diretorios estah habilitada para esse caminho URL
 
-
+  C++ -> virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
   string getCaminhoParaUmaPaginaHTTPParaUmStatusHTTP(HTTP_STATUS codigoHTTP);
         // Esse metodo vai receber um codigo HTTP e ele deve retornar um caminho para uma pagina HTTP
         // Que possa existir para esse metodo, se nenhum caminho vai estabelecido
         // Ele deve retornar uma string vazia
+        // Essas paginas sao as paginas personalizadas que o cliente possa ter passado
+        // No arquivo de configuracao
 
 ===================================================================================
 
