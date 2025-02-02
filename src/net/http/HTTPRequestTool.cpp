@@ -1,12 +1,12 @@
 
 #include "HTTPRequestTool.hpp"
+#include <sstream>
 
 HTTPRequestTool::HTTPRequestTool() {}
 
-HTTPRequestTool::HTTPRequestTool(const HTTPRequestTool &other) {
+HTTPRequestTool::HTTPRequestTool(const HTTPRequestTool &other) : HTTPStatus(other) {
     (void)other;
 }
-
 HTTPRequestTool &HTTPRequestTool::operator=(const HTTPRequestTool &other) {
     (void)other;
     return *this;
@@ -74,10 +74,22 @@ std::string HTTPRequestTool::getBody() {
     return _body;
 }
 
-void HTTPRequestTool::setBody(const std::string& body, const std::string& contentLength) {
-    if (contentLength.empty()) {
+void HTTPRequestTool::setBody(const std::string& body) {
+    if (_header["Content-Length"].empty()) {
         _body = body;
     } else {
-        _body = body.substr(0, std::stoi(contentLength));
+       long int len = stringParaLongInt(_header["Content-Length"]);
+        _body = body.substr(0, len);
     }
+}
+
+long int HTTPRequestTool::stringParaLongInt(const std::string& str) {
+    std::istringstream iss(str);
+    long int resultado = 0;
+
+    if (iss >> resultado)
+        return resultado;
+    else 
+        throw ("Erro na conversão: string inválida para long int.");
+    
 }

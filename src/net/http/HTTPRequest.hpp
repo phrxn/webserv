@@ -21,10 +21,9 @@ class HTTPRequest : public Request {
   StateOfCreation headerRequest();
 
   SocketFileDescriptor *_socketFD;
-  std::map<std::string, std::string> _header;
-  std::string _body;
   std::string _buffer;
   HTTPStatus::Status _status;
+  HTTPRequestTool _HTTPTool;
   Log *_logger;
 
  public:

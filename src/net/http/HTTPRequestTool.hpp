@@ -3,10 +3,11 @@
 
 #include <map>
 #include <string>
+#include "HTTPStatus.hpp"
 
 
 
-class HTTPRequestTool {
+class HTTPRequestTool : public HTTPStatus {
 public:
     // Default constructor
     HTTPRequestTool();
@@ -23,12 +24,15 @@ public:
     //parse the HTTP request
     void parserHeader (const std::string& buffer);
     //set body
-    void setBody(const std::string& body, const std::string& contentLength);
+    void setBody(const std::string& body);
+
 
 private:
 
     HTTPRequestTool& operator=(const HTTPRequestTool& other);
     HTTPRequestTool(const HTTPRequestTool& other);
+
+    long int stringParaLongInt(const std::string& str);
 
     std::map<std::string, std::string> _header;
     int _status;

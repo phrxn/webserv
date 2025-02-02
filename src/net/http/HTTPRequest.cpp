@@ -6,8 +6,6 @@
 HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD, Log *logger)
 {
 	_socketFD = socketFD;
-	(void)_header;
-	(void)_body;
 	_logger = logger;
 }
 
@@ -25,8 +23,8 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 }
 
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
-
-	if(HTTPRequestTool::parserHeader() == REQUEST_CREATING && ){
+	
+	if(headerRequest() == REQUEST_CREATED){
 		return REQUEST_CREATING;
 	}
 
@@ -42,6 +40,7 @@ HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
 	if (!isTheHTTPHeaderComplete(_buffer)) {
 		return REQUEST_CREATING;
 	}
+	_HTTPTool.parserHeader(_buffer);
 
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
 	return REQUEST_CREATED;
@@ -66,11 +65,11 @@ HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
 // 		_status = HTTPStatus::OK;
 // }
 
-HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
-	HTTPMethods httpMethods;
+// HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
+// 	HTTPMethods httpMethods;
 
-	return httpMethods.getStringToMethod(_header[key]);
-}
+// 	return httpMethods.getStringToMethod(_header[key]);
+// }
 
 HTTPStatus::Status HTTPRequest::getStatus(){
 	return _status;
