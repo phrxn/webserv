@@ -18,83 +18,58 @@
     - Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
 	  Se ultrapassar o tamanho maximo                         : 413 - Request Entity Too Large
   - Verifica se o verbo eh permitido pelo servidor, se nao for: 501 - Not Implemented
+  - Verificar se tem o header: Connection para dizer se uma conexao deve ou nao ser mantida, por padrao isso eh falso
+      - Se tiver o header connection, se basear no que ele diz para criar o booleano
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
 5) Se o HTTPRequest for valido e puder prosseguir, pegar o seu VirtualHost e Fazer algumas verificoes com o arquivos
 
-  #HTTPRequest;
-  #HTTPResponse;
   #VirtualHost;
   #HTTPServlet httpServlet;
-  #PhysicalPathChecker  physicalPathChecker 
+  #HandlerHTTPStatus
 
-	- Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
+    - Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
+    
+    - iniciar o HandlerHTTPStatus com o virtualHost;
 
     - Checar: O Status da Requisicao (Se ele for diferente de 200, algum erro ocorreu)
-			- return doError(request.getStatus(), response);
+        - return HandlerHTTPStatus.doStatusError(request.getStatus(), response);
 
-	- Checar: O caminhoURI eh valido ou nao (ou seja, ele existe)?
-            - return doError(NOT_FOUND 404, response);
+    - Checar: O caminhoURI eh valido ou nao (ou seja, ele existe)?
+        - return HandlerHTTPStatus.doStatusError(NOT_FOUND 404, response);
 	
-	- Checar: O caminhoURI tem um redirecionamento?
-			- pegar o caminho adicionar o header especial de redirecionamento ao response
-              ** aqui o codigo eh 301;
-            - return;
+    - Checar: O caminhoURI tem um redirecionamento? Se sim:
+       - pegar o caminho
+       - return HandlerHTTPStatus.doStatusFamily300(MOVID_PERMANENTE 301, response, caminho);
 	
-	- Checar: O caminhoURI aceita o metodo HTTP que está no request?  (Se nao: NOT_ALLOWED 405)
-			- return doError(NOT_ALLOWED 405, response);	
-	
-	>> Pegar: O caminhoURI eh um CGI?                    | bool
+    - Checar: O caminhoURI aceita o metodo HTTP que está no request?  (Se nao: NOT_ALLOWED 405)
+        - return HandlerHTTPStatus.doStatusError(NOT_ALLOWED 405, response);
+
+    >> Pegar: O caminhoURI eh um CGI?                    | bool
     >> Pegar: O caminho absoluto a partir do caminhoURI  | std::string
     >> Pegar: O caminhoURI Pode listar diretorios?       | bool
     >> Pegar: O verbo HTTP                               | HTTPMethod
 
-    - Se for CGI:
-		physicalPathChecker = DinamicPagesPhysicalPathChecker
-    - Se for STATIC
-        physicalPathChecker = StaticPagesPhysicalPathChecker
-
-    - Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: physicalPathChecker;
-	   HTTPStatus httpStatus = physicalPathChecker.isPathXXXXXXX();
-
-    
-
-
-
     - Checar: Com o Verbo do HTTPRequest,
 
-
-
-
-	- Se for CGI:
-		httpServlet = HTTPServletCGI
-	- Se for STATIC
-		httpServlet = HTTPServletStatic
+    - Se for CGI:
+        httpServlet = HTTPServletCGI
+    - Se for STATIC
+        httpServlet = HTTPServletStatic
 	
-	- Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: httpServlet;
-		HTTPStatus httpStatus = httpServlet.doXXXX(HTTPRequest, HTTPResponse);
+    - Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: httpServlet;
+        HTTPStatus httpStatus = httpServlet.doXXXX(HTTPRequest, HTTPResponse);
 
-	- Pegar o httpStatus retornado pelo metodo que foi chamado do httpServlet, se for diferente de 200, algum erro aconteceu:
-			** Adicionar a logica para o 301 aqui! pois ele pode ter vindo sem o /
-			-return doError(httpStatus, response);
+    - Pegar o httpStatus retornado pelo metodo que foi chamado do httpServlet, se for diferente de 200, algum erro aconteceu:
+        - Se o retorno foi 301, nesse ponto do código, quer dizer que o redirecionamento é por falta da barra em algum caminho para um diretório
+??      - ?? O path retornado pelo header location, é o original da URI ou do caminho fisico?
+        - return - return HandlerHTTPStatus.doStatusFamily300(MOVID_PERMANENTE 301, response, caminho);
 
     ** Se chegou aqui, eh por que tudo deu certo, logo, basta adicionar as coisas para o HTTPResponse:
+    
+    HandlerHTTPStatus.doStatusFamily200(request, response, Status);
 
-	- carimbar as coisas finais no HTTPResponse:
-		- Nome do servidor:                 HTTPResponse.server("webserver");
-		- Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
-		- Manter ou não a conexão aberta:   HTTPResponse.setConnection("keep-alive");
-
-	_______________________________________________________________________
-	void doError(){
-		- Procurar no Virtual um caminho para uma pagina de erro para o codigo, se nao achar, usar a padrao do servidor
-		- Tentar carregar o arquivo baseado no codigo de erro
-			-- Se nao der certo
-			-- carregar o 500
-		- Criar o HTTPRequest com a resposta
-		- Retornar o HTTPRequest
-	}
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -128,7 +103,6 @@ HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 	//metodo proprio da classe
 	void fillHTTPResponseWithHTMLDocument(HTMLDocument &, HTTPResponse &){
 
-		HTTPResponse.setStatus(200);
 		HTTPResponse.setBody(HTMLDocument.getData());
 		HTTPResponse.setBodySize(HTMLDocument.size());
 		HTTPResponse.setContentType(HTMLDocument.getMimeType());
@@ -139,11 +113,12 @@ HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 
 HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
-  #PhysicalPathChecker;
+    #PhysicalPathChecker;
+    #HTMLDocument:
 
-  HTTPStatus doGet(HTTPRequest  &, HTTPResponse &);
-  HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
-  HTTPStatus doDelete(HTTPRequest &, HTTPResponse &);
+    HTTPStatus doGet(HTTPRequest  &, HTTPResponse &);
+    HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
+    HTTPStatus doDelete(HTTPRequest &, HTTPResponse &);
 
 }	
 
@@ -152,4 +127,105 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 #HTMLDocument: interface;
 
 #fillHTTPResponse classe para preencher o HTTPResponse;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========== OUTRAS IDEAS (DAQUI PARA BAIXO É SÓ RASCUNHO ==========
+    
+    HandlerHTTPStatus (_virtualHost);
+
+        ** Nessa classe carregar uma pagina de erro
+    
+    
+        #_virtualHost                     <- para buscar possivel paginas de erro definida pelo usuario
+        #_CreateDefaultErrorPagesFactory  <- para pegar as paginas padroes do servidor de o virtual host nao possuir tal pagina de erro/status
+        #_HTMLDocument*                   <- a pagina de erro, que nesse caso, eh filha de _HTMLDocument :)
+	#_FillHTMLPages                   
+
+        - doStatusError(HTTPStatus status, response){
+            createErrorHTTPResponse(status, response);
+        }
+
+        - doStatusFamily200(HTTPRequest, HTTPResponse, HTTPStatus){
+          HTTPResponse.Status(httpStatus);
+          HTTPResponse.setConnection(HTTPRequest.isToKeepTheConnection());
+          stampTheResponse(HTTPResponse);
+        }
+
+        - doStatusFamily300(HTTPStatus status, response, string thePathToRedirect){
+            reponse.addHeader("Location", thePathToRedirect);
+	    createErrorHTTPResponse(status, response);
+	    stampTheResponse(HTTPResponse);
+        }
+        
+        - doStatusFamily400and500(HTTPRequest, HTTPResponse, HTTPStatus){
+            createErrorHTTPResponse(status, response);
+        }
+   
+        
+
+        private createErrorHTTPResponse(HTTPStatus status, response){
+            loadPageErrorPage(status);
+            _FillHTMLPages.makeFill(response, HTMLDocument);
+            HTTPResponse.Status(httpStatus);
+            HTTPResponse.setConnection(false);
+        }
+        
+        - private stampTheResponse(response){
+            - Nome do servidor:                 HTTPResponse.server("webserver");
+            - Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
+        }
+
+
+
+
+        - loadPageErrorPage(HTTPStatus status){          
+            _HTMLDocument = CreateDefaultErrorPagesFactory.getPageError(status);
+
+            virtualHostErroPagePath = _virtualHost.getThePathToCustomPageForHTTPStatus(status);
+            
+            if (!virtualHostErroPagePath.empty()){
+                _HTMLDocumentTmp  = * new ErrorPageFileHTMLDocument(virtualHostErroPagePath);
+                if (_HTMLDocument.getStatus() == 200){
+                  delete _HTMLDocument;
+                  _HTMLDocument = _HTMLDocumentTmp;
+                }
+            }
+        }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
