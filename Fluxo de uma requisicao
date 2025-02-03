@@ -51,8 +51,6 @@
     >> Pegar: O caminhoURI Pode listar diretorios?       | bool
     >> Pegar: O verbo HTTP                               | HTTPMethod
 
-    - Checar: Com o Verbo do HTTPRequest,
-
     - Se for CGI:
         httpServlet = HTTPServletCGI
     - Se for STATIC
