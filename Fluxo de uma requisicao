@@ -13,10 +13,10 @@
   - Procura pelo VirtualHost no VirtualHostFactory usando o host
       - Se nao existir:                                       : 400 - BadRequest
   - Pegar o ConfigurationSingleton
-	  - Enquanto lendo os dados ir verificando se o tamanho nao passa do maximo permitido pelo servidor: 413 - Request Entity Too Large
+      - Enquanto lendo os dados ir verificando se o tamanho nao passa do maximo permitido pelo servidor: 413 - Request Entity Too Large
   - Ver se tem a linha Content-Lenght ou Chunck
     - Ver se o tamanho do body size Ultrapassa o máximo definido pelo Virtual Host
-	  Se ultrapassar o tamanho maximo                         : 413 - Request Entity Too Large
+      Se ultrapassar o tamanho maximo                         : 413 - Request Entity Too Large
   - Verifica se o verbo eh permitido pelo servidor, se nao for: 501 - Not Implemented
   - Verificar se tem o header: Connection para dizer se uma conexao deve ou nao ser mantida, por padrao isso eh falso
       - Se tiver o header connection, se basear no que ele diz para criar o booleano
@@ -30,7 +30,7 @@
   #HandlerHTTPStatus
 
     - Pegar o virtual Host usando o HostName e a porta do HTTPRequest (é garantido que pelos um VH irá dar match sempre, pois sempre haverá uma porta aberta!)
-    
+
     - iniciar o HandlerHTTPStatus com o virtualHost;
 
     - Checar: O Status da Requisicao (Se ele for diferente de 200, algum erro ocorreu)
@@ -38,11 +38,11 @@
 
     - Checar: O caminhoURI eh valido ou nao (ou seja, ele existe)?
         - return HandlerHTTPStatus.doStatusError(NOT_FOUND 404, response);
-	
+
     - Checar: O caminhoURI tem um redirecionamento? Se sim:
        - pegar o caminho
        - return HandlerHTTPStatus.doStatusFamily300(MOVID_PERMANENTE 301, response, caminho);
-	
+
     - Checar: O caminhoURI aceita o metodo HTTP que está no request?  (Se nao: NOT_ALLOWED 405)
         - return HandlerHTTPStatus.doStatusError(NOT_ALLOWED 405, response);
 
@@ -57,7 +57,7 @@
         httpServlet = HTTPServletCGI
     - Se for STATIC
         httpServlet = HTTPServletStatic
-	
+
     - Baseado no verbo HTTP do HTTPRequest, chamar o metodo na variavel: httpServlet;
         HTTPStatus httpStatus = httpServlet.doXXXX(HTTPRequest, HTTPResponse);
 
@@ -67,7 +67,7 @@
         - return - return HandlerHTTPStatus.doStatusFamily300(MOVID_PERMANENTE 301, response, caminho);
 
     ** Se chegou aqui, eh por que tudo deu certo, logo, basta adicionar as coisas para o HTTPResponse:
-    
+
     HandlerHTTPStatus.doStatusFamily200(request, response, Status);
 
 
@@ -79,36 +79,36 @@ HTTPServletStatic (string caminhoFisicoReal, pode listar diretorio){
 
   #PhysicalPathChecker;
   #HTMLDocument;
-	
-	HTTPStatus doGet(HTTPRequest  &, HTTPResponse &)
-		- Com o caminho absolute em maos
-		- PathVerifier.pathToGetInvalid(
-			-Se for diferente de 200, retornar o HTTPStatus;
-		- caminhoFisicoReal eh para um diretorio:
-			HTMLDocument; ...
-		- caminhoFisicoReal eh para um arquivo:
-		
-	HTTPStatus doPost(HTTPRequest &, HTTPResponse &){
-		- PathVerifier.pathToGetInvalid(
-			- O valor vai ser diferente de 200, logo retornar ele
-		- Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
-	}
-	
-	HTTPStatus doDelete(HTTPRequest &, HTTPResponse &){
-		- PathVerifier.pathToGetInvalid(
-			- O valor vai ser diferente de 200, logo retornar ele
-		- Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
-	}
-	
-	//metodo proprio da classe
-	void fillHTTPResponseWithHTMLDocument(HTMLDocument &, HTTPResponse &){
 
-		HTTPResponse.setBody(HTMLDocument.getData());
-		HTTPResponse.setBodySize(HTMLDocument.size());
-		HTTPResponse.setContentType(HTMLDocument.getMimeType());
-		HTTPResponse.setLastModified(HTMLDocument.getlastModified());
-		
-	}
+    HTTPStatus doGet(HTTPRequest  &, HTTPResponse &)
+        - Com o caminho absolute em maos
+        - PathVerifier.pathToGetInvalid(
+            -Se for diferente de 200, retornar o HTTPStatus;
+        - caminhoFisicoReal eh para um diretorio:
+            HTMLDocument; ...
+        - caminhoFisicoReal eh para um arquivo:
+
+    HTTPStatus doPost(HTTPRequest &, HTTPResponse &){
+        - PathVerifier.pathToGetInvalid(
+            - O valor vai ser diferente de 200, logo retornar ele
+        - Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
+    }
+
+    HTTPStatus doDelete(HTTPRequest &, HTTPResponse &){
+        - PathVerifier.pathToGetInvalid(
+            - O valor vai ser diferente de 200, logo retornar ele
+        - Caiu aqui? Algo FATAL Aconteceu! Imprimir e retornar 500
+    }
+
+    //metodo proprio da classe
+    void fillHTTPResponseWithHTMLDocument(HTMLDocument &, HTTPResponse &){
+
+        HTTPResponse.setBody(HTMLDocument.getData());
+        HTTPResponse.setBodySize(HTMLDocument.size());
+        HTTPResponse.setContentType(HTMLDocument.getMimeType());
+        HTTPResponse.setLastModified(HTMLDocument.getlastModified());
+
+    }
 }
 
 HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
@@ -120,7 +120,7 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
     HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
     HTTPStatus doDelete(HTTPRequest &, HTTPResponse &);
 
-}	
+}
 
 #PhysicalPathChecker : interface;
 
@@ -147,46 +147,40 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 
 ========== OUTRAS IDEAS (DAQUI PARA BAIXO É SÓ RASCUNHO ==========
-    
+
     HandlerHTTPStatus (_virtualHost);
 
         ** Nessa classe carregar uma pagina de erro
-    
-    
+
+
         #_virtualHost                     <- para buscar possivel paginas de erro definida pelo usuario
         #_CreateDefaultErrorPagesFactory  <- para pegar as paginas padroes do servidor de o virtual host nao possuir tal pagina de erro/status
         #_HTMLDocument*                   <- a pagina de erro, que nesse caso, eh filha de _HTMLDocument :)
-	#_FillHTMLPages                   
+        #_FillHTMLPages
 
         - doStatusError(HTTPStatus status, response){
             createErrorHTTPResponse(status, response);
         }
 
         - doStatusFamily200(HTTPRequest, HTTPResponse, HTTPStatus){
-          HTTPResponse.Status(httpStatus);
-          HTTPResponse.setConnection(HTTPRequest.isToKeepTheConnection());
-          stampTheResponse(HTTPResponse);
+            HTTPResponse.Status(httpStatus);
+            HTTPResponse.setConnection(HTTPRequest.isToKeepTheConnection());
+            stampTheResponse(HTTPResponse);
         }
 
         - doStatusFamily300(HTTPStatus status, response, string thePathToRedirect){
             reponse.addHeader("Location", thePathToRedirect);
-	    createErrorHTTPResponse(status, response);
-	    stampTheResponse(HTTPResponse);
-        }
-        
-        - doStatusFamily400and500(HTTPRequest, HTTPResponse, HTTPStatus){
             createErrorHTTPResponse(status, response);
+            stampTheResponse(HTTPResponse);
         }
-   
-        
 
-        private createErrorHTTPResponse(HTTPStatus status, response){
+        private createErrorHTTPResponse(response, HTTPStatus status){
             loadPageErrorPage(status);
             _FillHTMLPages.makeFill(response, HTMLDocument);
             HTTPResponse.Status(httpStatus);
             HTTPResponse.setConnection(false);
         }
-        
+
         - private stampTheResponse(response){
             - Nome do servidor:                 HTTPResponse.server("webserver");
             - Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
@@ -195,11 +189,11 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 
 
-        - loadPageErrorPage(HTTPStatus status){          
+        - loadPageErrorPage(HTTPStatus status){
             _HTMLDocument = CreateDefaultErrorPagesFactory.getPageError(status);
 
             virtualHostErroPagePath = _virtualHost.getThePathToCustomPageForHTTPStatus(status);
-            
+
             if (!virtualHostErroPagePath.empty()){
                 _HTMLDocumentTmp  = * new ErrorPageFileHTMLDocument(virtualHostErroPagePath);
                 if (_HTMLDocument.getStatus() == 200){
@@ -209,23 +203,23 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
             }
         }
 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
