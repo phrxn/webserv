@@ -25,7 +25,9 @@ public:
     void parserHeader (const std::string& buffer);
     //set body
     void setBody(const std::string& body);
-
+    //parser chunked
+    void parserChunked(const std::string& buffer);
+    int hexStringToInt(const std::string& hex);
 
 private:
 

@@ -1,6 +1,10 @@
 
 #include "HTTPRequestTool.hpp"
+#include <iostream>
+#include <string>
 #include <sstream>
+#include <vector>
+#include <iomanip>
 
 HTTPRequestTool::HTTPRequestTool() {}
 
@@ -92,4 +96,40 @@ long int HTTPRequestTool::stringParaLongInt(const std::string& str) {
     else 
         throw ("Erro na conversão: string inválida para long int.");
     
+}
+
+int HTTPRequestTool::hexStringToInt(const std::string& hex) {
+    int value;
+    std::istringstream hexStream(hex);
+    hexStream >> std::hex >> value;
+    return value;
+}
+
+void HTTPRequestTool::parserChunked(const std::string& buffer) {
+    std::string body;
+    std::string line;
+    std::istringstream stream(buffer);
+
+    while (std::getline(stream, line)) {
+        if (line.empty()) continue;
+
+        int chunkSize = hexStringToInt(line);
+        if (chunkSize == 0) break; // Final chunk - DO NOT include this in the body
+
+        std::vector<char> _buffer(chunkSize + 1);
+        if (stream.read(&_buffer[0], chunkSize)) {
+            _buffer[chunkSize] = '\0';
+            body.append(&_buffer[0], chunkSize);  // Append ONLY the chunk data
+        } else {
+            std::cerr << "Error: Could not read chunk data." << std::endl;
+            return;
+        }
+
+        std::getline(stream, line); // Read the trailing \r\n - DO NOT include this
+        if (line != "\r") {
+          std::cerr << "Warning: Expected \\r\\n, but got: " << line << std::endl;
+        }
+    }
+
+    _body = body;
 }

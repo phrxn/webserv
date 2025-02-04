@@ -93,3 +93,25 @@ TEST(HTTPRequestToolTest, parsePostRequest) {
     // Check if the body was correctly set to the first 2 characters as per Content-Length
     EXPECT_EQ("{\"nome\": \"Novo Usuario\", \"email\": \"novo@exemplo.com\"}", requestTool.getBody());
 }
+
+//test chunked
+TEST(HTTPRequestToolTest, parsePostRequestChunked) {
+    HTTPRequestTool requestTool;
+    std::string requestString =
+        "2\r\n"  // Chunk size: 2
+        " {\r\n" // Chunk data
+        "5\r\n"  // Chunk size: 5
+        "nome\"\r\n" // Chunk data
+        "7\r\n"  // Chunk size: 7
+        ": \"Novo\r\n" // Chunk data
+        "9\r\n"  // Chunk size: 9
+        " Usuario\"\r\n" // Chunk data
+        "14\r\n" // Chunk size: 14
+        " , \"email\": \"\r\n" // Chunk data
+        "0\r\n"  // Final chunk (size 0)
+        "\r\n";   // Empty line after final chunk (also important!)
+
+    requestTool.parserChunked(requestString);
+
+    EXPECT_EQ(" {\"nome\": \"Novo Usuario\", \"email\": \"", requestTool.getBody());
+}
