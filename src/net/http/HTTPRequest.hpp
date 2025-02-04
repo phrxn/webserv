@@ -10,21 +10,20 @@
 #include "../URL.hpp"
 #include "HTTPMethods.hpp"
 #include "HTTPStatus.hpp"
+#include "HTTPRequestTool.hpp"
 
 class HTTPRequest : public Request {
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
   HTTPRequest();
-  void parserHeader();
-  void headerValidation();
+  
   StateOfCreation headerRequest();
 
   SocketFileDescriptor *_socketFD;
-  std::map<std::string, std::string> _header;
-  std::string _body;
   std::string _buffer;
   HTTPStatus::Status _status;
+  HTTPRequestTool _HTTPTool;
   Log *_logger;
 
  public:
@@ -44,8 +43,6 @@ class HTTPRequest : public Request {
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
   HTTPMethods::Method getAnythingFromHeader(const std::string &key);
-
-  HTTPStatus::Status body();
 
   int getPort();
 
