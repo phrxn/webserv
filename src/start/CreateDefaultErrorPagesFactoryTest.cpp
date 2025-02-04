@@ -52,8 +52,10 @@ TEST(CreateDefaultErrorPagesFactoryTest,
   cFactory.fillTheFactory(mapToFilTheFactory);
   cFactory.setLogger(logMock);
 
-  cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
-
+  ErrorPageFileHTMLDocument *epf = cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
+  if (epf){
+  	delete epf;
+  }
   // free things in the map.
   cFactory.destroyFactory();
 
@@ -83,6 +85,9 @@ TEST(CreateDefaultErrorPagesFactoryTest,
       cFactory.getDefaultErrorPages(HTTPStatus::NOT_FOUND);
 
   EXPECT_EQ("404", dep->getData());
+  if (dep){
+	delete dep;
+  }
 
   // free things in the map
   cFactory.destroyFactory();
