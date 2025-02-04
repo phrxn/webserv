@@ -58,6 +58,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/ProtocolManagerHTTPFake.cpp\
 		src/net/http/StaticPagesPhysicalPathChecker.cpp\
 		src/net/FileDescriptorVisitor.cpp\
+		src/net/ClusterOfVirtualHost.cpp\
 		src/net/GenericServer.cpp\
 		src/net/GenericServerRequestManager.cpp\
 		src/net/ProtocolManager.cpp\
@@ -70,7 +71,6 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/SocketFileDescriptorImpl.cpp\
 		src/net/URL.cpp\
 		src/net/VirtualHostDefault.cpp\
-		src/net/VirtualHostCluster.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateDefaultErrorPages.cpp\
 		src/start/CreateDefaultErrorPagesFactory.cpp\
@@ -96,11 +96,11 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/HTTPResponseTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
 				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\
+				src/net/ClusterOfVirtualHostTest.cpp\
 				src/net/GenericServerTest.cpp\
 				src/net/ServerSocketFileDescriptorTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
-				src/net/VirtualHostClusterTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp\
 				src/net/VirtualHostDefaultTest.cpp\
 				src/start/CreateDefaultErrorPagesFactoryTest.cpp\

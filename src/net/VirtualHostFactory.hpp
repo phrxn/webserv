@@ -7,11 +7,11 @@
 #include "../error/Log.hpp"
 #include "../error/StatusOr.hpp"
 #include "VirtualHostDefault.hpp"
-#include "VirtualHostCluster.hpp"
+#include "ClusterOfVirtualHost.hpp"
 
 class VirtualHostFactory {
  public:
-  static void fillTheFactory(const VirtualHostCluster &virtualHostCluster);
+  static void fillTheFactory(const ClusterOfVirtualHost &virtualHostCluster);
 
   VirtualHostFactory();
   ~VirtualHostFactory();
@@ -23,7 +23,7 @@ class VirtualHostFactory {
   void setLogger(Log *logger);
 
  private:
-  static VirtualHostCluster virtualHostCluster;
+  static ClusterOfVirtualHost virtualHostCluster;
   Log *_logger;
 };
 

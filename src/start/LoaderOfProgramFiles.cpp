@@ -109,7 +109,7 @@ bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv) {
   std::list<VirtualHostDefault>::const_iterator it = virtualHostsFromFile.begin();
   std::list<VirtualHostDefault>::const_iterator end = virtualHostsFromFile.end();
 
-  VirtualHostCluster virtualHostCluster;
+  ClusterOfVirtualHost virtualHostCluster;
 
   for (; it != end; ++it) {
     virtualHostCluster.addVirtualHostToCluster(*it);

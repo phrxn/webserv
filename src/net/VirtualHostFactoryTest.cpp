@@ -17,7 +17,7 @@ class LogMock : public Log {
               (override));
 };
 
-class VirtualHostClusterMock : public VirtualHostCluster {
+class VirtualHostClusterMock : public ClusterOfVirtualHost {
  public:
   MOCK_METHOD(error::StatusOr<VirtualHostDefault>, getVirtualHost,
               (int port, const std::string &serverName), (const override));

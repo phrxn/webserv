@@ -1,5 +1,5 @@
-#ifndef NET_VIRTUAL_HOST_CLUSTER_HPP
-#define NET_VIRTUAL_HOST_CLUSTER_HPP
+#ifndef NET_CLUSTER_OF_VIRTUAL_HOST_HPP
+#define NET_CLUSTER_OF_VIRTUAL_HOST_HPP
 
 #include <list>
 #include <map>
@@ -7,12 +7,12 @@
 #include "../error/StatusOr.hpp"
 #include "VirtualHostDefault.hpp"
 
-class VirtualHostCluster {
+class ClusterOfVirtualHost {
  public:
-  VirtualHostCluster();
-  ~VirtualHostCluster();
-  VirtualHostCluster(const VirtualHostCluster &src);
-  VirtualHostCluster &operator=(const VirtualHostCluster &src);
+  ClusterOfVirtualHost();
+  ~ClusterOfVirtualHost();
+  ClusterOfVirtualHost(const ClusterOfVirtualHost &src);
+  ClusterOfVirtualHost &operator=(const ClusterOfVirtualHost &src);
 
   bool addVirtualHostToCluster(const VirtualHostDefault &VirtualHostDefault);
   virtual error::StatusOr<VirtualHostDefault> getVirtualHost(

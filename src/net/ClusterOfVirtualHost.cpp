@@ -1,24 +1,24 @@
-#include "VirtualHostCluster.hpp"
+#include "ClusterOfVirtualHost.hpp"
 
 #include <algorithm>
 #include <sstream>
 
-VirtualHostCluster::VirtualHostCluster() {}
+ClusterOfVirtualHost::ClusterOfVirtualHost() {}
 
-VirtualHostCluster::~VirtualHostCluster() {}
+ClusterOfVirtualHost::~ClusterOfVirtualHost() {}
 
-VirtualHostCluster::VirtualHostCluster(const VirtualHostCluster &src) {
+ClusterOfVirtualHost::ClusterOfVirtualHost(const ClusterOfVirtualHost &src) {
   *this = src;
 }
 
-VirtualHostCluster &VirtualHostCluster::operator=(
-    const VirtualHostCluster &src) {
+ClusterOfVirtualHost &ClusterOfVirtualHost::operator=(
+    const ClusterOfVirtualHost &src) {
   if (this == &src) return *this;
   _mapTheCluster = src._mapTheCluster;
   return *this;
 }
 
-bool VirtualHostCluster::addVirtualHostToCluster(
+bool ClusterOfVirtualHost::addVirtualHostToCluster(
     const VirtualHostDefault &virtualHost) {
   std::map<int, std::list<VirtualHostDefault> >::iterator itPortAndItsList =
       _mapTheCluster.find(virtualHost.getPort());
@@ -45,7 +45,7 @@ bool VirtualHostCluster::addVirtualHostToCluster(
   return true;
 }
 
-error::StatusOr<VirtualHostDefault> VirtualHostCluster::getVirtualHost(
+error::StatusOr<VirtualHostDefault> ClusterOfVirtualHost::getVirtualHost(
     int port, const std::string &serverName) const {
   std::stringstream ss;
 
@@ -69,7 +69,7 @@ error::StatusOr<VirtualHostDefault> VirtualHostCluster::getVirtualHost(
   return *listHostWithPortEquals.begin();
 }
 
-std::list<int> VirtualHostCluster::getAllPorts() const {
+std::list<int> ClusterOfVirtualHost::getAllPorts() const {
   std::list<int> allPorts;
 
   std::map<int, std::list<VirtualHostDefault> >::const_iterator it =
@@ -83,7 +83,7 @@ std::list<int> VirtualHostCluster::getAllPorts() const {
   return allPorts;
 }
 
-const std::map<int, std::list<VirtualHostDefault> > &VirtualHostCluster::getMap()
+const std::map<int, std::list<VirtualHostDefault> > &ClusterOfVirtualHost::getMap()
     const {
   return _mapTheCluster;
 }

@@ -2,12 +2,12 @@
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
 
 #include "VirtualHostDefault.hpp"
-#include "VirtualHostCluster.hpp"
+#include "ClusterOfVirtualHost.hpp"
 
-TEST(VirtualHostClusterTest, addVirtualHostToCluster_addOneVirtualHost) {
+TEST(ClusterOfVirtualHostTest, addVirtualHostToCluster_addOneVirtualHost) {
   VirtualHostDefault v(100, "foo");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
 
@@ -21,11 +21,11 @@ TEST(VirtualHostClusterTest, addVirtualHostToCluster_addOneVirtualHost) {
   EXPECT_EQ(mapToCompare, map);
 }
 
-TEST(VirtualHostClusterTest, addVirtualHostToCluster_addTwoEqualsVirtualHost) {
+TEST(ClusterOfVirtualHostTest, addVirtualHostToCluster_addTwoEqualsVirtualHost) {
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(100, "foo");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -41,12 +41,12 @@ TEST(VirtualHostClusterTest, addVirtualHostToCluster_addTwoEqualsVirtualHost) {
   EXPECT_EQ(mapToCompare, map);
 }
 
-TEST(VirtualHostClusterTest,
+TEST(ClusterOfVirtualHostTest,
      addVirtualHostToCluster_addTwoDifferentVirtualHostsWithSamePort) {
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(100, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -63,12 +63,12 @@ TEST(VirtualHostClusterTest,
   EXPECT_EQ(mapToCompare, map);
 }
 
-TEST(VirtualHostClusterTest,
+TEST(ClusterOfVirtualHostTest,
      addVirtualHostToCluster_addTwoDifferentVirtualHostsWithDifferentPort) {
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(200, "foo");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -86,12 +86,12 @@ TEST(VirtualHostClusterTest,
 }
 
 TEST(
-    VirtualHostClusterTest,
+    ClusterOfVirtualHostTest,
     addVirtualHostToCluster_addTwoDifferentVirtualHostsWithDifferentPortsAndServername) {
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(200, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -111,9 +111,9 @@ TEST(
 // ---------------------------------------------------------
 
 
-TEST(VirtualHostClusterTest, getVirtualHost_invalidPort) {
+TEST(ClusterOfVirtualHostTest, getVirtualHost_invalidPort) {
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
 
   error::StatusOr<VirtualHostDefault> vhExist = vCluster.getVirtualHost(100, "foo");
 
@@ -121,11 +121,11 @@ TEST(VirtualHostClusterTest, getVirtualHost_invalidPort) {
   EXPECT_EQ("there is no host using port: 100", vhExist.status().message());
 }
 
-TEST(VirtualHostClusterTest, getVirtualHost_validPort) {
+TEST(ClusterOfVirtualHostTest, getVirtualHost_validPort) {
 
   VirtualHostDefault v(100, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
 
@@ -137,14 +137,14 @@ TEST(VirtualHostClusterTest, getVirtualHost_validPort) {
 }
 
 
-TEST(VirtualHostClusterTest, getVirtualHost_validPortButTheServernameIsAtTheEndOfItsCluster) {
+TEST(ClusterOfVirtualHostTest, getVirtualHost_validPortButTheServernameIsAtTheEndOfItsCluster) {
 
   //must return the last virtualHost
 
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(100, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -157,14 +157,14 @@ TEST(VirtualHostClusterTest, getVirtualHost_validPortButTheServernameIsAtTheEndO
   EXPECT_EQ(v2, vhExist.value());
 }
 
-TEST(VirtualHostClusterTest, getVirtualHost_validPortButTheServernameIsAtTheBeginningOfItsCluster) {
+TEST(ClusterOfVirtualHostTest, getVirtualHost_validPortButTheServernameIsAtTheBeginningOfItsCluster) {
 
   //must return the last virtualHost
 
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(100, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -178,14 +178,14 @@ TEST(VirtualHostClusterTest, getVirtualHost_validPortButTheServernameIsAtTheBegi
 }
 
 
-TEST(VirtualHostClusterTest, getVirtualHost_validPortButHostNameDoesntExists) {
+TEST(ClusterOfVirtualHostTest, getVirtualHost_validPortButHostNameDoesntExists) {
 
   //must return the first virtualHost
 
   VirtualHostDefault v(100, "foo");
   VirtualHostDefault v2(100, "bar");
 
-  VirtualHostCluster vCluster;
+  ClusterOfVirtualHost vCluster;
   bool wasVirtualAdded = vCluster.addVirtualHostToCluster(v);
   EXPECT_TRUE(wasVirtualAdded);
   bool wasVirtualAddedV2 = vCluster.addVirtualHostToCluster(v2);
@@ -200,9 +200,9 @@ TEST(VirtualHostClusterTest, getVirtualHost_validPortButHostNameDoesntExists) {
 
 // ---------------------------------------------------------
 
-TEST(VirtualHostClusterTest, getAllPorts_emptyCluster){
+TEST(ClusterOfVirtualHostTest, getAllPorts_emptyCluster){
 
-	VirtualHostCluster cluster;
+	ClusterOfVirtualHost cluster;
 
 	std::list<int> listToCompare;
 
@@ -210,9 +210,9 @@ TEST(VirtualHostClusterTest, getAllPorts_emptyCluster){
 
 }
 
-TEST(VirtualHostClusterTest, getAllPorts_cluterWithOneVirtualHost){
+TEST(ClusterOfVirtualHostTest, getAllPorts_cluterWithOneVirtualHost){
 
-	VirtualHostCluster cluster;
+	ClusterOfVirtualHost cluster;
 	cluster.addVirtualHostToCluster(VirtualHostDefault(80, "a"));
 
 	std::list<int> listToCompare{80};
@@ -221,9 +221,9 @@ TEST(VirtualHostClusterTest, getAllPorts_cluterWithOneVirtualHost){
 
 }
 
-TEST(VirtualHostClusterTest, getAllPorts_cluterWithTwoVirtualHostButSamePort){
+TEST(ClusterOfVirtualHostTest, getAllPorts_cluterWithTwoVirtualHostButSamePort){
 
-	VirtualHostCluster cluster;
+	ClusterOfVirtualHost cluster;
 	cluster.addVirtualHostToCluster(VirtualHostDefault(80, "bar"));
 	cluster.addVirtualHostToCluster(VirtualHostDefault(80, "xxx"));
 
@@ -233,9 +233,9 @@ TEST(VirtualHostClusterTest, getAllPorts_cluterWithTwoVirtualHostButSamePort){
 
 }
 
-TEST(VirtualHostClusterTest, getAllPorts_cluterWithTwoVirtualHostWithDifferentPorts){
+TEST(ClusterOfVirtualHostTest, getAllPorts_cluterWithTwoVirtualHostWithDifferentPorts){
 
-	VirtualHostCluster cluster;
+	ClusterOfVirtualHost cluster;
 	cluster.addVirtualHostToCluster(VirtualHostDefault(80, "bar"));
 	cluster.addVirtualHostToCluster(VirtualHostDefault(8080, "xxx"));
 

@@ -4,10 +4,10 @@
 
 #include "../Start.hpp"
 
-VirtualHostCluster VirtualHostFactory::virtualHostCluster;
+ClusterOfVirtualHost VirtualHostFactory::virtualHostCluster;
 
 void VirtualHostFactory::fillTheFactory(
-    const VirtualHostCluster &virtualHostCluster) {
+    const ClusterOfVirtualHost &virtualHostCluster) {
   VirtualHostFactory::virtualHostCluster = virtualHostCluster;
 }
 
