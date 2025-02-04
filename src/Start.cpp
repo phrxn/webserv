@@ -121,6 +121,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
   _programConfiguration.setServerName("Webserv");
+  _programConfiguration.setHTTPVersion("HTTP/1.1");
 
   // 5MB
   _programConfiguration.setMaxRequestSizeInBytes(5242880);

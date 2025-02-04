@@ -63,7 +63,7 @@ void HandlerHTTPStatus::stampTheResponse(HTTPResponse &response, HTTPStatus::Sta
   if (status == HTTPStatus::INVALID){
 	status = HTTPStatus::SERVER_ERROR;
   }
-  response.setHTTPVersion("HTTP/1.1");
+  response.setHTTPVersion(ProgramConfiguration::getInstance().getHTTPVersion());
   response.setStatus(status);
   response.setServer(ProgramConfiguration::getInstance().getServerName());
   response.setDate(_time.getCurrentTimeToStampAHTTPHeader());

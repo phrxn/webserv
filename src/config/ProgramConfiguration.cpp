@@ -95,3 +95,11 @@ std::string ProgramConfiguration::getServerName() const{
 void ProgramConfiguration::setServerName(const std::string &serverName){
 	_serverName = serverName;
 }
+
+std::string ProgramConfiguration::getHTTPVersion() const{
+	return _httpVersion;
+}
+
+void ProgramConfiguration::setHTTPVersion(const std::string &httpVersion){
+	_httpVersion = httpVersion;
+}

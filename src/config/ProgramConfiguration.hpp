@@ -37,6 +37,9 @@ class ProgramConfiguration {
   std::string getServerName() const;
   void setServerName(const std::string &serverName);
 
+  std::string getHTTPVersion() const;
+  void setHTTPVersion(const std::string &httpVersion);
+
  protected:
   ProgramConfiguration();
   ProgramConfiguration(const ProgramConfiguration &src);
@@ -50,6 +53,7 @@ class ProgramConfiguration {
   const char **_environmentVariables;
   std::size_t _maxRequestSizeInBytes;
   std::string _serverName;
+  std::string _httpVersion;
 
 };
 
