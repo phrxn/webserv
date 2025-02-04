@@ -28,12 +28,6 @@ class File {
 
   virtual bool isDirectory() const;
 
-  bool isReadable() const;
-
-  bool isWritable() const;
-
-  bool isExecutable() const;
-
   time_t getModificationTime() const;
 
   std::string getPath() const;

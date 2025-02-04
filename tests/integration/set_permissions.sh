@@ -11,48 +11,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod 111 "${directory_str}_x"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_x"
-    exit 1
-fi
-
-chmod 222 "${directory_str}_w"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_w"
-    exit 1
-fi
-
-chmod 333 "${directory_str}_wx"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_wx"
-    exit 1
-fi
-
-chmod 444 ${directory_str}_r
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_r"
-    exit 1
-fi
-
-chmod 555 ${directory_str}_rx
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_rx"
-    exit 1
-fi
-
-chmod 666 ${directory_str}_rw
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_rw"
-    exit 1
-fi
-
-chmod 777 ${directory_str}_rwx
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${directory_str}_rwx"
-    exit 1
-fi
-
 #set permissions to Files
 
 file_str=${directory_file_cpp}file
@@ -60,48 +18,6 @@ file_str=${directory_file_cpp}file
 chmod 000 $file_str
 if [ $? -ne 0 ]; then
     echo "Error: Failed to change permissions on directory"
-    exit 1
-fi
-
-chmod 111 "${file_str}_x"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_x"
-    exit 1
-fi
-
-chmod 222 "${file_str}_w"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_w"
-    exit 1
-fi
-
-chmod 333 "${file_str}_wx"
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_wx"
-    exit 1
-fi
-
-chmod 444 ${file_str}_r
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_r"
-    exit 1
-fi
-
-chmod 555 ${file_str}_rx
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_rx"
-    exit 1
-fi
-
-chmod 666 ${file_str}_rw
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_rw"
-    exit 1
-fi
-
-chmod 777 ${file_str}_rwx
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to change permissions on ${file_str}_rwx"
     exit 1
 fi
 

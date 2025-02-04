@@ -100,33 +100,6 @@ bool File::isDirectory() const {
   return true;
 }
 
-bool File::isReadable() const {
-  error::StatusOr<int> isReadable =
-      _systemCalls->access(_path.c_str(), F_OK | R_OK);
-  if (isReadable.ok()) {
-    return true;
-  }
-  return false;
-}
-
-bool File::isWritable() const {
-  error::StatusOr<int> isWritable =
-      _systemCalls->access(_path.c_str(), F_OK | W_OK);
-  if (isWritable.ok()) {
-    return true;
-  }
-  return false;
-}
-
-bool File::isExecutable() const {
-  error::StatusOr<int> isExecutable =
-      _systemCalls->access(_path.c_str(), F_OK | X_OK);
-  if (isExecutable.ok()) {
-    return true;
-  }
-  return false;
-}
-
 time_t File::getModificationTime() const {
   struct stat file_information;
 
