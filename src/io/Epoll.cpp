@@ -11,7 +11,12 @@ Epoll::Epoll(Log *logger)
 }
 
 Epoll::~Epoll() {
-  if (_systemCalls) delete _systemCalls;
+  if (_systemCalls){
+	if (_epollFileDescriptor != 1){
+		_systemCalls->close(_epollFileDescriptor);
+	}
+	delete _systemCalls;
+  }
 }
 
 // deleted (this class MUST BE UNIQUE!)
