@@ -4,18 +4,22 @@
 
 #include "CreateDirectoryHTMLPage.hpp"
 
-DirectoryHTMLDocument::DirectoryHTMLDocument(const std::string &pathToDirectory)
-    : _directory(new File(pathToDirectory)) {
-	createDirectoryListFileHTML(_directory);
+DirectoryHTMLDocument::DirectoryHTMLDocument(const std::string &pathToDirectory,
+                                             const std::string &urlPathToDir)
+    : _directory(new File(pathToDirectory)), _urlPathToDir(urlPathToDir) {
+  createDirectoryListFileHTML(_directory);
 }
 
-DirectoryHTMLDocument::DirectoryHTMLDocument(File *directoryToCreateList)
-    : _directory(directoryToCreateList) {}
+DirectoryHTMLDocument::DirectoryHTMLDocument(File *directoryToCreateList,
+                                             const std::string &urlPathToDir)
+    : _directory(directoryToCreateList), _urlPathToDir(urlPathToDir) {}
 
 DirectoryHTMLDocument::~DirectoryHTMLDocument() { freeThings(); }
 
 DirectoryHTMLDocument::DirectoryHTMLDocument(const DirectoryHTMLDocument &src)
-    : _status(src._status), _directory(new File(*src._directory)) {}
+    : _status(src._status),
+      _directory(new File(*src._directory)),
+      _urlPathToDir(src._urlPathToDir) {}
 
 DirectoryHTMLDocument &DirectoryHTMLDocument::operator=(
     const DirectoryHTMLDocument &src) {
@@ -23,6 +27,7 @@ DirectoryHTMLDocument &DirectoryHTMLDocument::operator=(
   freeThings();
   _status = src._status;
   _directory = new File(*src._directory);
+  _urlPathToDir = src._urlPathToDir;
   return *this;
 }
 
@@ -38,9 +43,8 @@ std::string DirectoryHTMLDocument::getLastModified() const { return ""; }
 
 HTTPStatus::Status DirectoryHTMLDocument::getStatus() const { return _status; }
 
-
-HTMLDocument* DirectoryHTMLDocument::clone() const{
-	return new DirectoryHTMLDocument(*this);
+HTMLDocument *DirectoryHTMLDocument::clone() const {
+  return new DirectoryHTMLDocument(*this);
 }
 
 void DirectoryHTMLDocument::createDirectoryListFileHTML(
@@ -54,14 +58,13 @@ void DirectoryHTMLDocument::createDirectoryListFileHTML(
 
   removeDotAndDotDotDirectoriesFromDirectoryList(filesInsideOfDirectory);
 
-
-  //add fullpath
+  // add fullpath
   std::vector<File>::iterator it1 = filesInsideOfDirectory.begin();
   std::vector<File>::iterator end1 = filesInsideOfDirectory.end();
 
   for (; it1 != end1; ++it1) {
-   std::string fullPath = _directory->getPath() + it1->getPath();
-   it1->setPath(fullPath);
+    std::string fullPath = _directory->getPath() + it1->getPath();
+    it1->setPath(fullPath);
   }
 
   sortDirectoryFiles(filesInsideOfDirectory);
@@ -69,7 +72,7 @@ void DirectoryHTMLDocument::createDirectoryListFileHTML(
   std::vector<ItemDirectoryHTMLDocument> listAllDirectoryItems =
       createItemDirectoryHTMLDocumentList(filesInsideOfDirectory);
 
-  CreateDirectoryHTMLPage createDirectory(_directory->getPath());
+  CreateDirectoryHTMLPage createDirectory(_directory->getPath(), _urlPathToDir);
 
   std::vector<ItemDirectoryHTMLDocument>::const_iterator it =
       listAllDirectoryItems.begin();

@@ -66,7 +66,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
     _hTTPServlet = new HTTPServletCGI(_virtualHost);
   } else {
     _hTTPServlet =
-        new HTTPServletStatic(absolutePathToResource, canListDirectory);
+        new HTTPServletStatic(absolutePathToResource, url.getPath(), canListDirectory);
   }
 
   HTTPStatus::Status methodReturn = HTTPStatus::SERVER_ERROR;

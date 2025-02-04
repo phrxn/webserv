@@ -4,7 +4,7 @@
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathShorterThan50Chars){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("dir07__", 0, 0, true);
 
@@ -15,7 +15,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathShorterTha
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathWith49Chars){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("dir49__890123456789012345678901234567890123456789/", 0, 0, true);
 
@@ -26,7 +26,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathWith49Char
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathWith50Chars){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("dir50__8901234567890123456789012345678901234567890", 0, 0, true);
 
@@ -38,7 +38,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_directoryWithPathWith50Char
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath__directoryWithPathWith51Chars){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("dir51__89012345678901234567890123456789012345678901/", 0, 0, true);
 
@@ -51,7 +51,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath__directoryWithPathWith51Cha
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathShorterThan50Chars){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("file07_", 0, 0, false);
 
@@ -62,7 +62,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathShorterThan50Ch
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith49Char){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("file49_890123456789012345678901234567890123456789", 0, 0, false);
 
@@ -73,7 +73,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith49Char){
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith50Char){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("file50_8901234567890123456789012345678901234567890", 0, 0, false);
 
@@ -84,7 +84,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith50Char){
 
 TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith51Char){
 
-	 CreateDirectoryHTMLPage create("foo");
+	 CreateDirectoryHTMLPage create("foo", "foo");
 
 	ItemDirectoryHTMLDocument a("file51_89012345678901234567890123456789012345678901", 0, 0, false);
 
@@ -96,7 +96,7 @@ TEST(CreateDirectoryHTMLPageTest, createAnchorToPath_fileWithPathWith51Char){
 //------------------------------------------------------------------
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathShorterThan50Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a("aaaaaaaaaa", 0, 0, false);
 
@@ -106,7 +106,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathShorterThan50Chars) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith49Char) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "1234567890123456789012345678901234567890123456789", 0, 0, false);
@@ -117,7 +117,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith49Char) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith50Char) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "file50_8901234567890123456789012345678901234567890", 0, 0, false);
@@ -129,7 +129,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith50Char) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith51Char) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "file51_89012345678901234567890123456789012345678901", 0, 0, false);
@@ -142,7 +142,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_fileWithPathWith51Char) {
 
 TEST(CreateDirectoryHTMLPageTest,
      formatPath_directoryWithPathShorterThan50Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a("aaaaaaaaa", 0, 0, true);
 
@@ -152,7 +152,7 @@ TEST(CreateDirectoryHTMLPageTest,
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith49Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "123456789012345678901234567890123456789012345678", 0, 0, true);
@@ -163,7 +163,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith49Chars) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith50Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "dir50_7890123456789012345678901234567890123456789/", 0, 0, true);
@@ -175,7 +175,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith50Chars) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith51Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "dir51_78901234567890123456789012345678901234567890/", 0, 0, true);
@@ -187,7 +187,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith51Chars) {
 }
 
 TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith52Chars) {
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "dir52_789012345678901234567890123456789012345678901/", 0, 0, true);
@@ -202,7 +202,7 @@ TEST(CreateDirectoryHTMLPageTest, formatPath_directoryWithPathWith52Chars) {
 
 TEST(CreateDirectoryHTMLPageTest, formatData) {
 
-  CreateDirectoryHTMLPage create("foo");
+  CreateDirectoryHTMLPage create("foo", "foo");
 
   ItemDirectoryHTMLDocument a(
       "dir52_789012345678901234567890123456789012345678901/", 1112486462, 0, true);
@@ -221,7 +221,7 @@ TEST(CreateDirectoryHTMLPageTest, formatData) {
 
 TEST(CreateDirectoryHTMLPageTest, operatorShiftLeft) {
 
-  CreateDirectoryHTMLPage create("/");
+  CreateDirectoryHTMLPage create("/", "/");
 
   std::list<ItemDirectoryHTMLDocument> items {
 	ItemDirectoryHTMLDocument("dir07__/",    1112486462, 4098, true),

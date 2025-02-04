@@ -8,7 +8,7 @@
 
 class CreateDirectoryHTMLPage {
  public:
-  CreateDirectoryHTMLPage(const std::string& directoryPath);
+  CreateDirectoryHTMLPage(const std::string& directoryPath, const std::string &urlPathToDir);
   ~CreateDirectoryHTMLPage();
   CreateDirectoryHTMLPage(const CreateDirectoryHTMLPage& src);
   CreateDirectoryHTMLPage& operator=(const CreateDirectoryHTMLPage& src);
@@ -29,6 +29,7 @@ class CreateDirectoryHTMLPage {
 
  private:
   std::string _directoryPath;
+  std::string _urlPathToDir;
   std::string _body;
   std::list<std::string> _paths;
 };

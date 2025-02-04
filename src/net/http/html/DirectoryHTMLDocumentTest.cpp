@@ -49,7 +49,7 @@ TEST(DirectoryHTMLDocumentTest, sortDirectoryFiles) {
       new FileMock(true, "../"),         new FileMock(false, "file49_89"),
       new FileMock(true, "dir49_789/")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.sortDirectoryFiles(listToSortDirectory);
 
@@ -71,7 +71,7 @@ TEST(DirectoryHTMLDocumentTest, removeDotAndDotDotDirectoriesFromDirectoryList_e
 
   std::vector<File> listToRemoveDirectory;
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 
@@ -86,7 +86,7 @@ TEST(DirectoryHTMLDocumentTest,
 
   std::vector<File> listToRemoveDirectory{File("."), File("..")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 
@@ -101,7 +101,7 @@ TEST(DirectoryHTMLDocumentTest,
 
   std::vector<File> listToRemoveDirectory{File("foo"), File(".."), File(".")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 
@@ -116,7 +116,7 @@ TEST(DirectoryHTMLDocumentTest,
 
   std::vector<File> listToRemoveDirectory{File(".."), File("foo"), File(".")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 
@@ -131,7 +131,7 @@ TEST(DirectoryHTMLDocumentTest,
 
   std::vector<File> listToRemoveDirectory{File(".."), File("."), File("foo")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 
@@ -146,7 +146,7 @@ TEST(DirectoryHTMLDocumentTest,
 
   std::vector<File> listToRemoveDirectory{File("foo"), File("bar"), File("zzz")};
 
-  DirectoryHTMLDocument dhtml("a");
+  DirectoryHTMLDocument dhtml("a", "a");
 
   dhtml.removeDotAndDotDotDirectoriesFromDirectoryList(listToRemoveDirectory);
 

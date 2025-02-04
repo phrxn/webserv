@@ -10,6 +10,7 @@
 class HTTPServletStatic : public HTTPServlet {
  public:
   HTTPServletStatic(const std::string &physicalPathToResource,
+				    const std::string &urlPathToDir,
                     bool canListDirectory);
   ~HTTPServletStatic();
 
@@ -22,6 +23,7 @@ class HTTPServletStatic : public HTTPServlet {
   HTTPServletStatic &operator=(const HTTPServletStatic &src);
 
   std::string _physicalPathToResource;
+  std::string _urlPathToDir;
   bool _canListDirectory;
   PhysicalPathChecker *_physicalPathChecker;
   HTMLDocument *_htmlDocument;

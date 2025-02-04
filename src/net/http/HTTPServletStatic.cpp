@@ -1,12 +1,14 @@
 #include "HTTPServletStatic.hpp"
 
+#include "StaticPagesPhysicalPathChecker.hpp"
 #include "html/DirectoryHTMLDocument.hpp"
 #include "html/FileHTMLDocument.hpp"
-#include "StaticPagesPhysicalPathChecker.hpp"
 
 HTTPServletStatic::HTTPServletStatic(const std::string &physicalPathToResource,
+                                     const std::string &urlPathToDir,
                                      bool canListDirectory)
     : _physicalPathToResource(physicalPathToResource),
+	  _urlPathToDir(urlPathToDir),
       _canListDirectory(canListDirectory),
       _physicalPathChecker(new StaticPagesPhysicalPathChecker),
       _htmlDocument(NULL) {}
@@ -49,7 +51,7 @@ HTTPStatus::Status HTTPServletStatic::doGet(HTTPRequest &request,
 
   bool isADirectory = isDirectory.value();
   if (isADirectory) {
-    _htmlDocument = new DirectoryHTMLDocument(_physicalPathToResource);
+    _htmlDocument = new DirectoryHTMLDocument(_physicalPathToResource, _urlPathToDir);
   } else {
     _htmlDocument = new FileHTMLDocument(_physicalPathToResource);
   }
@@ -63,7 +65,7 @@ HTTPStatus::Status HTTPServletStatic::doPost(HTTPRequest &request,
   (void)request;
   (void)response;
   return _physicalPathChecker->isThePathValidForThePostMethod(
-	  _physicalPathToResource);
+      _physicalPathToResource);
 }
 
 HTTPStatus::Status HTTPServletStatic::doDelete(HTTPRequest &request,
@@ -71,5 +73,5 @@ HTTPStatus::Status HTTPServletStatic::doDelete(HTTPRequest &request,
   (void)request;
   (void)response;
   return _physicalPathChecker->isThePathValidForTheDeleteMethod(
-	  _physicalPathToResource);
+      _physicalPathToResource);
 }

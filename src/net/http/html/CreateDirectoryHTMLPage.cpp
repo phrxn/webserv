@@ -3,20 +3,25 @@
 #include <sstream>
 
 CreateDirectoryHTMLPage::CreateDirectoryHTMLPage(
-    const std::string& directoryPath)
-    : _directoryPath(directoryPath) {}
+    const std::string& directoryPath, const std::string& urlPathToDir)
+    : _directoryPath(directoryPath), _urlPathToDir(urlPathToDir) {}
 
 CreateDirectoryHTMLPage::~CreateDirectoryHTMLPage() {}
 
 CreateDirectoryHTMLPage::CreateDirectoryHTMLPage(
     const CreateDirectoryHTMLPage& src)
-    : _body(src._body), _paths(src._paths) {}
+    : _directoryPath(src._directoryPath),
+      _urlPathToDir(src._urlPathToDir),
+      _body(src._body),
+      _paths(src._paths) {}
 
 CreateDirectoryHTMLPage& CreateDirectoryHTMLPage::operator=(
     const CreateDirectoryHTMLPage& src) {
   if (this == &src) {
     return *this;
   }
+  _directoryPath = src._directoryPath;
+  _urlPathToDir = src._urlPathToDir;
   _body = src._body;
   _paths = src._paths;
   return *this;
@@ -78,12 +83,12 @@ std::string CreateDirectoryHTMLPage::str() {
   std::stringstream ss;
 
   ss << "<html>\n"
-     << "<head><title>Index of " << _directoryPath << "</title></head>\n"
+     << "<head><title>Index of " << _urlPathToDir << "</title></head>\n"
      << "<body>\n"
-     << "<h1>Index of " << _directoryPath << "</h1>\n"
+     << "<h1>Index of " << _urlPathToDir << "</h1>\n"
      << "<hr>\n"
      << "<pre>\n"
-	 << "<a href=\"../\">../</a>\n";
+     << "<a href=\"../\">../</a>\n";
 
   std::list<std::string>::const_iterator it = _paths.begin();
   std::list<std::string>::const_iterator end = _paths.end();

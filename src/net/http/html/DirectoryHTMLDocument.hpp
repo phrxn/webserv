@@ -9,8 +9,8 @@
 
 class DirectoryHTMLDocument : public HTMLDocument {
  public:
-  DirectoryHTMLDocument(const std::string &pathToDirectory);
-  DirectoryHTMLDocument(File *directoryToCreateList);
+  DirectoryHTMLDocument(const std::string &pathToDirectory, const std::string& urlPathToDir);
+  DirectoryHTMLDocument(File *directoryToCreateList, const std::string& urlPathToDir);
   ~DirectoryHTMLDocument();
   DirectoryHTMLDocument(const DirectoryHTMLDocument &src);
   DirectoryHTMLDocument &operator=(const DirectoryHTMLDocument &src);
@@ -39,6 +39,7 @@ std::vector<ItemDirectoryHTMLDocument> createItemDirectoryHTMLDocumentList(
   HTTPStatus::Status _status;
   File *_directory;
   std::string _data;
+  std::string _urlPathToDir;
 
 };
 
