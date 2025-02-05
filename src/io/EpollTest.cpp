@@ -46,6 +46,12 @@ TEST(EpollTest, createPoll_ok) {
         return 42;
       }));
 
+  EXPECT_CALL(*systemCallMock, close(42))
+      .WillOnce(::testing::Invoke([](int options) {
+        (void)options;
+        return 42;
+      }));
+
   EXPECT_CALL(*logMock, log(::testing::A<Log::LogLevel>(),
                             ::testing::A<const std::string &>(),
                             ::testing::A<const std::string &>(),
@@ -276,6 +282,12 @@ TEST(EpollTest, wait_2Client_2Server_mocked_1client_ready_and_1_server_ready) {
             return 2;
           }));
 
+  EXPECT_CALL(*syscallMock, close(::testing::_))
+      .WillOnce(::testing::Invoke([](int options) {
+        (void)options;
+        return 42;
+      }));
+
   std::vector<FileDescriptor *> fdsReady = epoll.wait();
 
   EXPECT_EQ((std::size_t)2, fdsReady.size());
@@ -354,6 +366,12 @@ TEST(EpollTest, wait_3Client_2Server_mocked_all_ready) {
             events[4].events = EPOLLIN;
             return 5;
           }));
+
+  EXPECT_CALL(*syscallMock, close(::testing::_))
+      .WillOnce(::testing::Invoke([](int options) {
+        (void)options;
+        return 42;
+      }));
 
   std::vector<FileDescriptor *> fdsReady = epoll.wait();
 
