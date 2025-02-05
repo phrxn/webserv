@@ -71,6 +71,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/SocketFileDescriptor.cpp\
 		src/net/SocketFileDescriptorImpl.cpp\
 		src/net/URL.cpp\
+		src/net/VirtualHost.cpp\
 		src/net/VirtualHostDefault.cpp\
 		src/net/VirtualHostFactory.cpp\
 		src/start/CreateDefaultErrorPages.cpp\

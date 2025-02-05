@@ -5,29 +5,29 @@
 #include "URL.hpp"
 #include "http/HTTPMethods.hpp"
 #include "http/HTTPStatus.hpp"
+#include "VirtualHost.hpp"
 
-class VirtualHostDefault {
+class VirtualHostDefault : public VirtualHost{
  public:
   VirtualHostDefault();
   VirtualHostDefault(int port, const std::string &serverName);
-  virtual ~VirtualHostDefault();
+  ~VirtualHostDefault();
   VirtualHostDefault(const VirtualHostDefault &src);
   VirtualHostDefault &operator=(const VirtualHostDefault &src);
   bool operator==(const VirtualHostDefault &src) const;
 
+  int getPort() const;
+  void setPort(int port);
+  std::string getServername() const;
+  void setServername(const std::string &serverName);
 
-  virtual int getPort() const;
-  virtual void setPort(int port);
-  virtual std::string getServername() const;
-  virtual void setServername(const std::string &serverName);
-
-  virtual bool isPathValid(URL url) const;
-  virtual std::string isPathARedirection(URL url) const;
-  virtual bool isTheMethodAllowedForThisPath(URL url, HTTPMethods::Method method) const;
-  virtual bool isUrlAPathToCGI(URL url) const;
-  virtual std::string getThePhysicalPath(URL url) const;
-  virtual bool isDirectoryListingAllowedForThisPath(URL url) const;
-  virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
+  bool isPathValid(URL url) const;
+  std::string isPathARedirection(URL url) const;
+  bool isTheMethodAllowedForThisPath(URL url, HTTPMethods::Method method) const;
+  bool isUrlAPathToCGI(URL url) const;
+  std::string getThePhysicalPath(URL url) const;
+  bool isDirectoryListingAllowedForThisPath(URL url) const;
+  std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
 
  private:
   int _port;

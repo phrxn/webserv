@@ -11,6 +11,7 @@ VirtualHostDefault::VirtualHostDefault(const VirtualHostDefault &src) { *this = 
 
 VirtualHostDefault &VirtualHostDefault::operator=(const VirtualHostDefault &src) {
   if (this == &src) return *this;
+  VirtualHost::operator=(src);
   _port = src._port;
   _serverName = src._serverName;
   return *this;
