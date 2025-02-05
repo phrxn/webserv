@@ -28,7 +28,7 @@ class HTTPResponse : public Response {
   void setContentLength(std::size_t contentLength);
   void setLastModified(const std::string &lastModified);
   void setConnection(const std::string &connection);
-  bool getKeepAlive() const;
+  bool closeConnectionAfterThatResponse() const;
 
   void addHeader(const std::string &key, const std::string &value);
 
@@ -53,7 +53,7 @@ class HTTPResponse : public Response {
 
 
   HTTPStatus::Status _status;
-  bool _keepAlive;
+  bool _closeConnectionAfterThatResponse;
   std::map<std::string, std::string> _mapOtherHeaders;
   std::string _body;
 };

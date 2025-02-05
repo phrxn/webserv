@@ -5,7 +5,7 @@
 const std::string HTTPResponse::KEY_AND_VALUE_SEPARATOR = ": ";
 
 HTTPResponse::HTTPResponse(SocketFileDescriptor *socketFD)
-    : _socketFD(socketFD), _keepAlive(false) {
+    : _socketFD(socketFD), _closeConnectionAfterThatResponse(true) {
   (void)_socketFD;
 }
 
@@ -27,7 +27,7 @@ void HTTPResponse::createResponse() {
 
   _socketFD->getOutputStream().assign(theResponse.begin(),
                                       theResponse.begin() + theResponse.size());
-  _socketFD->setCloseSocketAfterProcessingResponse(_keepAlive);
+  _socketFD->setCloseSocketAfterProcessingResponse(_closeConnectionAfterThatResponse);
 }
 
 void HTTPResponse::setHTTPVersion(const std::string &httpVersion) {
@@ -74,14 +74,14 @@ void HTTPResponse::setLastModified(const std::string &lastModified) {
 
 void HTTPResponse::setConnection(const std::string &connection) {
   _connection = connection;
-  _keepAlive = false;
+  _closeConnectionAfterThatResponse = true;
   if (_connection == "keep-alive") {
-	_keepAlive = true;
+	_closeConnectionAfterThatResponse = false;
   }
 }
 
-bool HTTPResponse::getKeepAlive() const{
-	return _keepAlive;
+bool HTTPResponse::closeConnectionAfterThatResponse() const{
+	return _closeConnectionAfterThatResponse;
 }
 
 void HTTPResponse::addHeader(const std::string &key, const std::string &value) {
