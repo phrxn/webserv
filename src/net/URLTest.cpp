@@ -212,7 +212,7 @@ TEST(URLTest, extractPath_stringWithPathAndQueryString) {
 
 //--------------------------------------------------------------
 
-TEST(URLTest, extractPath_stringWithQuery) {
+TEST(URLTest, extractQuery_stringWithQuery) {
   URL url;
 
   std::string urlString("?a=b");
@@ -223,7 +223,7 @@ TEST(URLTest, extractPath_stringWithQuery) {
   EXPECT_EQ(urlString, "");
 }
 
-TEST(URLTest, extractPath_stringIsntAQueryString) {
+TEST(URLTest, extractQuery_stringIsntAQueryString) {
   URL url;
 
   std::string urlString("foo");
@@ -234,7 +234,7 @@ TEST(URLTest, extractPath_stringIsntAQueryString) {
   EXPECT_EQ(urlString, "foo");
 }
 
-TEST(URLTest, extractPath_stringIsntAQueryString2) {
+TEST(URLTest, extractQuery_stringIsntAQueryString2) {
   URL url;
 
   std::string urlString("a=b");
