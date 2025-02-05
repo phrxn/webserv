@@ -112,7 +112,7 @@ time_t File::getModificationTime() const {
   return file_information.st_mtim.tv_sec;
 }
 
-std::string File::getPath() const { return _path; }
+std::string File::getPathFullEncoded() const { return _path; }
 
 bool File::exist() const {
   error::StatusOr<int> isReadable = _systemCalls->access(_path.c_str(), F_OK);
@@ -122,7 +122,7 @@ bool File::exist() const {
   return false;
 }
 
-void File::setPath(const std::string &path){
+void File::setPathFull(const std::string &path){
 	_path = path;
 }
 

@@ -7,6 +7,10 @@ const std::string URL::PORT_DELIMITER(":");
 const std::string URL::PATH_DELIMITER("/");
 const std::string URL::QUERY_DELIMITER("?");
 
+URL::URL(const std::string &urlEncoded){
+	parserStringToURL(urlEncoded);
+}
+
 URL::URL()
     : _protocol(""),
       _domain(""),
@@ -59,16 +63,64 @@ void URL::setPort(int port) { _port = port; }
 const std::string &URL::getDomain() const { return _domain; }
 void URL::setDomain(const std::string &domain) { _domain = domain; }
 
-const std::string &URL::getPath() const { return _path; }
-void URL::setPath(const std::string &path) { _path = path; }
+void URL::setPathFull(const std::string &path) { _path = path; }
+
+
+
+std::string URL::getPathFull(bool decoded) const{
+	if (decoded){
+		return decode(_path);
+	}
+	return _path;
+}
+
+/**
+ * @brief Return the path without the extra path, return the path without the extra path, if the page type is not STATIC
+ *
+ * Exemple 1: /a/b.php/more/path -> /a/b.php
+ * Exemple 2: /a/b.php -> /a/b.php
+ */
+std::string URL::getPath(bool decoded) const{
+
+    std::string pathToReturn = _path;
+
+    HTTPTypeOfPages::TypeOfPage typeOfPage = _httpTypeOfPages.getTypeOfPathFromPath(_path);
+	if (typeOfPage != HTTPTypeOfPages::STATIC){
+		std::string extension = _httpTypeOfPages.getTypeOfPageToString(typeOfPage);
+		size_t extension_index = _path.find(extension);
+		pathToReturn = _path.substr(0, extension_index + extension.length());
+	}
+
+	if (decoded){
+		return decode(pathToReturn);
+	}
+	return pathToReturn;
+}
+
+/**
+ * @brief Return the extra path from the full path, if the page type is not STATIC
+ *
+ * Exemple 1: /a/b.php/more/path -> /more/path
+ * Exemple 2: /a/b.php -> ""
+ */
+std::string URL::getExtraPathFromFullPath() const{
+	HTTPTypeOfPages::TypeOfPage typeOfPage = _httpTypeOfPages.getTypeOfPathFromPath(_path);
+	if (typeOfPage == HTTPTypeOfPages::STATIC){
+		return "";
+	}
+	return removePathToExtraPath(_path, typeOfPage);
+}
+
 
 const std::string &URL::getQuery() const { return _query; }
 
 void URL::setQuery(const std::string &query) { _query = query; }
 
+
 void URL::parserStringToURL(std::string url) {
   _protocol = extractProtocol(url);
   _domain = extractDomain(url);
+
   std::string tmpPort = extractPort(url);
 
   std::stringstream sstring(tmpPort);
@@ -110,7 +162,7 @@ std::string URL::extractDomain(std::string &url) {
   // if 0 the url start with "/" or
   // if npos all string a domain
   if (delimiterPortIndex == 0 || delimiterPortIndex == std::string::npos) {
-    return url;
+    delimiterPortIndex = url.size();
   }
 
   domain = url.substr(0, delimiterPortIndex);
@@ -192,16 +244,16 @@ std::ostream &operator<<(std::ostream &os, const URL &url) {
   os << "[URL: protocol: " << url.getProtocol() << ", "
      << "domain: " << url.getDomain() << ", "
      << "port: " << url.getPort() << ", "
-     << "path: " << url.getPath() << ", "
+     << "path: " << url.getPathFull(true) << ", "
      << "query: " << url.getQuery() << "]";
   return os;
 }
 
-bool URL::isHexDigit(char c) {
+bool URL::isHexDigit(char c) const {
   return (std::isdigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
 }
 
-char URL::hexToChar(const std::string &hex) {
+char URL::hexToChar(const std::string &hex) const {
   int value;
   std::stringstream ss;
   ss << std::hex << hex;
@@ -209,7 +261,7 @@ char URL::hexToChar(const std::string &hex) {
   return static_cast<char>(value);
 }
 
-std::string URL::decode(const std::string &input) {
+std::string URL::decode(const std::string &input) const {
   std::string result;
   for (size_t i = 0; i < input.length(); ++i) {
     if (input[i] == '%' && (i + 2 < input.length()) &&
@@ -221,4 +273,23 @@ std::string URL::decode(const std::string &input) {
     }
   }
   return result;
+}
+
+
+//TESTAR ISSO
+std::string URL::removePathToExtraPath(const std::string& pathFull, HTTPTypeOfPages::TypeOfPage typeOfPage) const {
+	if (typeOfPage == HTTPTypeOfPages::STATIC){
+		return "";
+	}
+
+    std::string extension = _httpTypeOfPages.getTypeOfPageToString(typeOfPage);
+	if (pathFull < extension){
+		return "";
+	}
+
+    size_t pos = pathFull.find(extension);
+    if (pos != std::string::npos && pos + extension.length() < pathFull.length()) {
+        return pathFull.substr(pos + extension.length());
+    }
+    return "";  // Retorna vazio se o delimitador não for encontrado ou estiver no final da string
 }

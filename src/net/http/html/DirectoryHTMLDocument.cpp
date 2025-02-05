@@ -63,8 +63,8 @@ void DirectoryHTMLDocument::createDirectoryListFileHTML(
   std::vector<File>::iterator end1 = filesInsideOfDirectory.end();
 
   for (; it1 != end1; ++it1) {
-    std::string fullPath = _directory->getPath() + it1->getPath();
-    it1->setPath(fullPath);
+    std::string fullPath = _directory->getPathFullEncoded() + it1->getPathFullEncoded();
+    it1->setPathFull(fullPath);
   }
 
   sortDirectoryFiles(filesInsideOfDirectory);
@@ -72,7 +72,7 @@ void DirectoryHTMLDocument::createDirectoryListFileHTML(
   std::vector<ItemDirectoryHTMLDocument> listAllDirectoryItems =
       createItemDirectoryHTMLDocumentList(filesInsideOfDirectory);
 
-  CreateDirectoryHTMLPage createDirectory(_directory->getPath(), _urlPathToDir);
+  CreateDirectoryHTMLPage createDirectory(_directory->getPathFullEncoded(), _urlPathToDir);
 
   std::vector<ItemDirectoryHTMLDocument>::const_iterator it =
       listAllDirectoryItems.begin();
@@ -102,7 +102,7 @@ void DirectoryHTMLDocument::removeDotAndDotDotDirectoriesFromDirectoryList(
   std::vector<File>::iterator it = listFilesInsideDirectory.begin();
 
   while (it != listFilesInsideDirectory.end()) {
-    if (it->getPath() == "." || it->getPath() == "..") {
+    if (it->getPathFullEncoded() == "." || it->getPathFullEncoded() == "..") {
       listFilesInsideDirectory.erase(it);
       continue;
     }
@@ -119,7 +119,7 @@ DirectoryHTMLDocument::createItemDirectoryHTMLDocumentList(
   std::vector<ItemDirectoryHTMLDocument> itemList;
 
   for (; it != end; ++it) {
-    itemList.push_back(ItemDirectoryHTMLDocument(*it, _directory->getPath()));
+    itemList.push_back(ItemDirectoryHTMLDocument(*it, _directory->getPathFullEncoded()));
   }
   return itemList;
 }

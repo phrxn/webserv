@@ -42,7 +42,7 @@ CreateDirectoryHTMLPage& CreateDirectoryHTMLPage::operator<<(
 std::string CreateDirectoryHTMLPage::createAnchorToPath(
     const ItemDirectoryHTMLDocument& item) const {
   std::stringstream ss;
-  ss << "<a href=\"" << item.getPath() << "\">";
+  ss << "<a href=\"" << item.getPathFullEncoded() << "\">";
   std::string formattedPath = formatPath(item);
   ss << formattedPath << "</a>";
   if (formattedPath.size() < 50) {
@@ -55,7 +55,7 @@ std::string CreateDirectoryHTMLPage::createAnchorToPath(
 
 std::string CreateDirectoryHTMLPage::formatPath(
     const ItemDirectoryHTMLDocument& item) const {
-  std::string pathFormatted = item.getPath();
+  std::string pathFormatted = item.getPathFullEncoded();
 
   if (pathFormatted.size() < 51) {
     return pathFormatted;

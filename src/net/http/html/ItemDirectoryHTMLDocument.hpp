@@ -18,7 +18,7 @@ class ItemDirectoryHTMLDocument {
   bool operator==(const ItemDirectoryHTMLDocument &src);
   bool operator<(const ItemDirectoryHTMLDocument &src);
 
-  std::string getPath() const;
+  std::string getPathFullEncoded() const;
   std::string getModificationTime() const;
   std::string getSizeInBytes() const;
   bool isDirectory() const;

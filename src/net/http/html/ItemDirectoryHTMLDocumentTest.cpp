@@ -61,19 +61,19 @@ TEST(
 TEST(ItemDirectoryHTMLDocumentTest, getPath_toDirectoryThePathDoesntHasASlash){
 	ItemDirectoryHTMLDocument item("a", 0, 0, true);
 
-	EXPECT_EQ("a/", item.getPath());
+	EXPECT_EQ("a/", item.getPathFullEncoded());
 }
 
 TEST(ItemDirectoryHTMLDocumentTest, getPath_toDirectoryThePathHasASlash){
 	ItemDirectoryHTMLDocument item("a/", 0, 0, true);
 
-	EXPECT_EQ("a/", item.getPath());
+	EXPECT_EQ("a/", item.getPathFullEncoded());
 }
 
 TEST(ItemDirectoryHTMLDocumentTest, getPath_toFile){
 	ItemDirectoryHTMLDocument item("a", 0, 0, false);
 
-	EXPECT_EQ("a", item.getPath());
+	EXPECT_EQ("a", item.getPathFullEncoded());
 }
 
 // ------------------------------------------------------------------------

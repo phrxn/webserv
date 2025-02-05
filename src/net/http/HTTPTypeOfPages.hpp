@@ -13,9 +13,9 @@ class HTTPTypeOfPages {
   HTTPTypeOfPages(const HTTPTypeOfPages &src);
   HTTPTypeOfPages &operator=(const HTTPTypeOfPages &src);
 
-  HTTPTypeOfPages::TypeOfPage getStringToTypeOfPage(const std::string &typeOfPage);
-  std::string getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage typeOfPage);
-  HTTPTypeOfPages::TypeOfPage getTypeOfPathFromPath(const std::string &path);
+  HTTPTypeOfPages::TypeOfPage getStringToTypeOfPage(const std::string &typeOfPage) const ;
+  std::string getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage typeOfPage) const ;
+  HTTPTypeOfPages::TypeOfPage getTypeOfPathFromPath(const std::string &path) const ;
 
  private:
   static const std::map<HTTPTypeOfPages::TypeOfPage, std::string> mapTypeOfPage;

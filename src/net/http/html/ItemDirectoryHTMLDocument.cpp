@@ -3,7 +3,7 @@
 #include <sstream>
 
 ItemDirectoryHTMLDocument::ItemDirectoryHTMLDocument(const File &file, const std::string &dirParent) : _dirParent(dirParent){
-  init(file.getPath(), file.getModificationTime(), file.size(),
+  init(file.getPathFullEncoded(), file.getModificationTime(), file.size(),
        file.isDirectory());
 }
 
@@ -50,7 +50,7 @@ bool ItemDirectoryHTMLDocument::operator<(
 }
 
 
-std::string ItemDirectoryHTMLDocument::getPath() const {
+std::string ItemDirectoryHTMLDocument::getPathFullEncoded() const {
 
   std::string _pathFile = _path.substr(_dirParent.size());
 

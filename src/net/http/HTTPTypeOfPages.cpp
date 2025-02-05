@@ -26,7 +26,7 @@ HTTPTypeOfPages &HTTPTypeOfPages::operator=(const HTTPTypeOfPages &src){
 	return *this;
 }
 
-HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getStringToTypeOfPage(const std::string &typeOfPage){
+HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getStringToTypeOfPage(const std::string &typeOfPage) const {
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator start = mapTypeOfPage.begin();
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator end = mapTypeOfPage.end();
 
@@ -38,7 +38,7 @@ HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getStringToTypeOfPage(const std::st
 	return HTTPTypeOfPages::STATIC;
 }
 
-std::string HTTPTypeOfPages::getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage typeOfPage){
+std::string HTTPTypeOfPages::getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage typeOfPage) const {
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator start = mapTypeOfPage.begin();
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator end = mapTypeOfPage.end();
 
@@ -50,7 +50,7 @@ std::string HTTPTypeOfPages::getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage t
 	return "STATIC";
 }
 
-HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getTypeOfPathFromPath(const std::string &path){
+HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getTypeOfPathFromPath(const std::string &path) const {
 	if (path.find(".php") != std::string::npos){
 		return PHP;
 	}

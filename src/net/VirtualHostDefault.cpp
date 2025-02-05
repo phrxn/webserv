@@ -51,7 +51,7 @@ bool VirtualHostDefault::isTheMethodAllowedForThisPath(URL url, HTTPMethods::Met
 
 bool VirtualHostDefault::isUrlAPathToCGI(URL url) const{
 
-  std::string path = url.getPath();
+  std::string path = url.getPathFull(false);
 
   std::string::size_type phpExtesion = path.find(".php");
 
@@ -61,11 +61,11 @@ bool VirtualHostDefault::isUrlAPathToCGI(URL url) const{
 
 std::string VirtualHostDefault::getThePhysicalPath(URL url) const{
 	std::string prefix = "www";
-	return prefix + url.getPath();
+	return prefix + url.getPathFull(false);
 }
 
 bool VirtualHostDefault::isDirectoryListingAllowedForThisPath(URL url) const{
-  std::string path = url.getPath();
+  std::string path = url.getPathFull(false);
 
   std::string::size_type phpExtesion = path.find("dir");
 

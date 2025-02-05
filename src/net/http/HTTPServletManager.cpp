@@ -66,7 +66,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
     _hTTPServlet = new HTTPServletCGI(_virtualHost);
   } else {
     _hTTPServlet =
-        new HTTPServletStatic(absolutePathToResource, url.getPath(), canListDirectory);
+        new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);
   }
 
   HTTPStatus::Status methodReturn = HTTPStatus::SERVER_ERROR;
@@ -100,7 +100,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
   // redirection is due to the lack of a slash in some path to a directory
   if (methodReturn == HTTPStatus::MOVED_PERMANENTLY) {
     return _handlerHTTPStatus.doStatusFamily300(response, methodReturn,
-                                                url.getPath() + "/");
+                                                url.getPathFull(true) + "/");
   }
 
   _handlerHTTPStatus.doStatusError(response, methodReturn);

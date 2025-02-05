@@ -56,7 +56,7 @@ TEST(FileTest, copy_operator) {
 
   File b = a;
 
-  EXPECT_EQ("abc", b.getPath());
+  EXPECT_EQ("abc", b.getPathFullEncoded());
 }
 
 // ------------------------------------------------------------------------
@@ -67,7 +67,7 @@ TEST(FileTest, assignment_operator) {
 
   b = a;
 
-  EXPECT_EQ("abc", b.getPath());
+  EXPECT_EQ("abc", b.getPathFullEncoded());
 }
 
 // ------------------------------------------------------------------------
@@ -237,10 +237,10 @@ TEST(FileTest, isDirectory_statReturnRegularFile) {
 
 // ------------------------------------------------------------------------
 
-TEST(FileTest, getPath) {
+TEST(FileTest, getPathFullEncoded) {
   File file("abc");
 
-  std::string thePath = file.getPath();
+  std::string thePath = file.getPathFullEncoded();
 
   EXPECT_EQ("abc", thePath);
 }

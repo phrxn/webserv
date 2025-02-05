@@ -30,9 +30,9 @@ class File {
 
   time_t getModificationTime() const;
 
-  std::string getPath() const;
+  std::string getPathFullEncoded() const;
 
-  void setPath(const std::string &path);
+  void setPathFull(const std::string &path);
 
   bool exist() const;
 

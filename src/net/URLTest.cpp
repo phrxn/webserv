@@ -21,8 +21,8 @@ class URLBuilder {
     return *this;
   }
 
-  URLBuilder &setPath(const std::string &path) {
-    url.setPath(path);
+  URLBuilder &setPathFull(const std::string &path) {
+    url.setPathFull(path);
     return *this;
   }
 
@@ -36,6 +36,198 @@ class URLBuilder {
  private:
   URL url;
 };
+
+//--------------------------------------------------------------
+
+TEST(URLTest, getPathFull_decoded){
+
+	URL url("https://exemplo.com/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula");
+
+	EXPECT_EQ(url.getPathFull(true), "/pasta com espaço;com ponto e vírgula");
+}
+
+TEST(URLTest, getPathFull_NotDecoded){
+
+	URL url("https://exemplo.com/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula");
+
+	EXPECT_EQ(url.getPathFull(false), "/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula");
+}
+
+TEST(URLTest, getPathFullButPathWasQueryString_decoded){
+
+	URL url("https://exemplo.com/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula?query=1");
+
+	EXPECT_EQ(url.getPathFull(true), "/pasta com espaço;com ponto e vírgula");
+}
+
+TEST(URLTest, getPathFullButPathWasQueryString_NotDecoded){
+
+	URL url("https://exemplo.com/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula?query=1");
+
+	EXPECT_EQ(url.getPathFull(false), "/pasta%20com%20espaço%3Bcom%20ponto%20e%20vírgula");
+}
+
+//--------------------------------------------------------------
+
+TEST(URLTest, getPath_emptyPath){
+
+	URL url("https://exemplo.com");
+
+	EXPECT_EQ(url.getPath(true), "");
+}
+
+TEST(URLTest, getPath_pathDoesntHaveExtraPath){
+
+	URL url("https://exemplo.com/foo");
+
+	EXPECT_EQ(url.getPath(true), "/foo");
+
+}
+
+TEST(URLTest, getPath_pathHaveACGIAndItDoesntHaveAnExtraPath){
+
+	URL url("https://exemplo.com/file.php");
+
+	EXPECT_EQ(url.getPath(false), "/file.php");
+
+}
+
+TEST(URLTest, getPath_pathHaveACGIAndItHaveAnExtraPath){
+
+	URL url("https://exemplo.com/file.php/");
+
+	EXPECT_EQ(url.getPath(false), "/file.php");
+
+}
+
+TEST(URLTest, getPath_pathHaveACGIAndItHaveAnExtraPath2){
+
+	URL url("https://exemplo.com/file.php/extra.php/foo");
+
+	EXPECT_EQ(url.getPath(false), "/file.php");
+
+}
+
+//--------------------------------------------------------------
+
+TEST(URLTest, getExtraPathFromFullPath_emptyPath){
+
+	URL url("https://exemplo.com");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(), "");
+}
+
+TEST(URLTest, getExtraPathFromFullPath_pathHaveACGIAndItDoesntHaveAnExtraPath){
+
+	URL url("https://exemplo.com/file.php");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(), "");
+
+}
+
+TEST(URLTest, getExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath){
+
+	URL url("https://exemplo.com/file.php/");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(), "/");
+
+}
+
+TEST(URLTest, ggetExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath2){
+
+	URL url("https://exemplo.com/file.php/extra.php/foo");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(), "/extra.php/foo");
+
+}
+
+TEST(URLTest, ggetExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath3){
+
+	URL url("https://exemplo.com/file.php/extra.php");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(), "/extra.php");
+
+}
+
+//--------------------------------------------------------------
+
+
+TEST(URLTest, parserStringToURL_FullValidURL) {
+  URLBuilder urlBuilder;
+  URL urlToCompare = urlBuilder.setProtocol("abcd")
+                         .setDomain("www.a.com")
+                         .setPort(9090)
+                         .setPathFull("/a/b.php")
+                         .setQuery("z=1;x=2")
+                         .build();
+
+  URL url;
+  url.parserStringToURL("abcd://www.a.com:9090/a/b.php?z=1;x=2");
+
+  EXPECT_EQ(urlToCompare, url);
+}
+
+TEST(URLTest, parserStringToURL_PathAndQueryString) {
+  URLBuilder urlBuilder;
+  URL urlToCompare = urlBuilder.setProtocol("")
+                         .setDomain("")
+                         .setPort(0)
+                         .setPathFull("/a/b.php")
+                         .setQuery("z=1;x=2")
+                         .build();
+
+  URL url;
+  url.parserStringToURL("/a/b.php?z=1;x=2");
+
+  EXPECT_EQ(urlToCompare, url);
+}
+
+TEST(URLTest, parserStringToURL_OnlyPath) {
+  URLBuilder urlBuilder;
+  URL urlToCompare = urlBuilder.setProtocol("")
+                         .setDomain("")
+                         .setPort(0)
+                         .setPathFull("/a/b.php")
+                         .setQuery("")
+                         .build();
+
+  URL url;
+  url.parserStringToURL("/a/b.php");
+
+  EXPECT_EQ(urlToCompare, url);
+}
+
+
+TEST(URLTest, parserStringToURL_OnlyPathWithPHPTextAndExtraPath) {
+  URLBuilder urlBuilder;
+  URL urlToCompare = urlBuilder.setProtocol("")
+                         .setDomain("")
+                         .setPort(0)
+                         .setPathFull("/a/b.php/more/path")
+                         .setQuery("")
+                         .build();
+
+  URL url;
+  url.parserStringToURL("/a/b.php/more/path");
+
+  EXPECT_EQ(urlToCompare, url);
+}
+
+TEST(URLTest, parserStringToURL_OnlyPathWithDomainAndPath) {
+  URLBuilder urlBuilder;
+  URL urlToCompare = urlBuilder.setProtocol("https")
+                         .setDomain("www.exemple.com")
+                         .setPort(0)
+                         .setPathFull("")
+                         .setQuery("")
+                         .build();
+
+  URL url;
+  url.parserStringToURL("https://www.exemple.com");
+
+  EXPECT_EQ(urlToCompare, url);
+
+}
 
 //--------------------------------------------------------------
 
@@ -93,7 +285,7 @@ TEST(URLTest, extractDomain_domainWithoutPortAndWithoutPath) {
   std::string domain = url.extractDomain(urlString);
 
   EXPECT_EQ(domain, "www.a.com");
-  EXPECT_EQ(urlString, "www.a.com");
+  EXPECT_EQ(urlString, "");
 }
 
 TEST(URLTest, extractDomain_domainWithPortAndNoPath) {
@@ -245,54 +437,7 @@ TEST(URLTest, extractQuery_stringIsntAQueryString2) {
   EXPECT_EQ(urlString, "a=b");
 }
 
-//--------------------------------------------------------------
-
-TEST(URLTest, parserStringToURL_FullValidURL) {
-  URLBuilder urlBuilder;
-  URL urlToCompare = urlBuilder.setProtocol("abcd")
-                         .setDomain("www.a.com")
-                         .setPort(9090)
-                         .setPath("/a/b.php")
-                         .setQuery("z=1;x=2")
-                         .build();
-
-  URL url;
-  url.parserStringToURL("abcd://www.a.com:9090/a/b.php?z=1;x=2");
-
-  EXPECT_EQ(urlToCompare, url);
-}
-
-TEST(URLTest, parserStringToURL_PathAndQueryString) {
-  URLBuilder urlBuilder;
-  URL urlToCompare = urlBuilder.setProtocol("")
-                         .setDomain("")
-                         .setPort(0)
-                         .setPath("/a/b.php")
-                         .setQuery("z=1;x=2")
-                         .build();
-
-  URL url;
-  url.parserStringToURL("/a/b.php?z=1;x=2");
-
-  EXPECT_EQ(urlToCompare, url);
-}
-
-TEST(URLTest, parserStringToURL_OnlyPath) {
-  URLBuilder urlBuilder;
-  URL urlToCompare = urlBuilder.setProtocol("")
-                         .setDomain("")
-                         .setPort(0)
-                         .setPath("/a/b.php")
-                         .setQuery("")
-                         .build();
-
-  URL url;
-  url.parserStringToURL("/a/b.php");
-
-  EXPECT_EQ(urlToCompare, url);
-}
-
-//--------------------------------------------------------------
+//-------------------------------------------------------------
 
 TEST(URLTest, decode_testCaseInsensitive) {
 
@@ -374,4 +519,72 @@ TEST(URLTest, decode_decodeSpaceAndQuestionMake) {
 
   EXPECT_EQ("cgi_variables.php/aaa bbbb?;year=2024&month=06", decodedValue);
 
+}
+
+// ---------------------------------------------------------------
+
+TEST(URLTest, removePathToExtraPath_emptyPath){
+
+	URL url;
+
+	std::string pathFull = "";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::STATIC);
+
+	EXPECT_EQ("", extraPath);
+}
+
+TEST(URLTest, removePathToExtraPath_emptyPathCGI){
+
+	URL url;
+
+	std::string pathFull = "";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::PHP);
+
+	EXPECT_EQ("", extraPath);
+}
+
+TEST(URLTest, removePathToExtraPath_pathIsOnlyCGI){
+
+	URL url;
+
+	std::string pathFull = ".php";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::PHP);
+
+	EXPECT_EQ("", extraPath);
+}
+
+TEST(URLTest, removePathToExtraPath_pathEndsWithCGI){
+
+	URL url;
+
+	std::string pathFull = "/foo/a.php";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::PHP);
+
+	EXPECT_EQ("", extraPath);
+}
+
+TEST(URLTest, removePathToExtraPath_pathIsACGIAndEndsWithSlash){
+
+	URL url;
+
+	std::string pathFull = "/foo/a.php/";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::PHP);
+
+	EXPECT_EQ("/", extraPath);
+}
+
+TEST(URLTest, removePathToExtraPath_pathIsACGIAndEndsWithAExtraPathWithSameExtension){
+
+	URL url;
+
+	std::string pathFull = "/foo/a.php/delete.php";
+
+	std::string extraPath = url.removePathToExtraPath(pathFull, HTTPTypeOfPages::TypeOfPage::PHP);
+
+	EXPECT_EQ("/delete.php", extraPath);
 }
