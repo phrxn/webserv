@@ -35,6 +35,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/io/FileDescriptor.cpp\
 		src/io/Poll.cpp\
 		src/net/http/cgi/CGICreateEnvironmentVariables.cpp\
+		src/net/http/cgi/EnvironmentVariables.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
@@ -93,6 +94,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/io/EpollTest.cpp\
 				src/io/FileTest.cpp\
 				src/net/http/cgi/CGICreateEnvironmentVariablesTest.cpp\
+				src/net/http/cgi/EnvironmentVariablesTest.cpp\
 				src/net/http/html/CreateDirectoryHTMLPageTest.cpp\
 				src/net/http/html/DirectoryHTMLDocumentTest.cpp\
 				src/net/http/html/ItemDirectoryHTMLDocumentTest.cpp\
