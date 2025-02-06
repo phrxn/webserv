@@ -84,12 +84,14 @@ the_val_tests(){
 	if [ -z "$filter" ]; then
 		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --track-fds=yes "./""$TESTS_BINARY"
 		if [ $? -eq 1 ]; then
+		    remove_permissions_to_things_to_test
 			echo -e "\033[1;31mVALGRIND : Code failed to pass valgrind! (memory leak or open file descriptor) \033[0m"
 			return 1
 		fi
 	else
 		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --track-fds=yes "./""$TESTS_BINARY" --gtest_filter="$filter"'.*'
 		if [ $? -eq 1 ]; then
+		    remove_permissions_to_things_to_test
 			echo -e "\033[1;31mVALGRIND : Code failed to pass valgrind! (memory leak or open file descriptor) \033[0m"
 			return 1
 		fi
@@ -131,6 +133,7 @@ if [ -z "$1" ]; then
 	echo -e "        val_tests [filter]"
 	echo -e "        val_run <configuration file>"
 	echo -e "        re"
+	echo -e "        ci"
     exit 1
 fi
 
@@ -197,4 +200,24 @@ if [ "$USER_OPTION" == "val_run" ]; then
 		exit 1
 	fi
 
+fi
+
+if [ "$USER_OPTION" == "ci" ]; then
+    make fclean
+    if [ $? -ne 0 ]; then
+		echo -e "\033[1;31m (CI) Webserv: Error trying to clean the project\033[0m"
+		exit 1
+	fi
+
+	make COMPILE=binary -j$(nproc)
+    if [ $? -ne 0 ]; then
+		echo -e "\033[1;31m (CI) Webserv: Error trying to compile the project\033[0m"
+		exit 1
+	fi
+
+	the_val_tests
+	if [ $? -ne 0 ]; then
+		echo -e "\033[1;31m (CI) Webserv: Error in the tests \033[0m"
+		exit 1
+	fi
 fi
