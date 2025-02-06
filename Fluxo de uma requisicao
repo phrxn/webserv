@@ -144,16 +144,14 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 --------------  CGI Logica de funcionamento INICIO  --------------
 
-7) No HTTPServletCGI (string caminhoFisicoReal)  <--- Esse caminho sempre tera o seu final apontando para um CGI e nunca vai terminar com / (pois o virtual host jah tratou) ou nao nao tem como ser diretorio o que vem depois eh extra-path mesmo que seja uma barra/
+7) No HTTPServletCGI (string caminhoFisicoReal, caminho raizDoVirtual (tipo /var/www/html/)  <--- Esse caminho sempre tera o seu final apontando para um CGI e nunca vai terminar com / (pois o virtual host jah tratou) ou nao nao tem como ser diretorio o que vem depois eh extra-path mesmo que seja uma barra/
   
     vamos receber o HTTPRquest, nele vamos ter: URL, da porta remota do cliente, do ip do cliente
 
   
 	#Criar o CGIPagesPhysicalPathChecker <- implementa
     #HTMLDocument:
-    #ProgramConfiguration
-
-
+    #ProcessCGIRequest;
 
     HTTPStatus doGet(HTTPRequest  &, HTTPResponse &){}
     HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
@@ -166,20 +164,200 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
            REDIRECT_STATUS = "true"
            SCRIPT_FILENAME = caminhoFisicoReal
 	    se no http header tiver o valor: Cookie pegar esse valor e colocar em mais uma variavel de ambiente
-           HTTP_COOKIE=
+           HTTP_COOKIE=HTTPRquest.getCookie();
         
     }
 
 
+8) ProcessCGIRequest (string caminhoFisicoReal, caminho raizDoVirtual, HTTPRequest &httpRequest)
+   
+   # static int count = 1000;
+
+   #CGIEnvironmentVariables _cGIEnvironmentVariables
+   #FilesToCGI              _filesToCGI
+   
+   
+   HTMLDocument processCGIRequest(){
+		if (!_fileToCGI.createFileDescriptors(httpRequest))
+			return 500;
+		
+   }
+
+
+
+9)FilesToCGI  (HTTPRquest &request)
+
+    #int _fileDescriptorInput  = -1
+	#int _fileDescriptorOutput = -1
+	#int _fileDescriptorStdErr = -1
+	
+	#SystemCall _systemCalls;
+	#SystemCall _logger;
+	
+	//deletar copia e atribuicao
+	
+	bool createFileDescriptors(const HTTPRequest &request){
+		//se criou todos os arquivo certo
+		//adicionar o Body do HTTPRequest
+	}
+	bool prepareFileDescriptorsToChildProcess(){
+		fazer os dup2() para os 3 defaults
+		fechar os 3 criados();
+	}
+	
+	
+	bool closeFileDescriptorsInParentProcess(){
+	    fechar os 3 criados();
+	}
+
+    private fechar os 3 criados(){close e setar todos como -1}
+	
+	
+1) ExecuteCGIProgram
+
+	#CGIEnvironmentVariables       _cGIEnvironmentVariables
+	#HTTPRequest                  *_request;
+	#SystemCall                   *_systemCalls;
+	#Logger                       *_logger;
+	#ProgramConfiguration         *_programConfiguration;
+
+	ExecutionStatus{OK=0, SCRIPT_ISNOT_A_CGI_FILE, BINARY_CGI_DOESNT_EXIST, FORK_ERROR}
+	
+
+    ExecutionStatus execute(caminhoAbsolutoParaOScript, _cGIEnvironmentVariables, _filesToCGI){
+   
+        std::string pathToCGIBinary =  getFullPathToCGIBinary(caminhoAbsolutoParaOScript);
+        
+		if (pathToCGIBinary.empty()){
+			return SCRIPT_ISNOT_A_CGI_FILE;
+		}
+	    
+		bool binaryCGIExist = binaryCGIExist(pathToCGIBinary);
+		
+		if (binaryCGIExists == false){
+			return BINARY_CGI_DOESNT_EXIST;
+		}
+   
+        char **argvToExecve = createArgv(pathToCGIBinary, caminhoAbsolutoParaOScript);
+        
+		int retorno = _systemCalls->Fork();
+        
+		if (retorno == -1){
+            Logger.logFatal();
+		    return FORK_ERROR;
+        }
+	  
+        if (retorno != 0) {  //processo pai
+	       time_t startTime = time.getCurrentTime();
+	       size_t tempoEmSegundoParaEsperarOProcessoFilho = _programConfiguration.timeToWaitCGI();
+		   
+		   time_t time.timepoPassadoEmSegundosDesde(startTime);
+		   
+
+        }else{
+            bool preparoBemFeito =  _filesToCGI.prepareFileDescriptorsToChildProcess();
+			if (preparoBemFeito  = falso){
+				Logger.logFatal()
+				exit(1);
+			}
+
+			char **envFullToExec = _cGIEnvironmentVariables.getVariables();
+			
+			int retorno systemCall->execute(pathToCGIBinary, argv, envFullToExec);
+			return (1);
+	  }
+    }
+	
+	
+	
+	
+	//empty String if file ins't a CGI
+	std::string getFullPathToCGIBinary(caminhoAbsolutoParaOScript){
+	       
+        HTTPTypeOfCGI typeOfCGI = _HTTPTypeOfCGI.getTypeFromPath(caminhoAbsolutoParaOScript);
+   
+        if (typeOfCGI == PHP)
+            return "/bin/php/php-cgi";
+        if (typeOfCGi == PYTHON)
+            return "/bin/python3";
+            Logger.logFatal()
+            return ""
+        }
+	}
+	
+	bool binaryCGIExist(FullpathToCGIBinary){
+		File binaryCGI = File(pathToCGIBinary);
+		return binaryCGI.exist();
+	}
+	
+	char **createArgv(caminhoAbsolutoParaCGI, caminhoAbsolutoParaOScript){
+	
+	}
+	
+
+
+============= IDEIAS PARA O CGI EXECUTION ============
+
+ExecuteCGIProgramRefinado**********
+   1) Vai ter que receber o &HTTPRequest e provavelmente o &FileToCGI! E provalmente o caminho Absoluto!
+   
+   2) Checar as coisas:
+   
+    std::string pathToCGIBinary =  getFullPathToCGIBinary(caminhoAbsolutoParaOScript);
+        
+	if (pathToCGIBinary.empty()){
+		return SCRIPT_ISNOT_A_CGI_FILE;
+	}
+	    
+	bool binaryCGIExist = binaryCGIExist(pathToCGIBinary);
+		
+	if (binaryCGIExists == false){
+		return BINARY_CGI_DOESNT_EXIST;
+	}
+   
+    3) Criar:
+        3.1) **argv   usando (pathToCGIBinary e caminhoabsoluto)
+		3.2) **envi   usando _cGIEnvironmentVariables
+	
+	4) Fazer o Fork:
+		se der ruim retorna erro...
+	
+	5) se 0
+		ProcessoFilho(char **argv, char **env, _cgiFiles);
+		ProcessoFilho.exec();
+	6) se > 0
+	    ProcessoPai  (tempo em segundo)  <-- aqui podese usar o ProgramConfiguration.getInstance();
+		return ProcessoPai.exec();
+
+ExecuteCGIProgramRefinado**********
+   
+   
+   
 
 
 
 
+  #FilesToCGI    _cgiFiles    (por causa do processo filho)
+  #char **argv                (por causa do processo filho)
+  #char **env                 (por causa do processo filho)
+  #tempo em segundo           (O wait no processo pai)
+  #SystemClass                (para fazer as systemcalls)
+  
+  ProcessoFilho(char **argv, char **env, _cgiFiles)   <<---Interface ProcessExec  com uma funcaoExec??
+  ProcessoPai  (tempo em segundo)
+	#Time
+    #SystemClass
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-
-
-
-
+--------------------------------------
 
 1) Criar as variaveis de ambiente padroes do CGI OK
 
@@ -190,15 +368,22 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 3) Criar uma lista da nova de variaveis de ambiente, onde as variaveis de ambiente
    já existentes serão adicionadas as do CGI as do programa
+   
+--------------------------------------
+
+** Nesse ponto vamos precisar: caminhoAbsolutoParaOScript, HTTPRequest, Variaveis de Ambiente full (cgi + sistema)
 
 4) Baseado no valor do filedescriptor criar 3 arquivos (onde fd é o filedescriptor)
 	fd-input
 	fd-output
 	fd-error
 
-5) criar os arquivos usando o open e pegar os seus fds
+    criar os arquivos usando o open e pegar os seus fds
 
-6) Se o tipo do método HTTP for POST, preencher o fd-input como o corpo do HTTPRequest
+    Se o tipo do método HTTP for POST, preencher o fd-input como o corpo do HTTPRequest
+
+
+
 
 7) fazer o FORK
 	-- No processo filho:
@@ -286,6 +471,9 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 	  o servidor vai ficar escrevendo, o write trava, logo, nunca mais saimos do processo filho CGI nem o
 	  servidor vai ter a chance de continuar
 
+
+
+
 ** O bufer tem 64KB de tamanho (normalmente)
 
 
@@ -332,3 +520,15 @@ LOGICA:
 
 
 -------  CGI V2  -------
+
+
+PHP-CGI
+
+|arquivo existe | pode ser lido | esta bem configurado |   STATUS     |                          output                                                                    |                               stderr                   |
+     0                  0                 0            |    255       |  Status: 404 Not Found\r\nContent-type: text/html; charset=UTF-8\r\n\r\nNo input file specified.   | 
+	 1                  0                 0            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8\r\n\r\nAccess denied.             | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
+	 1                  1                 0            |    255       |  Status: 500 Internal Server\r\nErrorContent-type: text/html; charset=UTF-8\r\n\r\n                | PHP Parse error:  syntax error, unexpected 'kkk' (T_STRING) in /home/phz/development/quazzom/webserv/coisas_cgi/cgi/ppp.php on line 2 |
+	 1                  0                 1            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8r\n\r\nAccess denied.              | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
+	 1                  1                 1            |     0        |  Content-type: text/html; charset=UTF-8r\n\r\nConteudo do body                                     | 
+	 
+

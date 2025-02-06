@@ -11,3 +11,6 @@
 
 ** arrumar no HTTPServetManager, pois soh faz sentido perguntar sobre se pode listar diretorios se
    o caminho aponta para STATIC pagw
+   
+
+** Provavelmente colocar O_EXCLO nos fds abertos
