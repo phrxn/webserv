@@ -28,7 +28,7 @@ class URL {
   void setPathFull(const std::string &path);
   std::string getPathFull(bool decoded) const;
   std::string getPath(bool decoded) const;
-  std::string getExtraPathFromFullPath() const;
+  std::string getExtraPathFromFullPath(bool decoded) const;
 
   const std::string &getQuery() const;
   void setQuery(const std::string &query);

@@ -115,16 +115,24 @@ Start &Start::operator=(const Start &src) {
 }
 
 void Start::createProgramConfiguration() {
-  _programConfiguration.setEnvironment(TEST);
+
+  std::list<HTTPMethods::Method> listSupportedMethodsByServer;
+  listSupportedMethodsByServer.push_back(HTTPMethods::GET);
+  listSupportedMethodsByServer.push_back(HTTPMethods::POST);
+  listSupportedMethodsByServer.push_back(HTTPMethods::DELETE);
+
   _programConfiguration.setTypeOfProtocol(HTTP);
+  _programConfiguration.setEnvironment(TEST);
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(15);
   _programConfiguration.setLogLevel(Log::DEBUG);
+  _programConfiguration.setListSupportedMethodsByServer(listSupportedMethodsByServer);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
-  _programConfiguration.setServerName("Webserv");
-  _programConfiguration.setHTTPVersion("HTTP/1.1");
 
   // 5MB
   _programConfiguration.setMaxRequestSizeInBytes(5242880);
+  _programConfiguration.setServerName("Webserv");
+  _programConfiguration.setHTTPVersion("HTTP/1.1");
+  _programConfiguration.setCGIVersion("CGI/1.1");
 }
 
 void Start::startLog() {

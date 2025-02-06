@@ -103,12 +103,16 @@ std::string URL::getPath(bool decoded) const{
  * Exemple 1: /a/b.php/more/path -> /more/path
  * Exemple 2: /a/b.php -> ""
  */
-std::string URL::getExtraPathFromFullPath() const{
+std::string URL::getExtraPathFromFullPath(bool decoded) const{
 	HTTPTypeOfPages::TypeOfPage typeOfPage = _httpTypeOfPages.getTypeOfPathFromPath(_path);
 	if (typeOfPage == HTTPTypeOfPages::STATIC){
 		return "";
 	}
-	return removePathToExtraPath(_path, typeOfPage);
+	std::string extraPath = removePathToExtraPath(_path, typeOfPage);
+	if (decoded){
+		return decode(extraPath);
+	}
+	return extraPath;
 }
 
 

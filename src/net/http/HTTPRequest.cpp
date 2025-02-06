@@ -71,7 +71,7 @@ HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
 // 	return httpMethods.getStringToMethod(_header[key]);
 // }
 
-HTTPStatus::Status HTTPRequest::getStatus(){
+HTTPStatus::Status HTTPRequest::getStatus() const{
 	return _status;
 }
 
@@ -82,22 +82,47 @@ bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
 }
 
 
-std::string HTTPRequest::getHost(){
+std::string HTTPRequest::getHost() const{
 	return "";
 }
 
-HTTPMethods::Method HTTPRequest::getMethod(){
+HTTPMethods::Method HTTPRequest::getMethod() const{
 	return HTTPMethods::GET;
 }
 
-std::string HTTPRequest::getURL(){
+std::string HTTPRequest::getURLStr() const{
     return "";
 }
 
-int HTTPRequest::getPort(){
+URL HTTPRequest::getURL() const {
+	return URL();
+}
+
+HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
+	(void)key;
+	return HTTPMethods::GET;
+}
+
+int HTTPRequest::getPort() const{
 	return _socketFD->getServerPort();
 }
 
-std::string HTTPRequest::isToKeepTheConnection(){
+std::string HTTPRequest::isToKeepTheConnection() const {
+	return "";
+}
+
+std::string HTTPRequest::getContentType() const {
+	return "";
+}
+
+std::string HTTPRequest::getContentLength() const {
+	return "";
+}
+
+std::string HTTPRequest::getClientAddressIPv4() const{
+	return _socketFD->getClientIPv4();
+}
+
+std::string HTTPRequest::getCookie() const{
 	return "";
 }

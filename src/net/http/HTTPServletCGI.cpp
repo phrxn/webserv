@@ -30,6 +30,14 @@ HTTPStatus::Status HTTPServletCGI::doGet(HTTPRequest &request,
                                          HTTPResponse &response) {
   (void)request;
   (void)response;
+  HTTPStatus::Status status = _physicalPathChecker->isThePathValidForTheGetMethod(_physicalPathToResource, false);
+  if (status != HTTPStatus::OK) {
+    return status;
+  }
+
+
+
+
   return HTTPStatus::OK;
 }
 

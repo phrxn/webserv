@@ -25,6 +25,9 @@ class ProgramConfiguration {
   Log::LogLevel getLogLevel() const;
   void setLogLevel(Log::LogLevel logLevel);
 
+  void setListSupportedMethodsByServer(
+	const std::list<HTTPMethods::Method> &listSupportedMethodsByServer);
+
   bool theServerSupportsThisHTTPMethod(HTTPMethods::Method method);
 
   const char **getEnvironmentVariables() const;
@@ -40,11 +43,14 @@ class ProgramConfiguration {
   std::string getHTTPVersion() const;
   void setHTTPVersion(const std::string &httpVersion);
 
- protected:
+  std::string getCGIVersion() const;
+  void setCGIVersion(const std::string &cgiVersion);
+
   ProgramConfiguration();
   ProgramConfiguration(const ProgramConfiguration &src);
   ProgramConfiguration &operator=(const ProgramConfiguration &src);
 
+ protected:
   TypesOfProtocol _typeOfProtocol;
   Environment _environment;
   int _timeOutForNewRequestOrToSendAFullRequest;
@@ -54,6 +60,7 @@ class ProgramConfiguration {
   std::size_t _maxRequestSizeInBytes;
   std::string _serverName;
   std::string _httpVersion;
+  std::string _cgiVersion;
 
 };
 

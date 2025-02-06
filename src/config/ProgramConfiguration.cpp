@@ -19,15 +19,24 @@ ProgramConfiguration::ProgramConfiguration()
 
 ProgramConfiguration::~ProgramConfiguration() {}
 
-ProgramConfiguration::ProgramConfiguration(const ProgramConfiguration &src) { *this = src; }
+ProgramConfiguration::ProgramConfiguration(const ProgramConfiguration &src) {
+  *this = src;
+}
 
-ProgramConfiguration &ProgramConfiguration::operator=(const ProgramConfiguration &src) {
+ProgramConfiguration &ProgramConfiguration::operator=(
+    const ProgramConfiguration &src) {
   if (this == &src) return *this;
   _typeOfProtocol = src._typeOfProtocol;
   _environment = src._environment;
   _timeOutForNewRequestOrToSendAFullRequest =
       src._timeOutForNewRequestOrToSendAFullRequest;
   _logLevel = src._logLevel;
+  _listSupportedMethodsByServer = src._listSupportedMethodsByServer;
+  _environmentVariables = src._environmentVariables;
+  _maxRequestSizeInBytes = src._maxRequestSizeInBytes;
+  _serverName = src._serverName;
+  _httpVersion = src._httpVersion;
+  _cgiVersion = src._cgiVersion;
   return *this;
 }
 
@@ -43,7 +52,9 @@ void ProgramConfiguration::setTypeOfProtocol(TypesOfProtocol typeOfProtocol) {
   _typeOfProtocol = typeOfProtocol;
 }
 
-Environment ProgramConfiguration::getEnvironment() const { return _environment; }
+Environment ProgramConfiguration::getEnvironment() const {
+  return _environment;
+}
 
 void ProgramConfiguration::setEnvironment(Environment environment) {
   _environment = environment;
@@ -53,7 +64,8 @@ int ProgramConfiguration::getTimeOutForNewRequestOrToSendAFullRequest() const {
   return _timeOutForNewRequestOrToSendAFullRequest;
 }
 
-void ProgramConfiguration::setTimeOutForNewRequestOrToSendAFullRequest(int timeout) {
+void ProgramConfiguration::setTimeOutForNewRequestOrToSendAFullRequest(
+    int timeout) {
   _timeOutForNewRequestOrToSendAFullRequest = timeout;
 }
 
@@ -61,6 +73,11 @@ Log::LogLevel ProgramConfiguration::getLogLevel() const { return _logLevel; }
 
 void ProgramConfiguration::setLogLevel(Log::LogLevel logLevel) {
   _logLevel = logLevel;
+}
+
+void ProgramConfiguration::setListSupportedMethodsByServer(
+    const std::list<HTTPMethods::Method> &listSupportedMethodsByServer) {
+  _listSupportedMethodsByServer = listSupportedMethodsByServer;
 }
 
 bool ProgramConfiguration::theServerSupportsThisHTTPMethod(
@@ -80,26 +97,30 @@ void ProgramConfiguration::setEnvironmentVariables(
   _environmentVariables = environmentVariables;
 }
 
-std::size_t ProgramConfiguration::getMaxRequestSizeInBytes() const{
-	return _maxRequestSizeInBytes;
+std::size_t ProgramConfiguration::getMaxRequestSizeInBytes() const {
+  return _maxRequestSizeInBytes;
 }
 
-void ProgramConfiguration::setMaxRequestSizeInBytes(std::size_t maxSize){
-	_maxRequestSizeInBytes = maxSize;
+void ProgramConfiguration::setMaxRequestSizeInBytes(std::size_t maxSize) {
+  _maxRequestSizeInBytes = maxSize;
 }
 
-std::string ProgramConfiguration::getServerName() const{
-	return _serverName;
+std::string ProgramConfiguration::getServerName() const { return _serverName; }
+
+void ProgramConfiguration::setServerName(const std::string &serverName) {
+  _serverName = serverName;
 }
 
-void ProgramConfiguration::setServerName(const std::string &serverName){
-	_serverName = serverName;
+std::string ProgramConfiguration::getHTTPVersion() const {
+  return _httpVersion;
 }
 
-std::string ProgramConfiguration::getHTTPVersion() const{
-	return _httpVersion;
+void ProgramConfiguration::setHTTPVersion(const std::string &httpVersion) {
+  _httpVersion = httpVersion;
 }
 
-void ProgramConfiguration::setHTTPVersion(const std::string &httpVersion){
-	_httpVersion = httpVersion;
+std::string ProgramConfiguration::getCGIVersion() const { return _cgiVersion; }
+
+void ProgramConfiguration::setCGIVersion(const std::string &cgiVersion) {
+  _cgiVersion = cgiVersion;
 }

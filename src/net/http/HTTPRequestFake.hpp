@@ -16,11 +16,13 @@ class HTTPRequestFake : public HTTPRequest {
 
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
-  HTTPMethods::Method getMethod();
+  HTTPMethods::Method getMethod() const;
 
-  std::string getURL();
+  std::string getURLStr() const;
 
-  HTTPStatus::Status getStatus();
+  URL getURL() const;
+
+  HTTPStatus::Status getStatus() const;
 
  private:
   HTTPRequestFake(const HTTPRequestFake &src);

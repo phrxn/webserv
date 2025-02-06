@@ -49,15 +49,19 @@ bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer) {
   return false;
 }
 
-HTTPMethods::Method HTTPRequestFake::getMethod(){
+HTTPMethods::Method HTTPRequestFake::getMethod() const{
 	HTTPMethods convert;
 	return convert.getStringToMethod(_method);
 }
 
-std::string HTTPRequestFake::getURL(){
+std::string HTTPRequestFake::getURLStr() const{
 	return _url;
 }
 
-HTTPStatus::Status HTTPRequestFake::getStatus(){
+URL HTTPRequestFake::getURL() const{
+	return _url;
+}
+
+HTTPStatus::Status HTTPRequestFake::getStatus() const{
 	return _status;
 }

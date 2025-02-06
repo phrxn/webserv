@@ -114,14 +114,14 @@ TEST(URLTest, getExtraPathFromFullPath_emptyPath){
 
 	URL url("https://exemplo.com");
 
-	EXPECT_EQ(url.getExtraPathFromFullPath(), "");
+	EXPECT_EQ(url.getExtraPathFromFullPath(false), "");
 }
 
 TEST(URLTest, getExtraPathFromFullPath_pathHaveACGIAndItDoesntHaveAnExtraPath){
 
 	URL url("https://exemplo.com/file.php");
 
-	EXPECT_EQ(url.getExtraPathFromFullPath(), "");
+	EXPECT_EQ(url.getExtraPathFromFullPath(false), "");
 
 }
 
@@ -129,7 +129,7 @@ TEST(URLTest, getExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath){
 
 	URL url("https://exemplo.com/file.php/");
 
-	EXPECT_EQ(url.getExtraPathFromFullPath(), "/");
+	EXPECT_EQ(url.getExtraPathFromFullPath(false), "/");
 
 }
 
@@ -137,7 +137,7 @@ TEST(URLTest, ggetExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath2){
 
 	URL url("https://exemplo.com/file.php/extra.php/foo");
 
-	EXPECT_EQ(url.getExtraPathFromFullPath(), "/extra.php/foo");
+	EXPECT_EQ(url.getExtraPathFromFullPath(false), "/extra.php/foo");
 
 }
 
@@ -145,7 +145,15 @@ TEST(URLTest, ggetExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraPath3){
 
 	URL url("https://exemplo.com/file.php/extra.php");
 
-	EXPECT_EQ(url.getExtraPathFromFullPath(), "/extra.php");
+	EXPECT_EQ(url.getExtraPathFromFullPath(false), "/extra.php");
+
+}
+
+TEST(URLTest, ggetExtraPathFromFullPath_pathHaveACGIAndItHaveAnExtraButItIsEncoded){
+
+	URL url("https://exemplo.com/file.php/relatorio%20simples;ano=2024&mes=06?tipo=pdf;param1=valor1;param2=valor2%3F");
+
+	EXPECT_EQ(url.getExtraPathFromFullPath(true), "/relatorio simples;ano=2024&mes=06");
 
 }
 

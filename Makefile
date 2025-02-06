@@ -26,14 +26,15 @@ endif
 SRC =	src/config/ProgramConfiguration.cpp\
 		src/error/Log.cpp\
 		src/error/LogDefault.cpp\
+		src/error/LogWriter.cpp\
+		src/error/LogWriteToConsole.cpp\
 		src/error/Status.cpp\
 		src/io/DirectoryListing.cpp\
 		src/io/Epoll.cpp\
 		src/io/File.cpp\
 		src/io/FileDescriptor.cpp\
 		src/io/Poll.cpp\
-		src/error/LogWriter.cpp\
-		src/error/LogWriteToConsole.cpp\
+		src/net/http/cgi/CGICreateEnvironmentVariables.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
@@ -91,6 +92,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/io/DirectoryListingTest.cpp\
 				src/io/EpollTest.cpp\
 				src/io/FileTest.cpp\
+				src/net/http/cgi/CGICreateEnvironmentVariablesTest.cpp\
 				src/net/http/html/CreateDirectoryHTMLPageTest.cpp\
 				src/net/http/html/DirectoryHTMLDocumentTest.cpp\
 				src/net/http/html/ItemDirectoryHTMLDocumentTest.cpp\

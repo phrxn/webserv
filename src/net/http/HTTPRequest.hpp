@@ -11,13 +11,14 @@
 #include "HTTPMethods.hpp"
 #include "HTTPStatus.hpp"
 #include "HTTPRequestTool.hpp"
+#include "../URL.hpp"
 
 class HTTPRequest : public Request {
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
   HTTPRequest();
-  
+
   StateOfCreation headerRequest();
 
   SocketFileDescriptor *_socketFD;
@@ -32,21 +33,31 @@ class HTTPRequest : public Request {
 
   StateOfCreation createRequest();
 
-  std::string getHost();
+  virtual std::string getHost() const;
 
-  virtual HTTPMethods::Method getMethod();
+  virtual HTTPMethods::Method getMethod() const;
 
-  virtual std::string getURL();
+  virtual std::string getURLStr() const;
 
-  virtual HTTPStatus::Status getStatus();
+  virtual URL getURL() const;
 
-  bool isTheHTTPHeaderComplete(std::string _buffer);
+  virtual HTTPStatus::Status getStatus() const;
 
-  HTTPMethods::Method getAnythingFromHeader(const std::string &key);
+  virtual bool isTheHTTPHeaderComplete(std::string _buffer);
 
-  int getPort();
+  virtual HTTPMethods::Method getAnythingFromHeader(const std::string &key);
 
-  std::string isToKeepTheConnection();
+  virtual int getPort() const;
+
+  virtual std::string isToKeepTheConnection() const;
+
+  virtual std::string getContentType() const;
+
+  virtual std::string getContentLength() const;
+
+  virtual std::string getClientAddressIPv4() const;
+
+  virtual std::string getCookie() const;
 };
 
 #endif

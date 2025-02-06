@@ -38,7 +38,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
   }
 
   URL url;
-  url.parserStringToURL(request.getURL());
+  url.parserStringToURL(request.getURLStr());
 
   if (!_virtualHost.isPathValid(url)) {
     return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
