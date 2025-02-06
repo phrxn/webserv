@@ -1,0 +1,13 @@
+** quando for CGI usar o caminho;
+** quando for STATIC usar o fullPath
+
+!!! rever os VirtualHost:
+	getAbsolutePath(){
+		STATIC sempre usar URL getFullPATH para concatenar ao caminho ja existente
+	    CGI (PHP, PYTHON) vai sempre usar o getPath para concatenar ao arquivo existente
+    }
+    isTypeOfPage  //trocar pelo isPathTOCGI
+    adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
+
+** arrumar no HTTPServetManager, pois soh faz sentido perguntar sobre se pode listar diretorios se
+   o caminho aponta para STATIC pagw

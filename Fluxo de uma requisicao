@@ -131,6 +131,44 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 
 
+-------  CGI V2 -------
+
+** Para executar o CGI precisamos:
+  -- saber o caminho para o script   virtualHost
+  -- ter a URL codificada            HTTPRquest
+  -- da porta remota do cliente      HTTPRquest wrapper o socket
+  -- do ip do cliente                HTTPRquest wrapper o socket
+  -- do nome do servidor             configuration
+  -- caminho absoluto até a pasta raiz do site pode vir do virtual host!(DOCUMENT_ROOT ver essa variavel)
+
+
+--------------  CGI Logica de funcionamento INICIO  --------------
+
+7) No HTTPServletCGI (string caminhoFisicoReal)  <--- Esse caminho sempre tera o seu final apontando para um CGI e nunca vai terminar com / (pois o virtual host jah tratou) ou nao nao tem como ser diretorio o que vem depois eh extra-path mesmo que seja uma barra/
+  
+    vamos receber o HTTPRquest, nele vamos ter: URL, da porta remota do cliente, do ip do cliente
+
+  
+	#Criar o CGIPagesPhysicalPathChecker <- implementa
+    #HTMLDocument:
+    #ProgramConfiguration
+
+
+
+    HTTPStatus doGet(HTTPRequest  &, HTTPResponse &){}
+    HTTPStatus doPost(HTTPRequest &, HTTPResponse &);
+    HTTPStatus doDelete(HTTPRequest &, HTTPResponse &);
+
+
+    HTTPStatus doAnyMethod(HTTPRequest  &, HTTPResponse &){
+		CGIPagesPhysicalPathChecker para verificar o caminho se for diferente de 200 retorna
+        Criar as variaveis de ambiente e adicionar:
+           REDIRECT_STATUS = "true"
+           SCRIPT_FILENAME = caminhoFisicoReal
+	    se no http header tiver o valor: Cookie pegar esse valor e colocar em mais uma variavel de ambiente
+           HTTP_COOKIE=
+        
+    }
 
 
 
@@ -143,63 +181,58 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 
 
+1) Criar as variaveis de ambiente padroes do CGI OK
 
-========== OUTRAS IDEAS (DAQUI PARA BAIXO É SÓ RASCUNHO ==========
+2) Verificar se CGI é o PHP, se for, adicionar mais duas variaveis de ambiente:
+	2.1)  REDIRECT_STATUS = "true"
+    2.2)  SCRIPT_FILENAME = nome do script, e isso inclue o caminho relativo tmb.
+	      Exemplo: post.php ou folder/post.php
 
-    HandlerHTTPStatus (_virtualHost);
+3) Criar uma lista da nova de variaveis de ambiente, onde as variaveis de ambiente
+   já existentes serão adicionadas as do CGI as do programa
 
-        ** Nessa classe carregar uma pagina de erro
+4) Baseado no valor do filedescriptor criar 3 arquivos (onde fd é o filedescriptor)
+	fd-input
+	fd-output
+	fd-error
 
+5) criar os arquivos usando o open e pegar os seus fds
 
-        #_virtualHost                     <- para buscar possivel paginas de erro definida pelo usuario
-        #_CreateDefaultErrorPagesFactory  <- para pegar as paginas padroes do servidor de o virtual host nao possuir tal pagina de erro/status
-        #_HTMLDocument*                   <- a pagina de erro, que nesse caso, eh filha de _HTMLDocument :)
-        #_FillHTMLPages
+6) Se o tipo do método HTTP for POST, preencher o fd-input como o corpo do HTTPRequest
 
-        - doStatusError(HTTPStatus status, response){
-            createErrorHTTPResponse(status, response);
-        }
+7) fazer o FORK
+	-- No processo filho:
+		-- usar o dup2 para desviar o input, output e stderr para os fd dos arquivos abertos
+		-- fechar os fds do arquivos criados
+		-- chamar o execve com os dados preenchidos
+			-- o primeiro parametro eh o caminho absoluto para o executavel do CGI
+			-- o segundo para paratro é o caminho absoluto para script (é a soma das duas variaveis de ambiente: DOCUMENT_ROOT + SCRIPT_NAME)
+            -- o terceiro parametro é a lista de variaveis de ambiente criada no passo 3
+	-- No processo pai:
+	  -- esperar o processo filho pelo tempo configurado, exemplo 3 segundos
+	  -- se o tempo limite foi antingido:
+	    -- kill no processo filho
+	    -- erro 500
+		-- salvar o erro do Log com o nivel de erro ERROR
+	  -- se o tempo limite nao foi atingido e o processo filho retornou
+	    -- checar o status de retorno, quaisquer status diferente de OK
+		  -- error 500
+		  -- pegar o erro do wait e salvar o error no log com o valor ERROR
+		    -- é interessante notar que, o waitpid tem muitas macros e cada uma delas pode nos dar um erro diferente
+	  1) checar o arquivo de stderr se tiver alguma coisa, logo, algo estranho ocorreu!
+	    -- no caso do Python pode ser o CGI com a mensagem que o cgi vai ser descontinuado
+	    -- se o arquivo de erro está setado (com execessao do python, pensar nisso) algo deu errado!
+		  -- erro 500 se o arquivo de stderro tiver algo
+		  -- salvar esse arquivos nos logs!
+		  -- error 500
+		  -- imprimir no log com nivel ERROR que algo deu errado
+      2) se o arquivo de stderr nao tiver dada, ler o arquivo output
+	    -- o arquivo output vai ter a saida, a parte de cima (se houver) até a primeira linha vazia eh o cabecalho
+		   tirar ele temporariamente para saber o tamanho do corpo para criar a resposta corretamente
+	  -- uma que o arquivo de output foi lido, o cabeçalho foi separado do corpo, o tamanho do corpo foi calculado
+	     deletar os 3 arquivos
 
-        - doStatusFamily200(HTTPRequest, HTTPResponse, HTTPStatus){
-            HTTPResponse.Status(httpStatus);
-            HTTPResponse.setConnection(HTTPRequest.isToKeepTheConnection());
-            stampTheResponse(HTTPResponse);
-        }
-
-        - doStatusFamily300(HTTPStatus status, response, string thePathToRedirect){
-            reponse.addHeader("Location", thePathToRedirect);
-            createErrorHTTPResponse(status, response);
-            stampTheResponse(HTTPResponse);
-        }
-
-        private createErrorHTTPResponse(response, HTTPStatus status){
-            loadPageErrorPage(status);
-            _FillHTMLPages.makeFill(response, HTMLDocument);
-            HTTPResponse.Status(httpStatus);
-            HTTPResponse.setConnection(false);
-        }
-
-        - private stampTheResponse(response){
-            - Nome do servidor:                 HTTPResponse.server("webserver");
-            - Data da criação dele:             HTTPResponse.setData(Time.getCurrentDateToHTTPResponse());
-        }
-
-
-
-
-        - loadPageErrorPage(HTTPStatus status){
-            _HTMLDocument = CreateDefaultErrorPagesFactory.getPageError(status);
-
-            virtualHostErroPagePath = _virtualHost.getThePathToCustomPageForHTTPStatus(status);
-
-            if (!virtualHostErroPagePath.empty()){
-                _HTMLDocumentTmp  = * new ErrorPageFileHTMLDocument(virtualHostErroPagePath);
-                if (_HTMLDocument.getStatus() == 200){
-                  delete _HTMLDocument;
-                  _HTMLDocument = _HTMLDocumentTmp;
-                }
-            }
-        }
+--------------  CGI Logica de funcionamento FIM  --------------
 
 
 
@@ -208,16 +241,94 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 
 
+  Como funciona o fluxo?
+  -- Criar as variaveis pedidas pelo RFC e adicionar elas ao ENV (que será enviado para o execve, juntos para as variaveis do proprio programa)
+  -- Se o CGI for para o php-cgi, adicionar as outras duas variaveis a mais.
+  -- criar 3 arquivos temporarios e o nome deles tem que usar o FD do socket para diferenciar os 3 arquivos de um requisicao de outra
+    exemplo: input-4, output-4, error-4  | input-5 output-5 error-5
+
+  -- criar os arquivos com open e pegar seus 3 fds
+  -- ainda do processo pai, preencher arquivo input
+
+  -- fazer o fork
+    -- no processo
+	  -- filho desviar o input, output e stderr para os arquivos criados
+	  -- fechar os fds criados
+	  -- chamar o execve com os dados preenchidos
+	-- no processo pai
+	  -- esperar o processo filho pelo tempo configurado, exemplo 3 segundos
+	  -- se o tempo limite foi antingido:
+	    -- kill no processo filho
+	    -- erro 500
+		-- salvar o erro do Log com o nivel de erro ERROR
+	  -- se o tempo limite nao foi atingido e o processo filho retornou
+	    -- checar o status de retorno, quaisquer status diferente de OK
+		  -- error 500
+		  -- pegar o erro do wait e salvar o error no log com o valor ERROR
+		    -- é interessante notar que, o waitpid tem muitas macros e cada uma delas pode nos dar um erro diferente
+	  1) checar o arquivo de stderr se tiver alguma coisa, logo, algo estranho ocorreu!
+	    -- no caso do Python pode ser o CGI com a mensagem que o cgi vai ser descontinuado
+	    -- se o arquivo de erro está setado (com execessao do python, pensar nisso) algo deu errado!
+		  -- erro 500 se o arquivo de stderro tiver algo
+		  -- salvar esse arquivos nos logs!
+		  -- error 500
+		  -- imprimir no log com nivel ERROR que algo deu errado
+      2) se o arquivo de stderr nao tiver dada, ler o arquivo output
+	    -- o arquivo output vai ter a saida, a parte de cima (se houver) até a primeira linha vazia eh o cabecalho
+		   tirar ele temporariamente para saber o tamanho do corpo para criar a resposta corretamente
+	  -- uma que o arquivo de output foi lido, o cabeçalho foi separado do corpo, o tamanho do corpo foi calculado
+	     deletar os 3 arquivos
+
+1) temos que criar o arquivo de input, pois o buffer do pipe eh de 64KB, logo, ficar escrevendo o POST por PIPE
+   pode travar o processo pai no write! Pois o write pode bloquear também!
+   -- imaginar o seguinte o POST é maior que o tamanho do buffer
+      o cliente está em um loop infinito, ou algum erro de lógica que não está lendo a entrada
+	  o servidor vai ficar escrevendo, o write trava, logo, nunca mais saimos do processo filho CGI nem o
+	  servidor vai ter a chance de continuar
+
+** O bufer tem 64KB de tamanho (normalmente)
+
+
+
+Observacoes:
+	pelo visto a parte da decodificao fica soh para a parte do caminho exemplo:
+      isso:     /sub/cgi_variables.php/relatorio%20simples%3F;ano=2024&mes=06?tipo=pdf;param1=valor1;param2=valor2%3F
+	  se torna: /sub/cgi_variables.php/relatorio simples?;ano=2024&mes=06?tipo=pdf;param1=valor1;param2=valor2%3F
+
+		**reparar que no fim da URL na parte da Query a URL nao foi decodificada
+
+    PATH_INFO E PATH_TRANSLATED pelo visto sempre tem a URL decodificada (usando o exemplo acima)
+	  PATH_INFO: /relatorio simples?;ano=2024&mes=06
+      PATH_TRANSLATED: /var/www/html/relatorio simples?;ano=2024&mes=06
+
+    QUERY_STRING pelo visto eh do jeito que a query string veio sem decodificat nada
+	  tipo=pdf;param1=valor1;param2=valor2%3F
+	  tipo=pdf;param1=valor%201;param2=valor2%3F  <--- reparar que aqui temos %20, o que seria um espaço e %3F que seria o ?
+
+** na hora de decoficar os hexadecimais, nao esquecer que: 3F e 3f sao a mesma coisa!
+
+   --caracteres especiais:                    ?    &    =    #    ;    /    (o espaço pode ser colocado aqui tambem)
+
+O postman mandou o %61 para o 'a' assim como foi previsto o Apache foi quem decodificou, logo,
+  a URL codificada é decoficada pelo webserver mesma não sendo só caracteres especiais
+
+
+LOGICA:
+
+  para o php-cgi temos que adicionar duas variaveis de ambiente a mais:
+    REDIRECT_STATU="true"
+    SCRIPT_FILENAME=nome do script, e isso inclue o caminho relativo tmb. Exemplo: post.php ou folder/post.php
+  o php-cgi pelo visto, pega o atual caminho (pwd) e concatena com o SCRIPT_FILENAME para saber qual arquivo executar
+  o argumento para para ele é inutil, ele utiliza a variable de ambiente SCRIPT_NAME
+
+  para o python3 (usando ele como CGI)
+  Ele parece se comportar bem com as variaveis do CGI.
+  Ele lança um warning no stderr falando que o module cgi está depreciado e que está marcado para ser descontinuado no
+  python 3.13
 
 
 
 
 
 
-
-
-
-
-
-
-
+-------  CGI V2  -------
