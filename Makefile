@@ -41,6 +41,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/html/FillHTTPResponse.cpp\
 		src/net/http/html/HTMLDocument.cpp\
 		src/net/http/html/ItemDirectoryHTMLDocument.cpp\
+		src/net/http/CGIPagesPhysicalPathChecker.cpp\
 		src/net/http/GetMimeType.cpp\
 		src/net/http/HandlerHTTPStatus.cpp\
 		src/net/http/HTTPMethods.cpp\
