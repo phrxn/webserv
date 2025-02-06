@@ -29,7 +29,7 @@ class HTTPRequest : public Request {
 
  public:
   HTTPRequest(SocketFileDescriptor *socketFD, Log *logger);
-  ~HTTPRequest();
+  virtual ~HTTPRequest();
 
   StateOfCreation createRequest();
 
@@ -58,6 +58,8 @@ class HTTPRequest : public Request {
   virtual std::string getClientAddressIPv4() const;
 
   virtual std::string getCookie() const;
+
+  virtual std::string getBody() const;
 };
 
 #endif

@@ -50,6 +50,10 @@ class SystemCalls {
 
   virtual error::StatusOr<int> access (const char *name, int type) const;
 
+  virtual error::StatusOr<int> open(const char *name, int flags, mode_t mode) const;
+
+  virtual error::StatusOr<int> dup2(int oldfd, int newfd) const;
+
  private:
   std::string createErrorMessage(const std::string &systemCallName) const;
 

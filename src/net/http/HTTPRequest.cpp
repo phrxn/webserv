@@ -126,3 +126,7 @@ std::string HTTPRequest::getClientAddressIPv4() const{
 std::string HTTPRequest::getCookie() const{
 	return "";
 }
+
+std::string HTTPRequest::getBody() const{
+	return "";
+}

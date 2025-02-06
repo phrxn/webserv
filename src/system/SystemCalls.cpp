@@ -1,8 +1,9 @@
 #include "SystemCalls.hpp"
 
+#include <fcntl.h>
 #include <sys/epoll.h>
-#include <sys/stat.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include <sstream>
@@ -124,22 +125,43 @@ error::StatusOr<int> SystemCalls::getsockname(int sockfd, struct sockaddr *addr,
   return status;
 }
 
-error::StatusOr<int> SystemCalls::stat(const char *_file, struct stat *_buf) const{
-    int status = ::stat(_file, _buf);
-    if (status == -1) {
-    	return error::Status(error::Status::SystemCall,
-                         createErrorMessage("stat"));
-  	}
-  	return status;
+error::StatusOr<int> SystemCalls::stat(const char *_file,
+                                       struct stat *_buf) const {
+  int status = ::stat(_file, _buf);
+  if (status == -1) {
+    return error::Status(error::Status::SystemCall, createErrorMessage("stat"));
+  }
+  return status;
 }
 
-error::StatusOr<int> SystemCalls::access(const char *name, int type) const{
-	int status = ::access(name, type);
-    if (status == -1) {
-    	return error::Status(error::Status::SystemCall,
+error::StatusOr<int> SystemCalls::access(const char *name, int type) const {
+  int status = ::access(name, type);
+  if (status == -1) {
+    return error::Status(error::Status::SystemCall,
                          createErrorMessage("access"));
-  	}
-  	return status;
+  }
+  return status;
+}
+
+error::StatusOr<int> SystemCalls::open(const char *name, int flags,
+                                       mode_t mode) const {
+  int status = ::open(name, flags, mode);
+
+  if (status == -1) {
+    return error::Status(error::Status::SystemCall, createErrorMessage("open"));
+  }
+
+  return status;
+}
+
+error::StatusOr<int> SystemCalls::dup2(int oldfd, int newfd) const {
+  int status = ::dup2(oldfd, newfd);
+
+  if (status == -1) {
+    return error::Status(error::Status::SystemCall, createErrorMessage("dup2"));
+  }
+
+  return status;
 }
 
 std::string SystemCalls::createErrorMessage(
