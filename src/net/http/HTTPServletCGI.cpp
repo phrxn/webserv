@@ -1,11 +1,21 @@
 #include "HTTPServletCGI.hpp"
 
-HTTPServletCGI::HTTPServletCGI(const VirtualHostDefault virtualHost)
-    : _virtualHost(virtualHost) {
-  (void)_virtualHost;
-}
+#include "CGIPagesPhysicalPathChecker.hpp"
 
-HTTPServletCGI::~HTTPServletCGI() {}
+HTTPServletCGI::HTTPServletCGI(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation)
+    : _physicalPathToResource(physicalPathToResource),
+	  _rootVirtualHostLocation(rootVirtualHostLocation),
+	  _physicalPathChecker(new CGIPagesPhysicalPathChecker),
+      _htmlDocument(NULL){}
+
+HTTPServletCGI::~HTTPServletCGI() {
+  if (_physicalPathChecker) {
+    delete _physicalPathChecker;
+  }
+  if (_htmlDocument) {
+    delete _htmlDocument;
+  }
+}
 
 // deleted (this class MUST BE UNIQUE!)
 HTTPServletCGI::HTTPServletCGI(const HTTPServletCGI &src) { *this = src; }

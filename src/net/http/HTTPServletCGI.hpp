@@ -1,12 +1,15 @@
 #ifndef NET_HTTP_HTTP_SERVLET_CGI_HPP
 #define NET_HTTP_HTTP_SERVLET_CGI_HPP
 
-#include "HTTPServlet.hpp"
 #include "../VirtualHostDefault.hpp"
+#include "HTTPServlet.hpp"
+#include "PhysicalPathChecker.hpp"
+#include "html/FillHTTPResponse.hpp"
+#include "html/HTMLDocument.hpp"
 
 class HTTPServletCGI : public HTTPServlet {
  public:
-  HTTPServletCGI(const VirtualHostDefault virtualHost);
+  HTTPServletCGI(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation);
   ~HTTPServletCGI();
 
   HTTPStatus::Status doGet(HTTPRequest &request, HTTPResponse &response);
@@ -17,7 +20,11 @@ class HTTPServletCGI : public HTTPServlet {
   HTTPServletCGI(const HTTPServletCGI &src);
   HTTPServletCGI &operator=(const HTTPServletCGI &src);
 
-  const VirtualHostDefault _virtualHost;
+  std::string _physicalPathToResource;
+  std::string _rootVirtualHostLocation;
+  PhysicalPathChecker *_physicalPathChecker;
+  HTMLDocument *_htmlDocument;
+  FillHTTPResponse _fillHTTPResponse;
 };
 
 #endif

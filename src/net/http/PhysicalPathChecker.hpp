@@ -19,9 +19,6 @@ class PhysicalPathChecker {
 
   virtual HTTPStatus::Status isThePathValidForTheDeleteMethod(
       const std::string &physicalPathToResource) = 0;
-
-  virtual error::StatusOr<bool> isThePathAPathToADirectory(
-      const std::string &physicalPathToResource) = 0;
 };
 
 #endif

@@ -63,7 +63,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
       _virtualHost.isDirectoryListingAllowedForThisPath(url);
 
   if (pathPointsToCGI) {
-    _hTTPServlet = new HTTPServletCGI(_virtualHost);
+    _hTTPServlet = new HTTPServletCGI("", "");
   } else {
     _hTTPServlet =
         new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);

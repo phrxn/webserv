@@ -3,15 +3,14 @@
 
 #include "../VirtualHostDefault.hpp"
 #include "HTTPServlet.hpp"
-#include "PhysicalPathChecker.hpp"
+#include "StaticPagesPhysicalPathChecker.hpp"
 #include "html/FillHTTPResponse.hpp"
 #include "html/HTMLDocument.hpp"
 
 class HTTPServletStatic : public HTTPServlet {
  public:
   HTTPServletStatic(const std::string &physicalPathToResource,
-				    const std::string &urlPathToDir,
-                    bool canListDirectory);
+                    const std::string &urlPathToDir, bool canListDirectory);
   ~HTTPServletStatic();
 
   HTTPStatus::Status doGet(HTTPRequest &request, HTTPResponse &response);
@@ -25,7 +24,7 @@ class HTTPServletStatic : public HTTPServlet {
   std::string _physicalPathToResource;
   std::string _urlPathToDir;
   bool _canListDirectory;
-  PhysicalPathChecker *_physicalPathChecker;
+  StaticPagesPhysicalPathChecker *_physicalPathChecker;
   HTMLDocument *_htmlDocument;
   FillHTTPResponse _fillHTTPResponse;
 };
