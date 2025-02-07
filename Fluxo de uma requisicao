@@ -299,7 +299,10 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 ============= IDEIAS PARA O CGI EXECUTION ============
 
 ExecuteCGIProgramRefinado**********
-   1) Vai ter que receber o &HTTPRequest e provavelmente o &FileToCGI! E provalmente o caminho Absoluto!
+
+  ExecuteCGIProgram()
+
+   1) Vai ter que receber o &HTTPRequest, FileToCGI e o caminho Absoluto!
    
    2) Checar as coisas:
    
@@ -316,8 +319,7 @@ ExecuteCGIProgramRefinado**********
 	}
    
     3) Criar:
-        3.1) **argv   usando (pathToCGIBinary e caminhoabsoluto)
-		3.2) **envi   usando _cGIEnvironmentVariables
+        3.1) ArrayChar argv   usando (pathToCGIBinary e caminhoabsoluto)
 	
 	4) Fazer o Fork:
 		se der ruim retorna erro...
@@ -342,12 +344,17 @@ ExecuteCGIProgramRefinado**********
   #char **env                 (por causa do processo filho)
   #tempo em segundo           (O wait no processo pai)
   #SystemClass                (para fazer as systemcalls)
-  
-  ProcessoFilho(char **argv, char **env, _cgiFiles)   <<---Interface ProcessExec  com uma funcaoExec??
+
+  ProcessoFilho(ArrayChar argv, _cGIEnvironmentVariables, _cgiToFilesFiles){   <<---Interface ProcessExec  com uma funcaoExec??
+
+  }
+
+
   ProcessoPai  (tempo em segundo)
 	#Time
     #SystemClass
-	
+
+
 	
 	
 	
@@ -533,16 +540,22 @@ LOGICA:
 
                    === PYTHON === 
 
+   Verificado antes?    | arquivo existe | pode ser lido | esta bem configurado |   STATUS     |                     output                        |                               stderr                   |
+  sim pelo pathchecker  |       0        |       0       |         0            |      2       |                                                   |  /bin/python3: can't open file '/home/phz/development/quazzom/webserv/coisas_cgi/cgi/python/aa.py': [Errno 2] No such file or directory  |
+  sim pelo pathchecker  |       1        |       0       |         0            |      2       |                                                   |  /bin/python3: can't open file '/home/phz/development/quazzom/webserv/coisas_cgi/cgi/python/aa.py': [Errno 13] Permission denied |
+  sim pelo pathchecker  |       1        |       0       |         1            |      2       |                                                   |  /bin/python3: can't open file '/home/phz/development/quazzom/webserv/coisas_cgi/cgi/python/aa.py': [Errno 13] Permission denied  |
+                        |       1        |       1       |         0            |      1       |                                                   |  File "/home/phz/development/quazzom/webserv/coisas_cgi/cgi/python/aa.py", line 4\n\tprint kkkkf print''''' \n \n          ^\nSyntaxError: Missing parentheses in call to 'print'. Did you mean print(kkkkf print''''' \n)? |
+                        |       1        |       1       |         1            |      0       |  Content-Type: text/html\r\n\r\rConteudo do body  |                                                                                                                                           |                 
+
+    Se o Status de saida do programa for igual      a 0 e o stderr tiver algo, esse algo eh um WARNING, status OK
+    Se o Status de saida do programa for diferente de 0 e o stderr tiver algo, esse algo eh um ERRO   , status ERROR
 
 
-** Vamos fazer os testes para o Python, mas pelo visto a logica vai ser: se o Status de saída do program for 0, o output
-   vai ser válido e o strderr pode ser um Warning :)
-!! fazer os testes para o python
+1) O que vai separar o Header vindo do CGI com o 
 
-
-
-
-
+HTTPResponse pode ter o booleano: isCGI se for; nao definir coisas que ja existem,
+com exececao da primeira linha (vamos ter que checar se o arquivo preenchido pelo CGI na primeira linha tem algum codigo) se tiver nao podemos preencher por nos
+a logica de controle, pode ficar dentro do HTTPRequest, 
 
 
 
