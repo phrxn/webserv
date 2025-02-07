@@ -519,16 +519,37 @@ LOGICA:
 
 
 
--------  CGI V2  -------
+---------------------  CGI V2  ---------------------
 
 
-PHP-CGI
+                   === PHP-CGI === 
 
-|arquivo existe | pode ser lido | esta bem configurado |   STATUS     |                          output                                                                    |                               stderr                   |
-     0                  0                 0            |    255       |  Status: 404 Not Found\r\nContent-type: text/html; charset=UTF-8\r\n\r\nNo input file specified.   | 
-	 1                  0                 0            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8\r\n\r\nAccess denied.             | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
-	 1                  1                 0            |    255       |  Status: 500 Internal Server\r\nErrorContent-type: text/html; charset=UTF-8\r\n\r\n                | PHP Parse error:  syntax error, unexpected 'kkk' (T_STRING) in /home/phz/development/quazzom/webserv/coisas_cgi/cgi/ppp.php on line 2 |
-	 1                  0                 1            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8r\n\r\nAccess denied.              | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
-	 1                  1                 1            |     0        |  Content-type: text/html; charset=UTF-8r\n\r\nConteudo do body                                     | 
-	 
+   Verificado antes?    | arquivo existe | pode ser lido | esta bem configurado |   STATUS     |                          output                                                                    |                               stderr                   |
+  sim pelo pathchecker  |       0        |       0       |         0            |    255       |  Status: 404 Not Found\r\nContent-type: text/html; charset=UTF-8\r\n\r\nNo input file specified.   | 
+  sim pelo pathchecker  |       1        |       0       |         0            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8\r\n\r\nAccess denied.             | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
+  sim pelo pathchecker  |       1        |       0       |         1            |    255       |  Status: 403 Forbidden\r\nContent-type: text/html; charset=UTF-8r\n\r\nAccess denied.              | PHP Warning:  Unknown: failed to open stream: Permission denied in Unknown on line 0
+                        |       1        |       1       |         0            |    255       |  Status: 500 Internal Server\r\nErrorContent-type: text/html; charset=UTF-8\r\n\r\n                | PHP Parse error:  syntax error, unexpected 'kkk' (T_STRING) in /home/phz/development/quazzom/webserv/coisas_cgi/cgi/ppp.php on line 2 |
+                        |       1        |       1       |         1            |     0        |  Content-type: text/html; charset=UTF-8r\n\r\nConteudo do body                                     | 
+
+                   === PYTHON === 
+
+
+
+** Vamos fazer os testes para o Python, mas pelo visto a logica vai ser: se o Status de saída do program for 0, o output
+   vai ser válido e o strderr pode ser um Warning :)
+!! fazer os testes para o python
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
