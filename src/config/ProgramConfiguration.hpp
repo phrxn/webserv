@@ -46,6 +46,9 @@ class ProgramConfiguration {
   std::string getCGIVersion() const;
   void setCGIVersion(const std::string &cgiVersion);
 
+  std::size_t getTimeToWaitTheChildCGIProcessInSeconds() const;
+  void setTimeToWaitTheChildCGIProcessInSeconds(std::size_t timeInSeconds);
+
   ProgramConfiguration();
   ProgramConfiguration(const ProgramConfiguration &src);
   ProgramConfiguration &operator=(const ProgramConfiguration &src);
@@ -61,6 +64,7 @@ class ProgramConfiguration {
   std::string _serverName;
   std::string _httpVersion;
   std::string _cgiVersion;
+  std::size_t _timeToWaitTheChildCGIProcessInSeconds;
 
 };
 

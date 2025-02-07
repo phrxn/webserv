@@ -14,10 +14,17 @@ class Time {
 
   virtual std::string getTimeToLog() const;
 
- std::string convertTimeToHTTPHeaderPattern(const time_t &time) const;
- std::string convertTimeToItemDirectoryHTML(const time_t &time) const;
- std::string getCurrentTimeToStampAHTTPHeader();
+  std::string convertTimeToHTTPHeaderPattern(const time_t &time) const;
+  std::string convertTimeToItemDirectoryHTML(const time_t &time) const;
+  std::string getCurrentTimeToStampAHTTPHeader();
+  std::time_t getCurrentTime() const;
 
+  /**
+   * @brief check if timeToWaitInSeconds seconds have passed since startTime
+   * with current time
+   */
+  bool isTimeOut(const std::time_t startTime,
+                 const int timeToWaitInSeconds) const;
 };
 
 #endif

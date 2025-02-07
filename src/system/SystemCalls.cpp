@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #include <sstream>
 
@@ -162,6 +163,34 @@ error::StatusOr<int> SystemCalls::dup2(int oldfd, int newfd) const {
   }
 
   return status;
+}
+
+error::StatusOr<pid_t> SystemCalls::waitpid(pid_t pid, int *stat_loc, int options) const{
+	pid_t status = ::waitpid(pid, stat_loc, options);
+
+	if (status == -1) {
+		return error::Status(error::Status::SystemCall, createErrorMessage("waitpid"));
+	}
+	return status;
+}
+
+error::StatusOr<int> SystemCalls::kill(pid_t pid, int sig) const{
+	int status = ::kill(pid, sig);
+
+	if (status == -1) {
+		return error::Status(error::Status::SystemCall, createErrorMessage("kill"));
+	}
+	return status;
+
+}
+
+error::StatusOr<pid_t> SystemCalls::fork(void) const{
+	pid_t status = ::fork();
+
+	if (status == -1) {
+		return error::Status(error::Status::SystemCall, createErrorMessage("fork"));
+	}
+	return status;
 }
 
 std::string SystemCalls::createErrorMessage(

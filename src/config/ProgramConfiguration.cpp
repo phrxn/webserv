@@ -37,6 +37,8 @@ ProgramConfiguration &ProgramConfiguration::operator=(
   _serverName = src._serverName;
   _httpVersion = src._httpVersion;
   _cgiVersion = src._cgiVersion;
+  _timeToWaitTheChildCGIProcessInSeconds =
+      src._timeToWaitTheChildCGIProcessInSeconds;
   return *this;
 }
 
@@ -123,4 +125,14 @@ std::string ProgramConfiguration::getCGIVersion() const { return _cgiVersion; }
 
 void ProgramConfiguration::setCGIVersion(const std::string &cgiVersion) {
   _cgiVersion = cgiVersion;
+}
+
+std::size_t ProgramConfiguration::getTimeToWaitTheChildCGIProcessInSeconds()
+    const {
+  return _timeToWaitTheChildCGIProcessInSeconds;
+}
+
+void ProgramConfiguration::setTimeToWaitTheChildCGIProcessInSeconds(
+    std::size_t timeInSeconds) {
+  _timeToWaitTheChildCGIProcessInSeconds = timeInSeconds;
 }

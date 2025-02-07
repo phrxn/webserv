@@ -44,3 +44,11 @@ std::string Time::getCurrentTimeToStampAHTTPHeader() {
   std::time_t now = std::time(0);
   return convertTimeToHTTPHeaderPattern(now);
 }
+
+std::time_t Time::getCurrentTime() const{
+	return std::time(0);
+}
+
+bool Time::isTimeOut(const std::time_t startTime, const int timeToWaitInSeconds) const{
+	return std::difftime(std::time(0), startTime) > timeToWaitInSeconds;
+}

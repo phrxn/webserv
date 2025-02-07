@@ -2,6 +2,7 @@
 #define SYSTEM_SYSTEM_CALLS
 
 #include <sys/socket.h>
+#include <signal.h>
 
 #include "../error/StatusOr.hpp"
 #include "Errno.hpp"
@@ -53,6 +54,12 @@ class SystemCalls {
   virtual error::StatusOr<int> open(const char *name, int flags, mode_t mode) const;
 
   virtual error::StatusOr<int> dup2(int oldfd, int newfd) const;
+
+  virtual error::StatusOr<pid_t> waitpid(pid_t pid, int *stat_loc, int options) const;
+
+  virtual error::StatusOr<int> kill(pid_t pid, int sig) const;
+
+  virtual error::StatusOr<pid_t> fork(void) const;
 
  private:
   std::string createErrorMessage(const std::string &systemCallName) const;
