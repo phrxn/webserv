@@ -1,6 +1,7 @@
 #ifndef NET_HTTP_CGI_FILES_TO_CGI
 #define NET_HTTP_CGI_FILES_TO_CGI
 
+#include <fstream>
 #include <string>
 
 #include "../../../error/Log.hpp"
@@ -40,6 +41,9 @@ class FilesToCGI {
   void setDefaultDirectoryToSaveTheFiles(const std::string &newDirectory);
   std::string getDefaultDirectoryToSaveTheFiles();
 
+  std::ifstream &getOutputFile();
+  std::ifstream &getStderrFile();
+
  private:
   static std::string defaultDirectoryToSaveTheFiles;
 
@@ -53,8 +57,8 @@ class FilesToCGI {
   int _outputFileDescriptor;
   int _stderrFileDescriptor;
 
-
-
+  std::ifstream _outputFile;
+  std::ifstream _srtErrFile;
 
 };
 

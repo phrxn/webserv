@@ -25,7 +25,7 @@ ParentExecuteProcessCGI::~ParentExecuteProcessCGI() {
   }
 }
 
-ParentExecuteProcessCGI::ExitStatus ParentExecuteProcessCGI::execute() const {
+ParentExecuteProcessCGI::ExitStatus ParentExecuteProcessCGI::execute() {
   std::time_t startTime = _time.getCurrentTime();
 
   pid_t waitReturn = 0;

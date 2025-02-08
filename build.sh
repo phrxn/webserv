@@ -82,14 +82,14 @@ the_val_tests(){
 	local filter=$1
 
 	if [ -z "$filter" ]; then
-		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --track-fds=yes "./""$TESTS_BINARY"
+		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --child-silent-after-fork=yes --track-fds=yes "./""$TESTS_BINARY"
 		if [ $? -eq 1 ]; then
 		    remove_permissions_to_things_to_test
 			echo -e "\033[1;31mVALGRIND : Code failed to pass valgrind! (memory leak or open file descriptor) \033[0m"
 			return 1
 		fi
 	else
-		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --track-fds=yes "./""$TESTS_BINARY" --gtest_filter="$filter"'.*'
+		valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=full --child-silent-after-fork=yes --track-fds=yes "./""$TESTS_BINARY" --gtest_filter="$filter"'.*'
 		if [ $? -eq 1 ]; then
 		    remove_permissions_to_things_to_test
 			echo -e "\033[1;31mVALGRIND : Code failed to pass valgrind! (memory leak or open file descriptor) \033[0m"

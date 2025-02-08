@@ -26,7 +26,7 @@ void ArrayChar::addString(const std::string &stringToAdd) {
 
 // the called MUST free the pointer, see freePointerToArray
 // if the ArrayChar is empty NULL is retorned
-char **ArrayChar::getPointerToArray() {
+char **ArrayChar::getPointerToArray() const {
   if (_listOfString.empty()) {
     return NULL;
   }

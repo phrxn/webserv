@@ -15,7 +15,7 @@ class ArrayChar {
   void addString(const std::string &stringToAdd);
 
   // the called MUST free the pointer, see freePointerToArray
-  char **getPointerToArray();
+  char **getPointerToArray() const;
 
   // obviously the pointer and its contents MUST HAVE been mallocated previously
   void freePointerToArray(char **pointerToArray);

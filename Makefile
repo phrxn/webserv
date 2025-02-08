@@ -38,7 +38,8 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/cgi/CGIBinary.cpp\
 		src/net/http/cgi/CGIBinaryFactory.cpp\
 		src/net/http/cgi/CGICreateEnvironmentVariables.cpp\
-	    src/net/http/cgi/CGIEnvironmentVariables.cpp\
+		src/net/http/cgi/CGIEnvironmentVariables.cpp\
+		src/net/http/cgi/ChildExecuteProcessCGI.cpp\
 		src/net/http/cgi/EnvironmentVariables.cpp\
 		src/net/http/cgi/ExecuteProcessCGI.cpp\
 		src/net/http/cgi/FilesToCGI.cpp\
@@ -103,6 +104,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/cgi/ArrayCharTest.cpp\
 				src/net/http/cgi/CGICreateEnvironmentVariablesTest.cpp\
 				src/net/http/cgi/CGIEnvironmentVariablesTest.cpp\
+				src/net/http/cgi/ChildExecuteProcessCGITest.cpp\
 				src/net/http/cgi/EnvironmentVariablesTest.cpp\
 				src/net/http/cgi/ParentExecuteProcessCGITest.cpp\
 				src/net/http/cgi/FilesToCGITest.cpp\

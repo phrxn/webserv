@@ -11,7 +11,7 @@ class ParentExecuteProcessCGI : public ExecuteProcessCGI {
   ParentExecuteProcessCGI(pid_t childPid);
   ParentExecuteProcessCGI(pid_t childPid, int timeToWaitThChildProcessInSeconds);
   virtual ~ParentExecuteProcessCGI();
-  ExitStatus execute() const;
+  ExitStatus execute();
   void setSystemCalls(SystemCalls *systemCalls);
   void setLogger(Log *logger);
 

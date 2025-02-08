@@ -61,6 +61,9 @@ class SystemCalls {
 
   virtual error::StatusOr<pid_t> fork(void) const;
 
+  virtual error::StatusOr<int> execve(const char *pathname, char *const argv[],
+                  char *const envp[]) const;
+
  private:
   std::string createErrorMessage(const std::string &systemCallName) const;
 

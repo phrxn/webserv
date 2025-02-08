@@ -77,10 +77,10 @@ bool FilesToCGI::createFileDescriptors(const HTTPRequest &request) {
   return true;
 }
 
-
-//run it in the child process! Before execve.
+// run it in the child process! Before execve.
 bool FilesToCGI::prepareFileDescriptorsToChildProcess(int fdIn, int fdOut,
                                                       int fdErr) {
+  (void)fdOut;
   error::StatusOr<int> sysCallReturn =
       _systemCalls->dup2(_inputFileDescriptor, fdIn);
   if (!sysCallReturn.ok()) {
@@ -98,7 +98,7 @@ bool FilesToCGI::prepareFileDescriptorsToChildProcess(int fdIn, int fdOut,
     return false;
   }
 
-  sysCallReturn = _systemCalls->dup2(_outputFileDescriptor, fdErr);
+  sysCallReturn = _systemCalls->dup2(_stderrFileDescriptor, fdErr);
   if (!sysCallReturn.ok()) {
     _logger->log(Log::ERROR, "FilesToCGI",
                  "prepareFileDescriptorsToChildProcess",
@@ -218,4 +218,18 @@ void FilesToCGI::setDefaultDirectoryToSaveTheFiles(
 
 std::string FilesToCGI::getDefaultDirectoryToSaveTheFiles() {
   return FilesToCGI::defaultDirectoryToSaveTheFiles;
+}
+
+std::ifstream &FilesToCGI::getOutputFile() {
+  std::string outputFileNameFullPath =
+      defaultDirectoryToSaveTheFiles + outputFileName;
+  _outputFile.open(outputFileNameFullPath.c_str());
+  return _outputFile;
+}
+
+std::ifstream &FilesToCGI::getStderrFile() {
+  std::string stderrFileNameFullPath =
+      defaultDirectoryToSaveTheFiles + stderrFileName;
+  _srtErrFile.open(stderrFileNameFullPath.c_str());
+  return _srtErrFile;
 }

@@ -193,6 +193,16 @@ error::StatusOr<pid_t> SystemCalls::fork(void) const{
 	return status;
 }
 
+error::StatusOr<int> SystemCalls::execve(const char *pathname, char *const argv[],
+                  char *const envp[]) const{
+    int status = ::execve(pathname, argv, envp);
+
+	if (status == -1) {
+		return error::Status(error::Status::SystemCall, createErrorMessage("execve"));
+	}
+	return status;
+}
+
 std::string SystemCalls::createErrorMessage(
     const std::string &systemCallName) const {
   std::stringstream errorMessage;
