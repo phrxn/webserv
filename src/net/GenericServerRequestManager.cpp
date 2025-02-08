@@ -1,6 +1,7 @@
 #include "GenericServerRequestManager.hpp"
 
 #include "../config/Variables.hpp"
+#include "../time/Time.hpp"
 
 GenericServerRequestManager::GenericServerRequestManager(
     Poll *poll, SocketFileDescriptorImpl *socketFileDescriptor, Log *logger,
@@ -164,16 +165,13 @@ void GenericServerRequestManager::resetForANewRequest() {
 
 // checks if 5 seconds have passed since the last input from the client
 void GenericServerRequestManager::checkTimeOut() {
-  // doesn't make sense to check the input timeout after protocol stage request
-  if (_managerStage != REQUEST_CREATING) return;
 
-  std::time_t timeNow = std::time(0);
-
-  double diff = std::difftime(timeNow, _timeOfLastInputFromCLient);
+  Time time;
 
   // checks if the last input time has passed the limit
-  if (diff < _configuration.getTimeOutForNewRequestOrToSendAFullRequest())
-    return;
+  if (!time.isTimeOut(_timeOfLastInputFromCLient, _configuration.getTimeOutForNewRequestOrToSendAFullRequest())){
+	return ;
+  }
 
   _logger->log(
       Log::WARNING, "GenericServerRequestManager", "checkTimeOut",
