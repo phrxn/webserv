@@ -442,24 +442,36 @@ std::string Config::getThePhysicalPath(const URL& url) const {
 }
 
 bool Config::isDirectoryListingAllowedForThisPath(const URL& url) const {
+    // Extrai o caminho da URL fornecida
     std::string path = url.getPath();
+    // Itera sobre todos os servidores configurados
     for (const auto& server : _servers) {
+        // Itera sobre todas as rotas configuradas para o servidor atual
         for (const auto& route : server.routes) {
+            // Verifica se o caminho da URL começa com o caminho da rota e se a listagem de diretório está habilitada para a rota
             if (path.find(route.locationPath) == 0 && route.autoindex) {
+                // Retorna true indicando que a listagem de diretório está habilitada para o caminho
                 return true;
             }
         }
     }
+    // Se nenhuma correspondência for encontrada, retorna false indicando que a listagem de diretório não está habilitada para o caminho
     return false;
 }
 
 std::string Config::getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const {
+    // Converte o código de status HTTP para uma string
     std::string statusCode = std::to_string(static_cast<int>(httpStatus));
+    // Itera sobre todos os servidores configurados
     for (const auto& server : _servers) {
+        // Procura o código de status HTTP nas páginas de erro configuradas para o servidor atual
         auto it = server.errorPages.find(statusCode);
+        // Se encontrar uma correspondência, retorna o caminho da página de erro personalizada
         if (it != server.errorPages.end()) {
+            
             return it->second;
         }
     }
+    // Se nenhuma correspondência for encontrada, retorna uma string vazia
     return "";
 }
