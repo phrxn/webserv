@@ -14,7 +14,7 @@
 #include <set>		 // Conjuntos
 #include <sys/stat.h>
 #include <sys/types.h>
-
+#include "CheckConfiguration.hpp"
 
 typedef enum {
 	INVALID = -1,
@@ -55,7 +55,7 @@ struct ServerConfig{
 };
 
 
-class Config {
+class Config : public CheckConfiguration {
 	private:
 			short								_countServer; // Índice do servidor atual
 			const std::string					_configFile; // Caminho do arquivo de configuração (nome do arquivo)
@@ -78,6 +78,15 @@ class Config {
 
 			// Métodos públicos
 			std::vector<ServerConfig>		getServers(void) const; // Retorna o vetor de servidores
+
+			// Implementing CheckConfiguration interface
+			bool isPathValid(const URL& url) const override;
+			std::string isPathARedirection(const URL& url) const override;
+			bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const override;
+			bool isUrlAPathToCGI(const URL& url) const override;
+			std::string getThePhysicalPath(const URL& url) const override;
+			bool isDirectoryListingAllowedForThisPath(const URL& url) const override;
+			std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const override;
 };
 
 //config utils functions
