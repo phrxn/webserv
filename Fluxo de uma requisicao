@@ -300,30 +300,30 @@ HTTPServletCGI (HTTPRequest, HTTPResponse, string absoluto){
 
 ExecuteCGIProgramRefinado**********
 
-  ExecuteCGIProgram()
+  ExecuteCGIProgram() : OK, NOT_FOUND, SYSTEM_CALL_ERROR, CGI_EXECUTABLE_ERRO_EXIT
 
    1) Vai ter que receber o &HTTPRequest, FileToCGI e o caminho Absoluto!
-   
+
    2) Checar as coisas:
-   
+  
     std::string pathToCGIBinary =  getFullPathToCGIBinary(caminhoAbsolutoParaOScript);
-        
+
 	if (pathToCGIBinary.empty()){
 		return SCRIPT_ISNOT_A_CGI_FILE;
 	}
-	    
+
 	bool binaryCGIExist = binaryCGIExist(pathToCGIBinary);
-		
+
 	if (binaryCGIExists == false){
 		return BINARY_CGI_DOESNT_EXIST;
 	}
-   
+
     3) Criar:
         3.1) ArrayChar argv   usando (pathToCGIBinary e caminhoabsoluto)
-	
+
 	4) Fazer o Fork:
 		se der ruim retorna erro...
-	
+
 	5) se 0
 		ProcessoFilho(char **argv, char **env, _cgiFiles);
 		ProcessoFilho.exec();
