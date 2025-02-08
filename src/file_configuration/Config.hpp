@@ -99,7 +99,6 @@ namespace ConfigUtils {
 	void			formatPath(std::string &path); // Formata o caminho do arquivo
 	void			validateFullLocationPath(RouteConfig &location); // Valida o caminho completo da localização
 	void			validateFullCGIPath(RouteConfig &location); // Valida o caminho completo do CGI
-	// void			createUploadFolder(std::string &uploadPath); // Cria a pasta de upload
 	void			printServerStruct(const ServerConfig &server); // Imprime a estrutura do servidor
 }
 

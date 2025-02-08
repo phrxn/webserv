@@ -340,7 +340,6 @@ void Config::_parseRouteBlock(const std::string &locationBlock, RouteConfig &loc
     }
     ConfigUtils::validateFullLocationPath(location);
     ConfigUtils::validateFullCGIPath(location);
-    // ConfigUtils::createUploadFolder(location.uploadPath);
 }
 
 // Método público para obter os servidores
