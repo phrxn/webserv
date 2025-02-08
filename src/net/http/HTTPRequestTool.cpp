@@ -1,10 +1,9 @@
 
 #include "HTTPRequestTool.hpp"
+#include <sstream>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <vector>
-#include <iomanip>
 
 HTTPRequestTool::HTTPRequestTool() {}
 
@@ -70,8 +69,8 @@ void HTTPRequestTool::parserHeader(const std::string& buffer) {
     }
 }
 
-std::map<std::string, std::string> HTTPRequestTool::getHeaders() {
-    return _header;
+std::map<std::string, std::string> HTTPRequestTool::getHeader(const std::string method) {
+    return _header[method];
 }
 
 std::string HTTPRequestTool::getBody() {
@@ -105,31 +104,24 @@ int HTTPRequestTool::hexStringToInt(const std::string& hex) {
     return value;
 }
 
-void HTTPRequestTool::parserChunked(const std::string& buffer) {
-    std::string body;
-    std::string line;
-    std::istringstream stream(buffer);
+bool HTTPRequestTool::isChunked() {
+    return _header["Transfer-Encoding"] == "chunked";
+}
 
-    while (std::getline(stream, line)) {
-        if (line.empty()) continue;
+bool HTTPRequestTool::isChunkedEnd(const std::string& buffer) {
+    return buffer.find("0\r\n\r\n") != std::string::npos;
+}
 
-        int chunkSize = hexStringToInt(line);
-        if (chunkSize == 0) break; // Final chunk - DO NOT include this in the body
-
-        std::vector<char> _buffer(chunkSize + 1);
-        if (stream.read(&_buffer[0], chunkSize)) {
-            _buffer[chunkSize] = '\0';
-            body.append(&_buffer[0], chunkSize);  // Append ONLY the chunk data
-        } else {
-            std::cerr << "Error: Could not read chunk data." << std::endl;
-            return;
-        }
-
-        std::getline(stream, line); // Read the trailing \r\n - DO NOT include this
-        if (line != "\r") {
-          std::cerr << "Warning: Expected \\r\\n, but got: " << line << std::endl;
-        }
+bool HTTPRequestTool::isBodyComplete(const std::string& buffer) {
+    if (_header["Content-Length"].empty()) {
+        return isChunkedEnd(buffer);
+    } else {
+        return buffer.size() >= stringParaLongInt(_header["Content-Length"]);
     }
+}
 
-    _body = body;
+bool HTTPRequestTool::isTheHTTPHeaderComplete(std::string _buffer){
+	if (_buffer.find("\r\n\r\n") != std::string::npos)
+		return true;
+	return false;
 }

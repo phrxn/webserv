@@ -40,13 +40,11 @@ class HTTPRequest : public Request {
 
   virtual HTTPStatus::Status getStatus();
 
-  bool isTheHTTPHeaderComplete(std::string _buffer);
-
-  HTTPMethods::Method getAnythingFromHeader(const std::string &key);
-
   int getPort();
 
   std::string isToKeepTheConnection();
 };
 
 #endif
+
+//IMPLEMENTAR VALIDADEÇÃO PROGRAM CONFIG. METODO É SUPORTADO? SE O REQUEST PASSOU O TAMANHO PERMITIDO?? VALIDAR DURANTE A LEITURA DO BODY!

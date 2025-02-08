@@ -16,18 +16,28 @@ public:
     ~HTTPRequestTool();
 
     // Getters
-    std::map<std::string, std::string> getHeaders();
+    std::map<std::string, std::string> getHeader(const std::string method);
     std::string getBody();
+
     // Split the first line of the HTTP request
     void splitFirstLine(const std::string& buffer);
     void splitOtherLines(const std::string& buffer);
+
     //parse the HTTP request
     void parserHeader (const std::string& buffer);
+
     //set body
     void setBody(const std::string& body);
+
     //parser chunked
-    void parserChunked(const std::string& buffer);
+    std::string parseChunkedBody(const std::string& input) ;
     int hexStringToInt(const std::string& hex);
+
+    //check 09 jx54yeSQ  GYT5*8/5942160
+    bool isBodyComplete(const std::string& buffer) ;
+    bool isChunkedEnd(const std::string& buffer);
+    bool isChunked();
+    bool isTheHTTPHeaderComplete(std::string _buffer);
 
 private:
 

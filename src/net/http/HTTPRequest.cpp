@@ -1,5 +1,4 @@
 #include "HTTPRequest.hpp"
-
 #include <iostream>
 #include <vector>
 
@@ -23,71 +22,43 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 }
 
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
-
-	if(headerRequest() == REQUEST_CREATED){
-		return REQUEST_CREATING;
-	}
-
-	return REQUEST_CREATED;
-}
-
-HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
 	std::vector<char> &data = _socketFD->getInputStream();
 	std::string strTmp(data.begin(), data.begin() + data.size());
 	data.clear();
 	_buffer += strTmp;
 
-	if (!isTheHTTPHeaderComplete(_buffer)) {
-		return REQUEST_CREATING;
+	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _HTTPTool.isBodyComplete(_buffer) || _HTTPTool.isChunked()) {
+		//FAZER  IF PARA O HEADER 
+		_HTTPTool.parserHeader(_buffer);
+		_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4);
+		if(_HTTPTool.isChunked()){
+			_buffer = _HTTPTool.parseChunkedBody(_buffer);
+			if(_HTTPTool.isChunkedEnd(_buffer)){
+				return REQUEST_CREATED;
+			}
+			else
+				return REQUEST_CREATING;
+		}
+		_HTTPTool.setBody(_buffer);
+		return REQUEST_CREATED;
 	}
-	_HTTPTool.parserHeader(_buffer);
-
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
-	return REQUEST_CREATED;
+	return REQUEST_CREATING;
 }
-
-// void HTTPRequest::headerValidation()
-// {
-// 	HTTPMethods httpMethods;
-
-// 	if (_header.find("Host") == _header.end() || _header.find("Method") == _header.end()
-// 		|| _header.find("URL") == _header.end() || _header.find("HTTP-Version") == _header.end()) {
-
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else if (httpMethods.getStringToMethod(_header["Method"]) == HTTPMethods::INVALID) {
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else if (_header["HTTP-Version"] != "HTTP/1.1") {
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else
-// 		_status = HTTPStatus::OK;
-// }
-
-// HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
-// 	HTTPMethods httpMethods;
-
-// 	return httpMethods.getStringToMethod(_header[key]);
-// }
 
 HTTPStatus::Status HTTPRequest::getStatus(){
 	return _status;
 }
 
-bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
-	if (_buffer.find("\r\n\r\n") != std::string::npos)
-		return true;
-	return false;
-}
+
 
 
 std::string HTTPRequest::getHost(){
 	return "";
 }
 
-HTTPMethods::Method HTTPRequest::getMethod(){
-	return HTTPMethods::GET;
+HTTPMethods::Method HTTPRequest::getMethod(const std::string method){
+	return _HTTPTool.getHeaders(method);
 }
 
 std::string HTTPRequest::getURL(){
@@ -96,8 +67,4 @@ std::string HTTPRequest::getURL(){
 
 int HTTPRequest::getPort(){
 	return _socketFD->getServerPort();
-}
-
-std::string HTTPRequest::isToKeepTheConnection(){
-	return "";
 }
