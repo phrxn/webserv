@@ -138,13 +138,13 @@ namespace ConfigUtils {
 		}
 	}
 
-	void	createUploadFolder( std::string &uploadPath ) {
-		if (!ConfigUtils::directoryExists(uploadPath)) {
-			if (mkdir(uploadPath.c_str(), 0777) == -1 && errno != EEXIST) {
-				throw std::runtime_error(ERROR_INVALID_UPLOAD_PATH);
-			}
-		}
-	}
+	// void	createUploadFolder( std::string &uploadPath ) {
+	// 	if (!ConfigUtils::directoryExists(uploadPath)) {
+	// 		if (mkdir(uploadPath.c_str(), 0777) == -1 && errno != EEXIST) {
+	// 			throw std::runtime_error(ERROR_INVALID_UPLOAD_PATH);
+	// 		}
+	// 	}
+	// }
 
 	void	printServerStruct( const ServerConfig &server ) {
 		std::cout << "              Server Configs " << std::endl;
