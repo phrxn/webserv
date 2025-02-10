@@ -28,7 +28,7 @@ void LogWriter::log(LogLevel level, const std::string& clazzName,
                                               message);
 
   if (!details.empty()) {
-    logMessage << " (" << details << ")";
+    logMessage << getDetailsFormatted(level, details);
   }
 
   logMessage << std::endl;
@@ -47,7 +47,8 @@ void LogWriter::log(LogLevel level, const std::string& clazzName,
 
   logMessage << createLogStringWithoutContext(level, clazzName, methodName,
                                               message);
-  logMessage << " (" << details << ")" << std::endl;
+
+  logMessage << getDetailsFormatted(level, details) << std::endl;
 
   try {
     writeLog(logMessage.str());

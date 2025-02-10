@@ -24,6 +24,24 @@ class Concreate1LogWriter : public LogWriter {
     return LogWriter::logToString(level);
   }
 
+  std::string getDetailsFormatted(LogLevel level, const std::string &details) {
+	(void)level;
+	std::stringstream ssDetailsFormatted;
+
+	ssDetailsFormatted << "(" << details << ")";
+
+	return ssDetailsFormatted.str();
+  }
+
+  std::string getDetailsFormatted(LogLevel level, int details) {
+	(void)level;
+	std::stringstream ssDetailsFormatted;
+
+	ssDetailsFormatted << "(" << details << ")";
+
+	return ssDetailsFormatted.str();
+  }
+
  private:
   std::string &_toWrite;
 };
@@ -40,7 +58,7 @@ TEST(LogWriterTest, log_simpleValidLogWithContext) {
   cLog.log(Log::DEBUG, "Clazz", "Method", "message", "details");
 
   std::string expectedLogStrig(
-      "[2000-01-02 03:04:05] [DEBUG] [Clazz] [Method] message (details)\n");
+      "[2000-01-02 03:04:05] [DEBUG] [Clazz] [Method] message(details)\n");
   EXPECT_EQ(expectedLogStrig, toWriteAndCompare);
 }
 

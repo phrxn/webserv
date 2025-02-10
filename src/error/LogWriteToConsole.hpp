@@ -14,6 +14,13 @@ class LogWriteToConsole : public LogWriter {
   void writeLog(const std::string &formattedLog);
 
   std::string getLogLevelString(LogLevel level);
+
+  std::string getDetailsFormatted(LogLevel level, const std::string &details);
+  std::string getDetailsFormatted(LogLevel level, int details);
+
+ private:
+  std::string getColorByLevel(LogLevel level);
+  std::string getResetColor();
 };
 
 #endif

@@ -49,3 +49,52 @@ std::string LogWriteToConsole::getLogLevelString(LogLevel level) {
 
   return logLevelString.str();
 }
+
+std::string LogWriteToConsole::getDetailsFormatted(LogLevel level, const std::string &details){
+	std::stringstream ssDetailsFormatted;
+
+	ssDetailsFormatted << getColorByLevel(level) << "(" << getResetColor();
+	ssDetailsFormatted << details;
+	ssDetailsFormatted << getColorByLevel(level) << ")" << getResetColor();
+
+	return ssDetailsFormatted.str();
+}
+
+std::string LogWriteToConsole::getDetailsFormatted(LogLevel level, int details){
+	std::stringstream ssDetailsFormatted;
+
+	ssDetailsFormatted << getColorByLevel(level) << "(" << getResetColor();
+	ssDetailsFormatted << details;
+	ssDetailsFormatted << getColorByLevel(level) << ")" << getResetColor();
+
+	return ssDetailsFormatted.str();
+}
+
+
+std::string LogWriteToConsole::getColorByLevel(LogLevel level){
+
+	std::string color;
+
+	switch (level) {
+		case DEBUG:
+		  color = "\033[34m";
+		  break;
+		case INFO:
+		  color = "\033[32m";
+		  break;
+		case WARNING:
+		  color = "\033[33m";
+		  break;
+		case ERROR:
+		  color = "\033[31m";
+		  break;
+		case FATAL:
+		  color = "\033[35m";
+		  break;
+	  }
+	  return color;
+}
+
+std::string LogWriteToConsole::getResetColor(){
+	return std::string("\033[0m");
+}

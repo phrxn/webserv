@@ -32,6 +32,9 @@ class LogWriter : public Log {
 
   virtual std::string getLogLevelString(LogLevel level) = 0;
 
+  virtual std::string getDetailsFormatted(LogLevel level, const std::string &details) = 0;
+  virtual std::string getDetailsFormatted(LogLevel level, int details) = 0;
+
  private:
   std::string createLogStringWithoutContext(LogLevel level,
                                             const std::string &clazzName,
