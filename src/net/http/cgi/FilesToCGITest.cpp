@@ -56,9 +56,9 @@ TEST(FilesToCGITest, testDestructor) {
   filesToCGI.setSystemCalls(systemCallsMock);
 }
 
-//-----------------------  openFile -----------------------
+//-----------------------  openAFile -----------------------
 
-TEST(FilesToCGITest, openFile_systeCallIsNull) {
+TEST(FilesToCGITest, openAFile_systeCallIsNull) {
   FilesToCGI filesToCGI(NULL);
   filesToCGI.setSystemCalls(NULL);
 
@@ -67,7 +67,7 @@ TEST(FilesToCGITest, openFile_systeCallIsNull) {
   EXPECT_EQ(-1, isFileDescritor);
 }
 
-TEST(FilesToCGITest, openFile_openSystemCallFailed) {
+TEST(FilesToCGITest, openAFile_openSystemCallFailed) {
   SystemCallsMockFilesToCGI *systemCallsMock = new SystemCallsMockFilesToCGI;
   EXPECT_CALL(*systemCallsMock,
               open(::testing::A<const char *>(), (O_CREAT | O_TRUNC | O_RDWR),
@@ -78,7 +78,7 @@ TEST(FilesToCGITest, openFile_openSystemCallFailed) {
   EXPECT_CALL(*systemCallsMock, close(-1)).WillRepeatedly(::testing::Return(1));
 
   LogMock *logMock = new LogMock;
-  EXPECT_CALL(*logMock, log(Log::ERROR, "FilesToCGI", "openFile", "xxx", ""))
+  EXPECT_CALL(*logMock, log(Log::ERROR, "FilesToCGI", "openAFile", "xxx", ""))
       .Times(1);
 
   FilesToCGI filesToCGI(logMock);
@@ -92,7 +92,7 @@ TEST(FilesToCGITest, openFile_openSystemCallFailed) {
   delete logMock;
 }
 
-TEST(FilesToCGITest, openFile_openSystemCallWork) {
+TEST(FilesToCGITest, openAFile_openSystemCallWork) {
 
   SystemCallsMockFilesToCGI *systemCallsMock = new SystemCallsMockFilesToCGI;
   EXPECT_CALL(*systemCallsMock,

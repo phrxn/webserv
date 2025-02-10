@@ -116,7 +116,7 @@ TEST(ParentProcessCGITest, execute_ChildReturnAValueDifferentOf0) {
 TEST(ParentProcessCGITest, execute_testKillByTimeout) {
 
   LogMockToParent *logMock = new LogMockToParent;
-  EXPECT_CALL(*logMock, log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute", ::testing::A<int>())).Times(1);
+  EXPECT_CALL(*logMock, log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute. Time in seconds", ::testing::A<int>())).Times(1);
 
   SystemCalls systemCalls;
 
