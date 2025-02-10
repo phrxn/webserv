@@ -42,9 +42,9 @@ This project is a simple HTTP server in C++98 with some restrictions and require
 | Implement a simple echo for testing | :heavy_check_mark:         |
 | Timeout for connections not to hang forever| :heavy_check_mark:         |
 | Handler the HTTP protocol | :bangbang: _in development_         |
-| CGI | :bangbang: _in development_         |
+| CGI | :heavy_check_mark:         |
 | Configuration File | :bangbang: _in development_         |
-| Virtual servers to handle many websites | :bangbang: _in development_         |
+| Virtual servers to handle many websites | :heavy_check_mark:         |
 | Run on Linux | :heavy_check_mark:         |
 | Run on Windows | :bangbang: _in development_         |
 
