@@ -58,7 +58,9 @@ HTTPStatus::Status HTTPServletCGI::makePage(HTTPRequest &request, HTTPResponse &
 
   HTTPStatus::Status statusCreatePage = _cgiHTMLDocument.createPage(_rootVirtualHostLocation, _physicalPathToResource, request);
 
-  _fillHTTPResponse.makeFill(response, _cgiHTMLDocument);
+  if (statusCreatePage == HTTPStatus::OK) {
+	_fillHTTPResponse.makeFill(response, _cgiHTMLDocument);
+  }
 
   return statusCreatePage;
 }
