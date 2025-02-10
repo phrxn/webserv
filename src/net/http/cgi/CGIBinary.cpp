@@ -2,33 +2,33 @@
 
 CGIBinary::CGIBinary(std::string pathToFileToExecute, std::string pathToBinary,
                      SupportedCGI supportedFileType)
-    : _pathToFileToExecute(pathToFileToExecute),
-      _pathToBinary(pathToBinary),
-      _supportedFileType(supportedFileType) {}
+    :  _pathToBinary(pathToBinary),
+	   _pathToFileToExecute(pathToFileToExecute),
+       _supportedFileType(supportedFileType) {}
 
 CGIBinary::CGIBinary(std::string pathToBinary, SupportedCGI supportedFileType)
-    : _pathToFileToExecute(""),
-      _pathToBinary(pathToBinary),
+    : _pathToBinary(pathToBinary),
+	  _pathToFileToExecute(""),
       _supportedFileType(supportedFileType) {}
 
 CGIBinary::~CGIBinary() {}
 
 CGIBinary::CGIBinary(const CGIBinary &src)
-    : _pathToFileToExecute(src._pathToFileToExecute),
-      _pathToBinary(src._pathToBinary),
+    : _pathToBinary(src._pathToBinary),
+	  _pathToFileToExecute(src._pathToFileToExecute),
       _supportedFileType(src._supportedFileType) {}
 
 CGIBinary &CGIBinary::operator=(const CGIBinary &src) {
 	if(this == &src) {
 		return *this;
 	}
-	_pathToFileToExecute = src._pathToFileToExecute;
 	_pathToBinary = src._pathToBinary;
+	_pathToFileToExecute = src._pathToFileToExecute;
 	_supportedFileType = src._supportedFileType;
 	return *this;
 }
 
-std::string CGIBinary::getPathToBinaryExecutable() const {
+std::string CGIBinary::getPathToBinary() const {
 	return _pathToBinary;
 }
 

@@ -14,7 +14,7 @@ class CGIBinary {
   CGIBinary(const CGIBinary &other);
   CGIBinary &operator=(const CGIBinary &other);
 
-  std::string getPathToBinaryExecutable() const;
+  std::string getPathToBinary() const;
 
   SupportedCGI getSupportedFileType() const;
 
@@ -23,8 +23,8 @@ class CGIBinary {
   void setPathToScriptToExecute(const std::string &path);
 
   private:
+    std::string _pathToBinary;
     std::string _pathToFileToExecute;
-	std::string _pathToBinary;
 	CGIBinary::SupportedCGI _supportedFileType;
 
 };

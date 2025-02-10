@@ -36,7 +36,7 @@ class LogMock : public Log {
 TEST(CreateDefaultErrorPagesFactoryTest,
      getDefaulErrorPage_theHTTPStatusDoesntExistInTheFactoryMap) {
   std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *> mapToFilTheFactory =
-      {{HTTPStatus::SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")}};
+      {{HTTPStatus::INTERNAL_SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")}};
 
   LogMock *logMock = new LogMock;
 
@@ -65,7 +65,7 @@ TEST(CreateDefaultErrorPagesFactoryTest,
 TEST(CreateDefaultErrorPagesFactoryTest,
      getDefaulErrorPage_theHTTPStatusExistsInTheFactoryMap) {
   std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument *> mapToFilTheFactory =
-      {{HTTPStatus::SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")},
+      {{HTTPStatus::INTERNAL_SERVER_ERROR, new ErrorPageFileHTMLDocumentMock("500")},
        {HTTPStatus::NOT_FOUND, new ErrorPageFileHTMLDocumentMock("404")}};
 
   LogMock *logMock = new LogMock;

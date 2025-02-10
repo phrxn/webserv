@@ -63,13 +63,13 @@ void HTTPServletManager::doService(HTTPRequest &request,
       _virtualHost.isDirectoryListingAllowedForThisPath(url);
 
   if (pathPointsToCGI) {
-    _hTTPServlet = new HTTPServletCGI("", "");
+    _hTTPServlet = new HTTPServletCGI(absolutePathToResource, "");
   } else {
     _hTTPServlet =
         new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);
   }
 
-  HTTPStatus::Status methodReturn = HTTPStatus::SERVER_ERROR;
+  HTTPStatus::Status methodReturn = HTTPStatus::INTERNAL_SERVER_ERROR;
   // based on the http verb call the corresponding method
   switch (request.getMethod()) {
     case HTTPMethods::GET:

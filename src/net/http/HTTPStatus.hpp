@@ -29,7 +29,7 @@ class HTTPStatus {
     REQUEST_ENTITY_TOO_LARGE = 413,
 
     // --- 500 family
-    SERVER_ERROR = 500,
+    INTERNAL_SERVER_ERROR = 500,
     NOT_IMPLEMENTED = 501,
     SERVICE_UNAVAILABLE = 503,
   };
@@ -41,7 +41,8 @@ class HTTPStatus {
   HTTPStatus(const HTTPStatus &src);
   HTTPStatus &operator=(const HTTPStatus &src);
 
-  HTTPStatus::Status getStringToStatus(std::string status);
+  HTTPStatus::Status getStringToStatus(const std::string &status);
+  HTTPStatus::Status getIntToStatus(int status);
   std::string getStatusToString(HTTPStatus::Status status);
 
   private:

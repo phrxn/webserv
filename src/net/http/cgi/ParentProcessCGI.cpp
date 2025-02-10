@@ -40,7 +40,7 @@ ParentProcessCGI::ExitStatus ParentProcessCGI::execute() {
         return ProcessCGI::PARENT_ERROR;
       }
       isChildKilled = true;
-	  _logger->log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute", _childPid);
+	  _logger->log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute. Time in seconds", _timeToWaitThChildProcessInSeconds);
     }
 
     error::StatusOr<pid_t> ret = _systemCalls->waitpid(_childPid, &status, WNOHANG);

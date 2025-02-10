@@ -43,7 +43,7 @@ ProcessCGI::ExitStatus ExecuteCGIProgram::execute(
   }
 
   ArrayChar _arrayChar;
-  _arrayChar.addString(_cgiBinary.getPathToBinaryExecutable());
+  _arrayChar.addString(_cgiBinary.getPathToBinary());
   _arrayChar.addString(_cgiBinary.getPathToScriptToExecute());
 
   CGIEnvironmentVariables _cgiEnvironmentVariables(
@@ -73,13 +73,16 @@ ProcessCGI::ExitStatus ExecuteCGIProgram::execute(
 }
 
 bool ExecuteCGIProgram::cgiBinaryValid(const CGIBinary &cgiBinary) const {
-  File _fileCGIBinary(cgiBinary.getPathToBinaryExecutable());
+
+  File _fileCGIBinary(cgiBinary.getPathToBinary());
   if (!_fileCGIBinary.exist()) {
+	_logger->log(Log::ERROR, "ExecuteCGIProgram", "cgiBinaryValid", "the cgi binary doesn't exist", cgiBinary.getPathToBinary());
     return false;
   }
 
   File _fileScriptFile(cgiBinary.getPathToScriptToExecute());
   if (!_fileScriptFile.exist()) {
+	_logger->log(Log::ERROR, "ExecuteCGIProgram", "cgiBinaryValid", "the file to cgi doesn't exist", cgiBinary.getPathToScriptToExecute());
     return false;
   }
   return true;

@@ -61,7 +61,7 @@ void HandlerHTTPStatus::createErrorHTTPResponse(HTTPResponse &response,
 
 void HandlerHTTPStatus::stampTheResponse(HTTPResponse &response, HTTPStatus::Status status) {
   if (status == HTTPStatus::INVALID){
-	status = HTTPStatus::SERVER_ERROR;
+	status = HTTPStatus::INTERNAL_SERVER_ERROR;
   }
   response.setHTTPVersion(ProgramConfiguration::getInstance().getHTTPVersion());
   response.setStatus(status);

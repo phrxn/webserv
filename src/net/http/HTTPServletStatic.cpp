@@ -46,7 +46,7 @@ HTTPStatus::Status HTTPServletStatic::doGet(HTTPRequest &request,
   error::StatusOr<bool> isDirectory =
       _physicalPathChecker->isThePathAPathToADirectory(_physicalPathToResource);
   if (!isDirectory.ok()) {
-    return HTTPStatus::SERVER_ERROR;
+    return HTTPStatus::INTERNAL_SERVER_ERROR;
   }
 
   bool isADirectory = isDirectory.value();

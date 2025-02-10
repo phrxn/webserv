@@ -26,6 +26,21 @@ HTTPTypeOfPages &HTTPTypeOfPages::operator=(const HTTPTypeOfPages &src){
 	return *this;
 }
 
+HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getStringToTypeOfPageFromPath(const std::string &path) const {
+
+	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator start = mapTypeOfPage.begin();
+	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator end = mapTypeOfPage.end();
+
+	while(start != end){
+		const std::string &extesionWithDot = start->second;
+		if (extesionWithDot != "" && path.find(extesionWithDot) != std::string::npos){
+				return start->first;
+		}
+		start++;
+	}
+	return HTTPTypeOfPages::STATIC;
+}
+
 HTTPTypeOfPages::TypeOfPage HTTPTypeOfPages::getStringToTypeOfPage(const std::string &typeOfPage) const {
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator start = mapTypeOfPage.begin();
 	std::map<HTTPTypeOfPages::TypeOfPage, std::string>::const_iterator end = mapTypeOfPage.end();

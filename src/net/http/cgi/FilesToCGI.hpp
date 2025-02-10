@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../../../error/Log.hpp"
+#include "../../../error/LogDefault.hpp"
 #include "../../../system/SystemCalls.hpp"
 #include "../HTTPRequest.hpp"
 

@@ -24,14 +24,14 @@ CGIBinary CGIBinaryFactory::getCGIBinary(CGIBinary::SupportedCGI supportedCGI) {
 
 CGIBinary CGIBinaryFactory::getCGIBinary(const std::string &pathToScriptPath) {
   HTTPTypeOfPages typeOfPage;
-  CGIBinary cgiBinary = getCGIBinary(typeOfPage.getStringToTypeOfPage(pathToScriptPath));
+  CGIBinary cgiBinary = getCGIBinary(typeOfPage.getStringToTypeOfPageFromPath(pathToScriptPath));
   cgiBinary.setPathToScriptToExecute(pathToScriptPath);
   return cgiBinary;
 }
 
-CGIBinary CGIBinaryFactory::getCGIBinary(
-    HTTPTypeOfPages::TypeOfPage typeOfPage) {
-  if (typeOfPage == HTTPTypeOfPages::PYTHON) {
+CGIBinary CGIBinaryFactory::getCGIBinary(HTTPTypeOfPages::TypeOfPage typeOfPage) {
+
+  if (typeOfPage == HTTPTypeOfPages::PHP) {
     return getCGIBinary(CGIBinary::PHP);
   }
   if (typeOfPage == HTTPTypeOfPages::PYTHON) {

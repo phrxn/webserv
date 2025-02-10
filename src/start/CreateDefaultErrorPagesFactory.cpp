@@ -64,7 +64,7 @@ ErrorPageFileHTMLDocument *CreateDefaultErrorPagesFactory::getDefaultErrorPages(
   }
 
   ErrorPageFileHTMLDocument *pageErro =
-      mapWithDefaultPagesErrors[HTTPStatus::SERVER_ERROR];
+      mapWithDefaultPagesErrors[HTTPStatus::INTERNAL_SERVER_ERROR];
 
   return dynamic_cast<ErrorPageFileHTMLDocument *>(pageErro->clone());
 }

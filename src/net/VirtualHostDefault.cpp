@@ -53,10 +53,9 @@ bool VirtualHostDefault::isUrlAPathToCGI(URL url) const{
 
   std::string path = url.getPathFull(false);
 
-  std::string::size_type phpExtesion = path.find(".php");
+  if (path.find(".php") != std::string::npos || path.find(".py") != std::string::npos) return true;
 
-  return (phpExtesion != std::string::npos);
-
+  return false;
 }
 
 std::string VirtualHostDefault::getThePhysicalPath(URL url) const{

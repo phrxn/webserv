@@ -25,3 +25,20 @@ TEST(HTTPStatusTest, getStatusToString){
 
 	EXPECT_EQ("OK", httpStatus.getStatusToString(HTTPStatus::OK));
 }
+
+//---------------------------------------------------
+
+TEST(HTTPStatusTest, getIntToStatus_validValue){
+
+	HTTPStatus httpStatus;
+
+	EXPECT_EQ(HTTPStatus::NOT_FOUND, httpStatus.getIntToStatus(404));
+}
+
+TEST(HTTPStatusTest, getIntToStatus_invalidValue){
+
+	HTTPStatus httpStatus;
+
+	EXPECT_EQ(HTTPStatus::INVALID, httpStatus.getIntToStatus(-1));
+}
+

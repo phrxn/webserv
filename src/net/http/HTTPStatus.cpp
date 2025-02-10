@@ -28,7 +28,7 @@ std::map<HTTPStatus::Status, std::string> HTTPStatus::startMapStatus(){
 	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::REQUEST_ENTITY_TOO_LARGE, "Payload Too Large"));
 
     // --- 500 family
-	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::SERVER_ERROR, "Internal Server Error"));
+	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::INTERNAL_SERVER_ERROR, "Internal Server Error"));
 	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::NOT_IMPLEMENTED, "Not Implemented"));
 	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::SERVICE_UNAVAILABLE, "Service Unavailable"));
 
@@ -48,7 +48,7 @@ HTTPStatus &HTTPStatus::operator=(const HTTPStatus &src){
 	return *this;
 }
 
-HTTPStatus::Status HTTPStatus::getStringToStatus(std::string status){
+HTTPStatus::Status HTTPStatus::getStringToStatus(const std::string &status){
 	std::map<HTTPStatus::Status, std::string>::const_iterator start = mapStatus.begin();
 	std::map<HTTPStatus::Status, std::string>::const_iterator end = mapStatus.end();
 
@@ -59,6 +59,19 @@ HTTPStatus::Status HTTPStatus::getStringToStatus(std::string status){
 	}
 	return HTTPStatus::INVALID;
 }
+
+HTTPStatus::Status HTTPStatus::getIntToStatus(int status){
+	std::map<HTTPStatus::Status, std::string>::const_iterator start = mapStatus.begin();
+	std::map<HTTPStatus::Status, std::string>::const_iterator end = mapStatus.end();
+
+	while(start != end){
+		if (start->first == status)
+			return start->first;
+		start++;
+	}
+	return HTTPStatus::INVALID;
+}
+
 
 std::string HTTPStatus::getStatusToString(HTTPStatus::Status status){
 	std::map<HTTPStatus::Status, std::string>::const_iterator start = mapStatus.begin();

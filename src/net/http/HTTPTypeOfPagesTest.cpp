@@ -3,21 +3,67 @@
 
 #include "HTTPTypeOfPages.hpp"
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathOnlyWithPHP){
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_emptyPath){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::STATIC, h1.getStringToTypeOfPageFromPath(""));
+}
+
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_withOneLetter){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::STATIC, h1.getStringToTypeOfPageFromPath("a"));
+}
+
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_thePathIsOnlyPHPExtension){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::PHP, h1.getStringToTypeOfPageFromPath(".php"));
+}
+
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_thePathIsOnlyPythonExtension){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::PYTHON, h1.getStringToTypeOfPageFromPath(".py"));
+}
+
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_thePathIsOnlyOneWordWithPHPExtension){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::PHP, h1.getStringToTypeOfPageFromPath("a.php"));
+}
+
+TEST(HTTPTypeOfPagesTest, getStringToTypeOfPageFromPath_thePathIsOnlyOneWordWithPythonExtension){
+
+	HTTPTypeOfPages h1;
+
+	EXPECT_EQ(HTTPTypeOfPages::PYTHON, h1.getStringToTypeOfPageFromPath("a.py"));
+}
+
+
+
+// --------------------------------------------
+
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathOnlyWithPHP){
 
 	HTTPTypeOfPages h1;
 
 	EXPECT_EQ(HTTPTypeOfPages::PHP, h1.getTypeOfPathFromPath(".php"));
 }
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathStartWithPHP){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathStartWithPHP){
 
 	HTTPTypeOfPages h1;
 
 	EXPECT_EQ(HTTPTypeOfPages::PHP, h1.getTypeOfPathFromPath(".php/foo"));
 }
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathHavePHPBetweenOtherThings){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathHavePHPBetweenOtherThings){
 
 	HTTPTypeOfPages h1;
 
@@ -25,21 +71,21 @@ TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathHavePHPBetweenOtherThings){
 }
 
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathOnlyWithPY){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathOnlyWithPY){
 
 	HTTPTypeOfPages h1;
 
 	EXPECT_EQ(HTTPTypeOfPages::PYTHON, h1.getTypeOfPathFromPath(".py"));
 }
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathStartWithPY){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathStartWithPY){
 
 	HTTPTypeOfPages h1;
 
 	EXPECT_EQ(HTTPTypeOfPages::PYTHON, h1.getTypeOfPathFromPath(".py/foo"));
 }
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathHavePYBetweenOtherThings){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathHavePYBetweenOtherThings){
 
 	HTTPTypeOfPages h1;
 
@@ -47,14 +93,14 @@ TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathHavePYBetweenOtherThings){
 }
 
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathDoesntHavePHPorPY){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathDoesntHavePHPorPY){
 
 	HTTPTypeOfPages h1;
 
 	EXPECT_EQ(HTTPTypeOfPages::STATIC, h1.getTypeOfPathFromPath("/bar/foo.xxx/zzz"));
 }
 
-TEST(HTTPTypeOfPages, getTypeOfPathFromPath_pathEmpty){
+TEST(HTTPTypeOfPagesTest, getTypeOfPathFromPath_pathEmpty){
 
 	HTTPTypeOfPages h1;
 

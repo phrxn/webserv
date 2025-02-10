@@ -15,6 +15,7 @@ class HTTPServletCGI : public HTTPServlet {
   HTTPStatus::Status doGet(HTTPRequest &request, HTTPResponse &response);
   HTTPStatus::Status doPost(HTTPRequest &request, HTTPResponse &response);
   HTTPStatus::Status doDelete(HTTPRequest &request, HTTPResponse &response);
+  HTTPStatus::Status makePage(HTTPRequest &request, HTTPResponse &response);
 
  private:
   HTTPServletCGI(const HTTPServletCGI &src);

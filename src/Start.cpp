@@ -133,6 +133,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setServerName("Webserv");
   _programConfiguration.setHTTPVersion("HTTP/1.1");
   _programConfiguration.setCGIVersion("CGI/1.1");
+  _programConfiguration.setTimeToWaitTheChildCGIProcessInSeconds(4);
 }
 
 void Start::startLog() {

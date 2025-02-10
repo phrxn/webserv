@@ -13,6 +13,7 @@ class HTTPTypeOfPages {
   HTTPTypeOfPages(const HTTPTypeOfPages &src);
   HTTPTypeOfPages &operator=(const HTTPTypeOfPages &src);
 
+  HTTPTypeOfPages::TypeOfPage getStringToTypeOfPageFromPath(const std::string &path) const;
   HTTPTypeOfPages::TypeOfPage getStringToTypeOfPage(const std::string &typeOfPage) const ;
   std::string getTypeOfPageToString(HTTPTypeOfPages::TypeOfPage typeOfPage) const ;
   HTTPTypeOfPages::TypeOfPage getTypeOfPathFromPath(const std::string &path) const ;

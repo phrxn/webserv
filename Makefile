@@ -45,6 +45,8 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/cgi/FilesToCGI.cpp\
 		src/net/http/cgi/ParentProcessCGI.cpp\
 		src/net/http/cgi/ProcessCGI.cpp\
+		src/net/http/html/CreateCGIHTMLDocument.cpp\
+		src/net/http/html/CGIHTMLDocument.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
@@ -109,6 +111,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/cgi/EnvironmentVariablesTest.cpp\
 				src/net/http/cgi/FilesToCGITest.cpp\
 				src/net/http/cgi/ParentProcessCGITest.cpp\
+				src/net/http/html/CreateCGIHTMLDocumentTest.cpp\
 				src/net/http/html/CreateDirectoryHTMLPageTest.cpp\
 				src/net/http/html/DirectoryHTMLDocumentTest.cpp\
 				src/net/http/html/ItemDirectoryHTMLDocumentTest.cpp\
@@ -116,6 +119,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPRequestToolTest.cpp\
+				src/net/http/HTTPResponseTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
 				src/net/http/HTTPTypeOfPagesTest.cpp\
 				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\
@@ -157,7 +161,7 @@ else ifeq ($(COMPILE), tests)
   all: $(TESTS_BINARY)
 
   $(TESTS_BINARY): $(GTEST_LIBS) $(OBJ)
-	$(CXX) $(OBJ) -o $(TESTS_BINARY) $(GTEST_LIBS) -lpthread
+	$(CXX) $(OBJ) -o $(TESTS_BINARY) $(GTEST_LIBS) -lpthread -lrt
 
   $(TESTS_OBJDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)

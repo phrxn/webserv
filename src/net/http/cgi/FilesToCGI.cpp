@@ -12,7 +12,7 @@ const std::string FilesToCGI::stderrFileName = "stderr";
 std::string FilesToCGI::defaultDirectoryToSaveTheFiles = "tmp/";
 
 FilesToCGI::FilesToCGI()
-    : _logger(NULL),
+    : _logger(LogDefault::loggerGlobal),
       _systemCalls(new SystemCalls),
       _inputFileDescriptor(-1),
       _outputFileDescriptor(-1),
@@ -125,7 +125,7 @@ int FilesToCGI::openAFile(const std::string fileName) {
   };
 
   if (_logger) {
-    _logger->log(Log::ERROR, "FilesToCGI", "openFile",
+    _logger->log(Log::ERROR, "FilesToCGI", "openAFile",
                  openFile.status().message(), fileName);
   }
 

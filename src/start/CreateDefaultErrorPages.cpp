@@ -47,7 +47,7 @@ CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   listStatusWithPage.push_back(HTTPStatus::REQUEST_ENTITY_TOO_LARGE);
 
   // 500 family
-  listStatusWithPage.push_back(HTTPStatus::SERVER_ERROR);
+  listStatusWithPage.push_back(HTTPStatus::INTERNAL_SERVER_ERROR);
   listStatusWithPage.push_back(HTTPStatus::NOT_IMPLEMENTED);
   listStatusWithPage.push_back(HTTPStatus::SERVICE_UNAVAILABLE);
 
