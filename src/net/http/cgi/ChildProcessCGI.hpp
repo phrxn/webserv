@@ -3,17 +3,17 @@
 
 #include "ArrayChar.hpp"
 #include "CGIEnvironmentVariables.hpp"
-#include "ExecuteProcessCGI.hpp"
+#include "ProcessCGI.hpp"
 #include "FilesToCGI.hpp"
 
-class ChildExecuteProcessCGI : public ExecuteProcessCGI {
+class ChildProcessCGI : public ProcessCGI {
  public:
-  ChildExecuteProcessCGI(const ArrayChar &cgiPath,
+  ChildProcessCGI(const ArrayChar &cgiPath,
                          const CGIEnvironmentVariables &cgiEnvironmentVariables,
                         FilesToCGI &filesToCGI);
-  ~ChildExecuteProcessCGI();
-  ChildExecuteProcessCGI(const ChildExecuteProcessCGI &src);
-  ChildExecuteProcessCGI &operator=(const ChildExecuteProcessCGI &src);
+  ~ChildProcessCGI();
+  ChildProcessCGI(const ChildProcessCGI &src);
+  ChildProcessCGI &operator=(const ChildProcessCGI &src);
   ExitStatus execute();
   void setSystemCalls(SystemCalls *systemCalls);
   void setLogger(Log *logger);

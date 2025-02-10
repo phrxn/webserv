@@ -1,6 +1,6 @@
 #include "../../../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../../../libs/googletest/googletest/include/gtest/gtest.h"
-#include "ParentExecuteProcessCGI.hpp"
+#include "ParentProcessCGI.hpp"
 
 class SystemCallsMockToParent : public SystemCalls {
  public:
@@ -27,39 +27,39 @@ class LogMockToParent : public Log {
 };
 
 
-TEST(ParentExecuteProcessCGITest, execute_killSystemCallError) {
+TEST(ParentProcessCGITest, execute_killSystemCallError) {
   SystemCallsMockToParent *sysCall = new SystemCallsMockToParent;
   EXPECT_CALL(*sysCall, kill(testing::_, testing::_))
       .WillOnce(testing::Return(
           error::Status(error::Status::SystemCall, "kill error")));
 
   LogMockToParent *log = new LogMockToParent;
-  EXPECT_CALL(*log, log(Log::ERROR, "ParentExecuteProcessCGI", "execute", std::string("kill error"), 42)).Times(1);
+  EXPECT_CALL(*log, log(Log::ERROR, "ParentProcessCGI", "execute", std::string("kill error"), 42)).Times(1);
 
-  ParentExecuteProcessCGI parent(42, -1);
+  ParentProcessCGI parent(42, -1);
   parent.setSystemCalls(sysCall);
   parent.setLogger(log);
 
-  ExecuteProcessCGI::ExitStatus status = parent.execute();
-  EXPECT_EQ(ExecuteProcessCGI::PARENT_ERROR, status);
+  ProcessCGI::ExitStatus status = parent.execute();
+  EXPECT_EQ(ProcessCGI::PARENT_ERROR, status);
 
   delete log;
 }
 
-TEST(ParentExecuteProcessCGITest, execute_waitpidSystemCallError) {
+TEST(ParentProcessCGITest, execute_waitpidSystemCallError) {
   SystemCallsMockToParent *sysCall = new SystemCallsMockToParent;
   EXPECT_CALL(*sysCall, waitpid(testing::_, testing::_, testing::_))
 	  .WillOnce(testing::Return(
 		  error::Status(error::Status::SystemCall, "waitpid error")));
   LogMockToParent *log = new LogMockToParent;
-  EXPECT_CALL(*log, log(Log::ERROR, "ParentExecuteProcessCGI", "execute", std::string("waitpid error"), 42)).Times(1);
+  EXPECT_CALL(*log, log(Log::ERROR, "ParentProcessCGI", "execute", std::string("waitpid error"), 42)).Times(1);
 
-  ParentExecuteProcessCGI parent(42, 100000);
+  ParentProcessCGI parent(42, 100000);
   parent.setSystemCalls(sysCall);
   parent.setLogger(log);
 
-  ExecuteProcessCGI::ExitStatus status = parent.execute();
-  EXPECT_EQ(ExecuteProcessCGI::PARENT_ERROR, status);
+  ProcessCGI::ExitStatus status = parent.execute();
+  EXPECT_EQ(ProcessCGI::PARENT_ERROR, status);
 
   delete log;
 }
@@ -73,7 +73,7 @@ TEST(ParentExecuteProcessCGITest, execute_waitpidSystemCallError) {
 // -----------------------------------------------------------------------
 
 // Test if the child EXIT WAS OK (value 0)
-TEST(ParentExecuteProcessCGITest, execute_ChildReturn0) {
+TEST(ParentProcessCGITest, execute_ChildReturn0) {
   SystemCalls systemCalls;
 
   error::StatusOr<pid_t> pid = systemCalls.fork();
@@ -85,14 +85,14 @@ TEST(ParentExecuteProcessCGITest, execute_ChildReturn0) {
   if (thePid == 0) {
     exit(0);
   } else {
-    ParentExecuteProcessCGI parentExecuteProcessCGI(thePid, 3);
-    ExecuteProcessCGI::ExitStatus status = parentExecuteProcessCGI.execute();
-    EXPECT_EQ(ExecuteProcessCGI::CHILD_EXIT_OK, status);
+    ParentProcessCGI parentProcessCGI(thePid, 3);
+    ProcessCGI::ExitStatus status = parentProcessCGI.execute();
+    EXPECT_EQ(ProcessCGI::CHILD_EXIT_OK, status);
   }
 }
 
 // Test if the child EXIT WAS A FAILURE (value different from 0)
-TEST(ParentExecuteProcessCGITest, execute_ChildReturnAValueDifferentOf0) {
+TEST(ParentProcessCGITest, execute_ChildReturnAValueDifferentOf0) {
   SystemCalls systemCalls;
 
   error::StatusOr<pid_t> pid = systemCalls.fork();
@@ -104,19 +104,19 @@ TEST(ParentExecuteProcessCGITest, execute_ChildReturnAValueDifferentOf0) {
   if (thePid == 0) {
     exit(1);
   } else {
-    ParentExecuteProcessCGI parentExecuteProcessCGI(thePid, 3);
-    ExecuteProcessCGI::ExitStatus status = parentExecuteProcessCGI.execute();
-    EXPECT_EQ(ExecuteProcessCGI::CHILD_EXIT_WITH_ERROR, status);
+    ParentProcessCGI parentProcessCGI(thePid, 3);
+    ProcessCGI::ExitStatus status = parentProcessCGI.execute();
+    EXPECT_EQ(ProcessCGI::CHILD_EXIT_WITH_ERROR, status);
   }
 }
 
 // Test if the child EXIT BY KILL (Timeout)
 // In this test we will run a child process that never ends! And we will kill it
 // because of the timeout!
-TEST(ParentExecuteProcessCGITest, execute_testKillByTimeout) {
+TEST(ParentProcessCGITest, execute_testKillByTimeout) {
 
   LogMockToParent *logMock = new LogMockToParent;
-  EXPECT_CALL(*logMock, log(Log::ERROR, "ParentExecuteProcessCGI", "execute", "the CGI child process took too long to execute", ::testing::A<int>())).Times(1);
+  EXPECT_CALL(*logMock, log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute", ::testing::A<int>())).Times(1);
 
   SystemCalls systemCalls;
 
@@ -136,10 +136,10 @@ TEST(ParentExecuteProcessCGITest, execute_testKillByTimeout) {
     }
     exit(1);
   } else {
-    ParentExecuteProcessCGI parentExecuteProcessCGI(thePid, 3);
-	parentExecuteProcessCGI.setLogger(logMock);
-    ExecuteProcessCGI::ExitStatus status = parentExecuteProcessCGI.execute();
-    EXPECT_EQ(ExecuteProcessCGI::CHILD_FINISHED_BY_SIGNAL, status);
+    ParentProcessCGI parentProcessCGI(thePid, 3);
+	parentProcessCGI.setLogger(logMock);
+    ProcessCGI::ExitStatus status = parentProcessCGI.execute();
+    EXPECT_EQ(ProcessCGI::CHILD_FINISHED_BY_SIGNAL, status);
   }
 
   delete logMock;

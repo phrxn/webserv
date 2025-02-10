@@ -1,10 +1,10 @@
-#include "ParentExecuteProcessCGI.hpp"
+#include "ParentProcessCGI.hpp"
 
 #include <sys/wait.h>
 
 #include "../../../config/ProgramConfiguration.hpp"
 
-ParentExecuteProcessCGI::ParentExecuteProcessCGI(pid_t childPid)
+ParentProcessCGI::ParentProcessCGI(pid_t childPid)
     : _systemCalls(new SystemCalls),
       _logger(LogDefault::loggerGlobal),
       _childPid(childPid),
@@ -12,20 +12,20 @@ ParentExecuteProcessCGI::ParentExecuteProcessCGI(pid_t childPid)
           ProgramConfiguration::getInstance()
               .getTimeToWaitTheChildCGIProcessInSeconds()) {}
 
-ParentExecuteProcessCGI::ParentExecuteProcessCGI(
+ParentProcessCGI::ParentProcessCGI(
     pid_t childPid, int timeToWaitThChildProcessInSeconds)
     : _systemCalls(new SystemCalls),
 	  _logger(LogDefault::loggerGlobal),
       _childPid(childPid),
       _timeToWaitThChildProcessInSeconds(timeToWaitThChildProcessInSeconds) {}
 
-ParentExecuteProcessCGI::~ParentExecuteProcessCGI() {
+ParentProcessCGI::~ParentProcessCGI() {
   if (_systemCalls) {
     delete _systemCalls;
   }
 }
 
-ParentExecuteProcessCGI::ExitStatus ParentExecuteProcessCGI::execute() {
+ParentProcessCGI::ExitStatus ParentProcessCGI::execute() {
   std::time_t startTime = _time.getCurrentTime();
 
   pid_t waitReturn = 0;
@@ -36,17 +36,17 @@ ParentExecuteProcessCGI::ExitStatus ParentExecuteProcessCGI::execute() {
     if (_time.isTimeOut(startTime, _timeToWaitThChildProcessInSeconds) && !isChildKilled) {
       error::StatusOr<int> ret = _systemCalls->kill(_childPid, SIGKILL);
       if (!ret.ok()) {
-        _logger->log(Log::ERROR, "ParentExecuteProcessCGI", "execute", ret.status().message(), _childPid);
-        return ExecuteProcessCGI::PARENT_ERROR;
+        _logger->log(Log::ERROR, "ParentProcessCGI", "execute", ret.status().message(), _childPid);
+        return ProcessCGI::PARENT_ERROR;
       }
       isChildKilled = true;
-	  _logger->log(Log::ERROR, "ParentExecuteProcessCGI", "execute", "the CGI child process took too long to execute", _childPid);
+	  _logger->log(Log::ERROR, "ParentProcessCGI", "execute", "the CGI child process took too long to execute", _childPid);
     }
 
     error::StatusOr<pid_t> ret = _systemCalls->waitpid(_childPid, &status, WNOHANG);
     if (!ret.ok()) {
-      _logger->log(Log::ERROR, "ParentExecuteProcessCGI", "execute", ret.status().message(), _childPid);
-      return ExecuteProcessCGI::PARENT_ERROR;
+      _logger->log(Log::ERROR, "ParentProcessCGI", "execute", ret.status().message(), _childPid);
+      return ProcessCGI::PARENT_ERROR;
     }
 
 	// if the value is 0, the child is still running, let's wait a little bit more :)
@@ -57,22 +57,22 @@ ParentExecuteProcessCGI::ExitStatus ParentExecuteProcessCGI::execute() {
 
     if (WIFEXITED(status)) {
       return WEXITSTATUS(status) == 0
-                 ? ExecuteProcessCGI::CHILD_EXIT_OK
-                 : ExecuteProcessCGI::CHILD_EXIT_WITH_ERROR;
+                 ? ProcessCGI::CHILD_EXIT_OK
+                 : ProcessCGI::CHILD_EXIT_WITH_ERROR;
     }
     if (WIFSIGNALED(status)) {
-      return ExecuteProcessCGI::CHILD_FINISHED_BY_SIGNAL;
+      return ProcessCGI::CHILD_FINISHED_BY_SIGNAL;
     }
   }
 }
 
-void ParentExecuteProcessCGI::setSystemCalls(SystemCalls *systemCalls) {
+void ParentProcessCGI::setSystemCalls(SystemCalls *systemCalls) {
   if (_systemCalls) {
     delete _systemCalls;
   }
   _systemCalls = systemCalls;
 }
 
-void ParentExecuteProcessCGI::setLogger(Log *logger) {
+void ParentProcessCGI::setLogger(Log *logger) {
   _logger = logger;
 }

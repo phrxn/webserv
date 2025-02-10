@@ -24,7 +24,9 @@ CGIBinary CGIBinaryFactory::getCGIBinary(CGIBinary::SupportedCGI supportedCGI) {
 
 CGIBinary CGIBinaryFactory::getCGIBinary(const std::string &pathToScriptPath) {
   HTTPTypeOfPages typeOfPage;
-  return getCGIBinary(typeOfPage.getStringToTypeOfPage(pathToScriptPath));
+  CGIBinary cgiBinary = getCGIBinary(typeOfPage.getStringToTypeOfPage(pathToScriptPath));
+  cgiBinary.setPathToScriptToExecute(pathToScriptPath);
+  return cgiBinary;
 }
 
 CGIBinary CGIBinaryFactory::getCGIBinary(

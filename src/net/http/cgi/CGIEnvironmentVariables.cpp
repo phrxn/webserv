@@ -46,13 +46,13 @@ CGIEnvironmentVariables &CGIEnvironmentVariables::operator=(
 }
 
 char **CGIEnvironmentVariables::createEnvironmentVariables() {
-
-  if (_programConfiguration.getEnvironmentVariables()){
+  if (_programConfiguration.getEnvironmentVariables()) {
     _env.addVariables(_programConfiguration.getEnvironmentVariables());
   }
   _cgiCreateEnvironmentVariables.setProgramConfiguration(_programConfiguration);
-  if (_httpRequest){
-    _env.addVariables(_cgiCreateEnvironmentVariables.createCGIVariables(_httpRequest));
+  if (_httpRequest) {
+    _env.addVariables(
+        _cgiCreateEnvironmentVariables.createCGIVariables(_httpRequest));
   }
 
   return _env.createEnvironmentVariables();

@@ -1,16 +1,16 @@
-#ifndef NET_HTTP_CGI_PARENT_EXECUTE_PROCESS_CGI_HPP
-#define NET_HTTP_CGI_PARENT_EXECUTE_PROCESS_CGI_HPP
+#ifndef NET_HTTP_CGI_PARENT_PROCESS_CGI_HPP
+#define NET_HTTP_CGI_PARENT_PROCESS_CGI_HPP
 
 #include "../../../system/SystemCalls.hpp"
 #include "../../../time/Time.hpp"
 #include "../../../error/LogDefault.hpp"
-#include "ExecuteProcessCGI.hpp"
+#include "ProcessCGI.hpp"
 
-class ParentExecuteProcessCGI : public ExecuteProcessCGI {
+class ParentProcessCGI : public ProcessCGI {
  public:
-  ParentExecuteProcessCGI(pid_t childPid);
-  ParentExecuteProcessCGI(pid_t childPid, int timeToWaitThChildProcessInSeconds);
-  virtual ~ParentExecuteProcessCGI();
+  ParentProcessCGI(pid_t childPid);
+  ParentProcessCGI(pid_t childPid, int timeToWaitThChildProcessInSeconds);
+  virtual ~ParentProcessCGI();
   ExitStatus execute();
   void setSystemCalls(SystemCalls *systemCalls);
   void setLogger(Log *logger);

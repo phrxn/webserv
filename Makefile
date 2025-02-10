@@ -39,11 +39,12 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/cgi/CGIBinaryFactory.cpp\
 		src/net/http/cgi/CGICreateEnvironmentVariables.cpp\
 		src/net/http/cgi/CGIEnvironmentVariables.cpp\
-		src/net/http/cgi/ChildExecuteProcessCGI.cpp\
+		src/net/http/cgi/ChildProcessCGI.cpp\
 		src/net/http/cgi/EnvironmentVariables.cpp\
-		src/net/http/cgi/ExecuteProcessCGI.cpp\
+		src/net/http/cgi/ExecuteCGIProgram.cpp\
 		src/net/http/cgi/FilesToCGI.cpp\
-		src/net/http/cgi/ParentExecuteProcessCGI.cpp\
+		src/net/http/cgi/ParentProcessCGI.cpp\
+		src/net/http/cgi/ProcessCGI.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
@@ -104,10 +105,10 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/cgi/ArrayCharTest.cpp\
 				src/net/http/cgi/CGICreateEnvironmentVariablesTest.cpp\
 				src/net/http/cgi/CGIEnvironmentVariablesTest.cpp\
-				src/net/http/cgi/ChildExecuteProcessCGITest.cpp\
+				src/net/http/cgi/ChildProcessCGITest.cpp\
 				src/net/http/cgi/EnvironmentVariablesTest.cpp\
-				src/net/http/cgi/ParentExecuteProcessCGITest.cpp\
 				src/net/http/cgi/FilesToCGITest.cpp\
+				src/net/http/cgi/ParentProcessCGITest.cpp\
 				src/net/http/html/CreateDirectoryHTMLPageTest.cpp\
 				src/net/http/html/DirectoryHTMLDocumentTest.cpp\
 				src/net/http/html/ItemDirectoryHTMLDocumentTest.cpp\

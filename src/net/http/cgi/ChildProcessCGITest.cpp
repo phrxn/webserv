@@ -11,7 +11,7 @@
 
 #include "ArrayChar.hpp"
 #include "CGIEnvironmentVariables.hpp"
-#include "ChildExecuteProcessCGI.hpp"
+#include "ChildProcessCGI.hpp"
 #include "FilesToCGI.hpp"
 
 #include <fstream>
@@ -102,7 +102,7 @@ class HTTPRequestMocktToFileToCGI1 : public HTTPRequest {
 };
 
 
-TEST(ChildExecuteProcessCGITest, execute_fileDescriptordup2){
+TEST(ChildProcessCGITest, execute_fileDescriptordup2){
 
 	HTTPRequestMocktToFileToCGI1 *httpReq = new HTTPRequestMocktToFileToCGI1;
 	EXPECT_CALL(*httpReq, getBody())
@@ -128,7 +128,7 @@ TEST(ChildExecuteProcessCGITest, execute_fileDescriptordup2){
 		FAIL();
 	}
 	if (pid == 0){
-		ChildExecuteProcessCGI child(_arrayChar, _cGIEnvironmentVariables, _filesToCGI);
+		ChildProcessCGI child(_arrayChar, _cGIEnvironmentVariables, _filesToCGI);
 		SystemCallsMockToChildProcess *sc = new SystemCallsMockToChildProcess;
 		child.setSystemCalls(sc);
 		child.execute();
