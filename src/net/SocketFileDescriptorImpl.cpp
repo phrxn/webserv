@@ -63,8 +63,6 @@ bool SocketFileDescriptorImpl::doRead() {
   return true;
 }
 
-#include <iostream>
-
 // return:
 //   The number of bytes from the buffer that remain to be written to the
 //   socket.
@@ -88,7 +86,7 @@ ssize_t SocketFileDescriptorImpl::doWrite() {
   std::string strWrite(_vectorOutputStream.begin(),
                        _vectorOutputStream.begin() + writed.value());
   _logger->log(Log::DEBUG, "SocketFileDescriptorImpl", "doWrite",
-               "chars writed to client:", strWrite);
+               "chars writed to client:\n", strWrite);
 
   _vectorOutputStream.erase(_vectorOutputStream.begin(),
                             _vectorOutputStream.begin() + writed.value());
