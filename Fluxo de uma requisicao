@@ -302,9 +302,27 @@ ExecuteCGIProgramRefinado**********
 
   ExecuteCGIProgram() : OK, NOT_FOUND, SYSTEM_CALL_ERROR, CGI_EXECUTABLE_ERRO_EXIT
 
-   1) Vai ter que receber o &HTTPRequest, FileToCGI e o caminho Absoluto!
+    1) Vai ter que receber o &HTTPRequest, FileToCGI e o caminho Absoluto!
 
-   2) Checar as coisas:
+    CGIBinary cgiBinary = CGIBinaryFactory.getCGIBinary(caminho absoluto);
+
+    if (cgiBinaryValid(const &cgiBinary) != OK)
+		return NOT_FOUND;
+
+    ArrayChar argv;
+    argv.addString(cgiBinary.getPathToBinary());
+    argv.addString(cgiBinary.getPathToScript());
+
+    CGIEnvironmentVariables  cgiCGIEnvironment(caminho Absoluto, "/var/www/html/", HTTPRequest);
+
+    systemCalls->fork();
+    if 
+
+
+
+
+
+    2) Checar as coisas:
   
     std::string pathToCGIBinary =  getFullPathToCGIBinary(caminhoAbsolutoParaOScript);
 
@@ -330,6 +348,25 @@ ExecuteCGIProgramRefinado**********
 	6) se > 0
 	    ProcessoPai  (tempo em segundo)  <-- aqui podese usar o ProgramConfiguration.getInstance();
 		return ProcessoPai.exec();
+
+
+
+cgiBinaryValid(const &CGIBinary){
+
+	File binaryCGI = File(CGIBinary.getPathToBinary());
+	if (!binaryCGI.exist())
+	   return false;
+    File binaryCGI = File(pathToCGIBinary.getPathToScript());
+    if (binaryCGI.exist())
+	   return false;
+    return true;
+}
+
+
+
+
+
+
 
 ExecuteCGIProgramRefinado**********
    

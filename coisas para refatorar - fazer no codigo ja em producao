@@ -12,5 +12,7 @@
 ** arrumar no HTTPServetManager, pois soh faz sentido perguntar sobre se pode listar diretorios se
    o caminho aponta para STATIC pagw
    
+** rever na URL e no HTTPServetManager como os caminhos absolutos estao sendo criados!!
+   Além do caminho Absoluto como a criacao do CGI (CreateCGIVariables) está criando as variaveis???? para o CGI obviamente
 
 ** Provavelmente colocar O_EXCLO nos fds abertos
