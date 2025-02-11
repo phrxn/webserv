@@ -6,7 +6,7 @@ const std::string HTTPResponse::KEY_AND_VALUE_SEPARATOR = ": ";
 
 HTTPResponse::HTTPResponse(SocketFileDescriptor *socketFD)
     : _socketFD(socketFD),
-	  _status(HTTPStatus::INVALID),
+      _status(HTTPStatus::INVALID),
       _closeConnectionAfterThatResponse(true),
       _isItACGIResponse(false) {}
 
@@ -37,9 +37,8 @@ void HTTPResponse::setHTTPVersion(const std::string &httpVersion) {
 }
 
 void HTTPResponse::setStatus(HTTPStatus::Status status) {
-
-  if(_status != HTTPStatus::INVALID && _isItACGIResponse){
-	return;
+  if (_status != HTTPStatus::INVALID && _isItACGIResponse) {
+    return;
   }
 
   std::stringstream ss;
@@ -56,24 +55,34 @@ HTTPStatus::Status HTTPResponse::getStatus() const { return _status; }
 
 std::string HTTPResponse::getStatusStr() const { return _statusStr; }
 
-void HTTPResponse::setHeaders(const std::map<std::string, std::vector<std::string> > &headers){
-	_headers = headers;
+void HTTPResponse::setHeaders(
+    const std::map<std::string, std::vector<std::string> > &headers) {
+  std::map<std::string, std::vector<std::string> >::const_iterator it;
+  for (it = headers.begin(); it != headers.end(); ++it) {
+    std::vector<std::string>::const_iterator valueIt = it->second.begin();
+    if (valueIt->empty()) {
+      continue;
+    }
+    for (; valueIt != it->second.end(); ++valueIt) {
+      _addHeader(it->first, *valueIt);
+    }
+  }
 }
 
 bool HTTPResponse::setServer(const std::string &server) {
-	return _addHeader("Server", server);
+  return _addHeader("Server", server);
 }
 
 bool HTTPResponse::setDate(const std::string &date) {
-	return _addHeader("Date", date);
+  return _addHeader("Date", date);
 }
 
 bool HTTPResponse::setContentType(const std::string &contentType) {
-	return _addHeader("Content-Type", contentType);
+  return _addHeader("Content-Type", contentType);
 }
 
 bool HTTPResponse::setContentLength(const std::string &contentLength) {
-	return _addHeader("Content-Length", contentLength);
+  return _addHeader("Content-Length", contentLength);
 }
 
 bool HTTPResponse::setContentLength(std::size_t contentLength) {
@@ -84,15 +93,33 @@ bool HTTPResponse::setContentLength(std::size_t contentLength) {
 }
 
 bool HTTPResponse::setLastModified(const std::string &lastModified) {
-	return _addHeader("Last-Modified", lastModified);
+  return _addHeader("Last-Modified", lastModified);
 }
 
+#include <iostream>
 bool HTTPResponse::setConnection(const std::string &connection) {
-  if (!_addHeader("Connection", connection)){
-	return false;
+
+  std::cout << "Connection: " << connection << std::endl;
+
+  std::string theConnection = connection;
+
+  for (size_t i = 0; i < theConnection.size(); ++i) {
+    if (i == 0) {
+      continue;
+    }
+    theConnection[i] = std::tolower(theConnection[i]);
   }
+
+  if (connection.empty()){
+	theConnection = "close";
+  }
+
+  if (!_addHeader("Connection", theConnection)) {
+    return false;
+  }
+
   _closeConnectionAfterThatResponse = true;
-  if (connection == "keep-alive") {
+  if (theConnection == "keep-alive") {
     _closeConnectionAfterThatResponse = false;
   }
   return true;
@@ -115,13 +142,13 @@ std::string HTTPResponse::createResponseString() const {
 
   std::map<std::string, std::vector<std::string> >::const_iterator it;
   for (it = _headers.begin(); it != _headers.end(); ++it) {
-	  std::vector<std::string>::const_iterator valueIt = it->second.begin();
-	  if (valueIt->empty()) {
-		continue;
-	  }
-	  for (; valueIt != it->second.end(); ++valueIt) {
-		 ss << it->first << ": " << *valueIt << "\r\n";
-	  }
+    std::vector<std::string>::const_iterator valueIt = it->second.begin();
+    if (valueIt->empty()) {
+      continue;
+    }
+    for (; valueIt != it->second.end(); ++valueIt) {
+      ss << it->first << ": " << *valueIt << "\r\n";
+    }
   }
   ss << "\r\n";
 
@@ -134,16 +161,26 @@ void HTTPResponse::setItACGIResponse(bool isItACGIResponse) {
   _isItACGIResponse = isItACGIResponse;
 }
 
-bool HTTPResponse::_addHeader(const std::string &key, const std::string &value) {
-  std::map<std::string, std::vector<std::string> >::iterator theKey = _headers.find(key);
+bool HTTPResponse::_addHeader(const std::string &key,
+                              const std::string &value) {
+  std::string keyLowerCase = key;
+
+  for (size_t i = 0; i < keyLowerCase.size(); ++i) {
+    if (i == 0) {
+      continue;
+    }
+    keyLowerCase[i] = std::tolower(keyLowerCase[i]);
+  }
+
+  std::map<std::string, std::vector<std::string> >::iterator theKey = _headers.find(keyLowerCase);
   if (theKey != _headers.end() && _isItACGIResponse) {
     return false;
   }
-  _headers[key].push_back(value);
+  _headers[keyLowerCase].push_back(value);
   return true;
 }
 
-std::ostream &operator<<(std::ostream &os, const HTTPResponse &response){
-	os << response.createResponseString();
-	return os;
+std::ostream &operator<<(std::ostream &os, const HTTPResponse &response) {
+  os << response.createResponseString();
+  return os;
 }
