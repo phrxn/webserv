@@ -38,6 +38,7 @@ public:
     bool isChunkedEnd(const std::string& buffer);
     bool isChunked();
     bool isTheHTTPHeaderComplete(std::string _buffer);
+    bool isParsed();
 
 private:
 

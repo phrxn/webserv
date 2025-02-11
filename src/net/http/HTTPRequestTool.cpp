@@ -70,7 +70,11 @@ void HTTPRequestTool::parserHeader(const std::string& buffer) {
 }
 
 std::map<std::string, std::string> HTTPRequestTool::getHeader(const std::string method) {
-    return _header[method];
+    return _header(method);
+}
+
+int HTTPRequestTool::getStatus() {
+    return _status;
 }
 
 std::string HTTPRequestTool::getBody() {
@@ -124,4 +128,10 @@ bool HTTPRequestTool::isTheHTTPHeaderComplete(std::string _buffer){
 	if (_buffer.find("\r\n\r\n") != std::string::npos)
 		return true;
 	return false;
+}
+
+bool HTTPRequestTool::isParsed(){
+    if(_header.empty())
+        return false;
+    return true;
 }

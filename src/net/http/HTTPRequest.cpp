@@ -29,8 +29,10 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 
 	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _HTTPTool.isBodyComplete(_buffer) || _HTTPTool.isChunked()) {
 		//FAZER  IF PARA O HEADER 
-		_HTTPTool.parserHeader(_buffer);
-		_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4);
+		if(_HTTPTool.isTheHTTPHeaderComplete(_buffer) && !_HTTPTool.isParsed()){
+			_HTTPTool.parserHeader(_buffer);
+			_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4);
+		}
 		if(_HTTPTool.isChunked()){
 			_buffer = _HTTPTool.parseChunkedBody(_buffer);
 			if(_HTTPTool.isChunkedEnd(_buffer)){
@@ -46,23 +48,26 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 	return REQUEST_CREATING;
 }
 
-HTTPStatus::Status HTTPRequest::getStatus(){
-	return _status;
-}
 
 
-
-
-std::string HTTPRequest::getHost(){
-	return "";
+HTTPStatus::Status HTTPRequest::getStatus() {
+	return _HTTPTool.getStatus();
 }
 
 HTTPMethods::Method HTTPRequest::getMethod(const std::string method){
-	return _HTTPTool.getHeaders(method);
+	return _HTTPTool.getHeader(method);
 }
 
 std::string HTTPRequest::getURL(){
-    return "";
+	return _HTTPTool.getHeader("URL");
+}
+
+std::string HTTPRequest::getHost(){
+	return _HTTPTool.getHeader("Host");
+}
+
+std::string HTTPRequest::isToKeepTheConnection(){
+	return _HTTPTool.getHeader("Connection");
 }
 
 int HTTPRequest::getPort(){
