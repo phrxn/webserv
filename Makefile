@@ -34,6 +34,9 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/io/Poll.cpp\
 		src/error/LogWriter.cpp\
 		src/error/LogWriteToConsole.cpp\
+		src/file_configuration/Config.cpp\
+		src/file_configuration/ConfigExtract.cpp\
+		src/file_configuration/ConfigUtils.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\
@@ -85,6 +88,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 
 SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
+				src/file_configuration/ConfigTest.cpp\
 				src/io/DirectoryListingTest.cpp\
 				src/io/EpollTest.cpp\
 				src/io/FileTest.cpp\

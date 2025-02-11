@@ -2,9 +2,9 @@
 #define CHECKCONFIGURATION_HPP
 
 #include <string>
-#include "URL.hpp"
-#include "HTTPMethods.hpp"
-#include "HTTPStatus.hpp"
+#include "../net/URL.hpp"
+#include "../net/http/HTTPMethods.hpp"
+#include "../net/http/HTTPStatus.hpp"
 
 class CheckConfiguration {
 public:
