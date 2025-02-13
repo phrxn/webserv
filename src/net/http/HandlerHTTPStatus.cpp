@@ -2,7 +2,7 @@
 
 #include "../../config/ProgramConfiguration.hpp"
 
-HandlerHTTPStatus::HandlerHTTPStatus(VirtualHostDefault &virtualHost)
+HandlerHTTPStatus::HandlerHTTPStatus(const VirtualHostDefault *virtualHost)
     : _virtualHost(virtualHost), _httpDocument(NULL) {}
 
 HandlerHTTPStatus::~HandlerHTTPStatus() {
@@ -73,8 +73,11 @@ void HandlerHTTPStatus::loadPageErrorPage(HTTPStatus::Status status) {
 
   _httpDocument = _createDefaultErrorPagesFactory.getDefaultErrorPages(status);
 
-  std::string virtualHostErroPagePath =
-      _virtualHost.getThePathToCustomPageForHTTPStatus(status);
+  std::string virtualHostErroPagePath;
+
+  if (_virtualHost){
+	virtualHostErroPagePath = _virtualHost->getThePathToCustomPageForHTTPStatus(status);
+  }
 
   if (!virtualHostErroPagePath.empty()) {
     HTMLDocument *_httpDocumentFromVirtualHost =

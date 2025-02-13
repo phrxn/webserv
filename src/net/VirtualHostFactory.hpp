@@ -12,14 +12,14 @@
 class VirtualHostFactory {
  public:
   static void fillTheFactory(const ClusterOfVirtualHost &virtualHostCluster);
+  static void destroyFactory();
 
   VirtualHostFactory();
   ~VirtualHostFactory();
   VirtualHostFactory(const VirtualHostFactory &src);
   VirtualHostFactory &operator=(const VirtualHostFactory &src);
 
-  VirtualHostDefault getVirtualHost(int port, const std::string &hostName) const;
-  VirtualHostDefault getDefaultVirtualHost() const;
+  const VirtualHostDefault *getVirtualHost(int port, const std::string &hostName) const;
   void setLogger(Log *logger);
 
  private:

@@ -11,6 +11,10 @@ void VirtualHostFactory::fillTheFactory(
   VirtualHostFactory::virtualHostCluster = virtualHostCluster;
 }
 
+void VirtualHostFactory::destroyFactory(){
+	virtualHostCluster.destroyAllVirtualHosts();
+}
+
 VirtualHostFactory::VirtualHostFactory() : _logger(LogDefault::loggerGlobal) {}
 
 VirtualHostFactory::~VirtualHostFactory() {}
@@ -26,10 +30,9 @@ VirtualHostFactory &VirtualHostFactory::operator=(
   return *this;
 }
 
-VirtualHostDefault VirtualHostFactory::getVirtualHost(
+const VirtualHostDefault *VirtualHostFactory::getVirtualHost(
     int port, const std::string &hostName) const {
-  error::StatusOr<VirtualHostDefault> vh =
-      virtualHostCluster.getVirtualHost(port, hostName);
+  error::StatusOr<const VirtualHostDefault*> vh = virtualHostCluster.getVirtualHost(port, hostName);
   if (!vh.ok()) {
     if (_logger) {
       std::stringstream errorMessage;
@@ -39,13 +42,9 @@ VirtualHostDefault VirtualHostFactory::getVirtualHost(
                    "using default VirtualHostDefault, the virtualhost wasn't found",
                    errorMessage.str());
     }
-    return getDefaultVirtualHost();
+    return NULL;
   }
   return vh.value();
-}
-
-VirtualHostDefault VirtualHostFactory::getDefaultVirtualHost() const{
-  return VirtualHostDefault(-1, "");
 }
 
 void VirtualHostFactory::setLogger(Log *logger){

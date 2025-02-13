@@ -22,7 +22,7 @@ class HTTPServletManager {
   HTTPServletManager &operator=(const HTTPServletManager &src);
 
   HTTPServlet *_hTTPServlet;
-  VirtualHostDefault _virtualHost;
+  const VirtualHostDefault *_virtualHost;
   SocketFileDescriptor *_socketFD;
   Log *_logger;
 

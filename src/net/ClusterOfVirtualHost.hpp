@@ -14,15 +14,16 @@ class ClusterOfVirtualHost {
   ClusterOfVirtualHost(const ClusterOfVirtualHost &src);
   ClusterOfVirtualHost &operator=(const ClusterOfVirtualHost &src);
 
-  bool addVirtualHostToCluster(const VirtualHostDefault &VirtualHostDefault);
-  virtual error::StatusOr<VirtualHostDefault> getVirtualHost(
-      int port, const std::string &serverName) const;
+  bool addVirtualHostToCluster(const VirtualHostDefault *VirtualHostFake);
+  virtual error::StatusOr<const VirtualHostDefault*> getVirtualHost(unsigned int port, const std::string &serverName) const;
   std::list<int> getAllPorts() const;
 
-  const std::map<int, std::list<VirtualHostDefault> > &getMap() const;
+  const std::map<int, std::list<const VirtualHostDefault*> > &getMap() const;
+
+  void destroyAllVirtualHosts();
 
  private:
-  std::map<int, std::list<VirtualHostDefault> > _mapTheCluster;
+  std::map<int, std::list<const VirtualHostDefault*> > _mapTheCluster;
 
 };
 

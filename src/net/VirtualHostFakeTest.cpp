@@ -1,23 +1,23 @@
 #include "../../libs/googletest/googlemock/include/gmock/gmock.h"
 #include "../../libs/googletest/googletest/include/gtest/gtest.h"
 
-#include "VirtualHostDefault.hpp"
+#include "VirtualHostFake.hpp"
 
-TEST(VirtualHostDefault, equalsOperator){
+TEST(VirtualHostFake, equalsOperator){
 
-	VirtualHostDefault a;
+	VirtualHostFake a;
 	a.setPort(100);
 	a.setServerName("foo");
 
-	VirtualHostDefault b;
+	VirtualHostFake b;
 	b.setPort(100);
 	b.setServerName("foo");
 
-	VirtualHostDefault c;
+	VirtualHostFake c;
 	c.setPort(42);
 	c.setServerName("foo");
 
-	VirtualHostDefault d;
+	VirtualHostFake d;
 	d.setPort(100);
 	d.setServerName("bar");
 

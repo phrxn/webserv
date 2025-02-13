@@ -1,19 +1,18 @@
 #include "ServerConfig.hpp"
 
 // Construtor da estrutura ServerConfig
-ServerConfig::ServerConfig(void) : _port(8080), _limitBodySize(1000000) {}
+ServerConfig::ServerConfig(void) : VirtualHostDefault(8080), _limitBodySize(1000000) {}
 
 ServerConfig::~ServerConfig(){}
 
-ServerConfig::ServerConfig(const ServerConfig &src){
+ServerConfig::ServerConfig(const ServerConfig &src) : VirtualHostDefault(src){
 	*this = src;
 }
 
 ServerConfig &ServerConfig::operator=(const ServerConfig &src){
 	if (this == &src){return *this;}
-    _port = src._port;
+	VirtualHostDefault::operator=(src);
     _host = src._host;
-    _serverName = src._serverName;
 	_limitBodySize = src._limitBodySize;
     _errorPages = src._errorPages;
     _routes = src._routes;
@@ -21,16 +20,8 @@ ServerConfig &ServerConfig::operator=(const ServerConfig &src){
 }
 
 // Métodos de configuração
-void ServerConfig::setPort(unsigned int port){
-	_port = port;
-}
-
 void ServerConfig::setHost(const std::string &host){
 	_host = host;
-}
-
-void ServerConfig::setServerName(const std::string &serverName){
-	_serverName = serverName;
 }
 
 void ServerConfig::setLimitBodySize(size_t limitBodySize){
@@ -46,16 +37,8 @@ void ServerConfig::addRoute(const RouteConfig &route){
 }
 
 // Métodos de acesso
-unsigned int ServerConfig::getPort(void) const{
-	return _port;
-}
-
 std::string ServerConfig::getHost(void) const{
 	return _host;
-}
-
-std::string ServerConfig::getServerName(void) const{
-	return _serverName;
 }
 
 size_t ServerConfig::getLimitBodySize(void) const{

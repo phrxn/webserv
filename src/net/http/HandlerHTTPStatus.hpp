@@ -13,7 +13,7 @@
 
 class HandlerHTTPStatus {
  public:
-  HandlerHTTPStatus(VirtualHostDefault &virtualHost);
+  HandlerHTTPStatus(const VirtualHostDefault *virtualHost);
   ~HandlerHTTPStatus();
   HandlerHTTPStatus(const HandlerHTTPStatus &src);
   HandlerHTTPStatus &operator=(const HandlerHTTPStatus &src);
@@ -34,7 +34,7 @@ class HandlerHTTPStatus {
 
   void loadPageErrorPage(HTTPStatus::Status status);
 
-  VirtualHostDefault &_virtualHost;
+  const VirtualHostDefault *_virtualHost;
   CreateDefaultErrorPagesFactory _createDefaultErrorPagesFactory;
   HTMLDocument *_httpDocument;
   FillHTTPResponse _fillHTTPResponse;

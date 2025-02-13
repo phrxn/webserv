@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "../net/VirtualHost.hpp"
+#include "../net/VirtualHostDefault.hpp"
 #include "RouteConfig.hpp"
 
-class ServerConfig : public VirtualHost{
+class ServerConfig : public VirtualHostDefault{
 
 public:
     ServerConfig(void);
@@ -30,10 +30,6 @@ public:
 	std::vector<RouteConfig> getRoutes(void) const;
 
 	//inteface methods
-	unsigned int getPort(void) const;
-	void setPort(unsigned int port);
-	std::string getServerName(void) const;
-	void setServerName(const std::string &serverName);
 
 	bool isPathValid(const URL& url) const;
     std::string isPathARedirection(const URL& url) const;
@@ -44,9 +40,7 @@ public:
     std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
 
 private:
-    unsigned int						_port; // Porta do servidor
     std::string							_host; // Endereço IP do servidor (localhost)
-    std::string							_serverName; // Nome do servidor
     size_t								_limitBodySize; // Tamanho máximo do corpo da requisição
     std::map<std::string, std::string> 	_errorPages; // Mapa que armazena as páginas de erro
     std::vector<RouteConfig>			_routes; // Vetor que armazena as rotas configuradas

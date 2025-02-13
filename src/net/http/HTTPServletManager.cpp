@@ -40,27 +40,26 @@ void HTTPServletManager::doService(HTTPRequest &request,
   URL url;
   url.parserStringToURL(request.getURLStr());
 
-  if (!_virtualHost.isPathValid(url)) {
+  if (!_virtualHost->isPathValid(url)) {
     return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
   }
 
-  std::string pathRedirection = _virtualHost.isPathARedirection(url);
+  std::string pathRedirection = _virtualHost->isPathARedirection(url);
   if (pathRedirection != "") {
     return _handlerHTTPStatus.doStatusFamily300(
         response, HTTPStatus::MOVED_PERMANENTLY, pathRedirection);
   }
 
-  if (!_virtualHost.isTheMethodAllowedForThisPath(url, request.getMethod())) {
+  if (!_virtualHost->isTheMethodAllowedForThisPath(url, request.getMethod())) {
     return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_ALLOWED);
   }
 
-  bool pathPointsToCGI = _virtualHost.isUrlAPathToCGI(url);
-  std::string absolutePathToResource = _virtualHost.getThePhysicalPath(url);
+  bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
+  std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
   _logger->log(Log::DEBUG, "HTTPServletManager", "doService",
                    "absolute path to resource", absolutePathToResource);
 
-  bool canListDirectory =
-      _virtualHost.isDirectoryListingAllowedForThisPath(url);
+  bool canListDirectory = _virtualHost->isDirectoryListingAllowedForThisPath(url);
 
   if (pathPointsToCGI) {
     _hTTPServlet = new HTTPServletCGI(absolutePathToResource, "");
@@ -110,9 +109,7 @@ void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &respon
 
   VirtualHostFactory vhf;
 
-  VirtualHostDefault _virtualHost = vhf.getDefaultVirtualHost();
-
-  HandlerHTTPStatus _handlerHTTPStatus(_virtualHost);
+  HandlerHTTPStatus _handlerHTTPStatus(NULL);
 
   _handlerHTTPStatus.doStatusError(response, status);
 }

@@ -6,6 +6,7 @@
 #include "error/LogDefault.hpp"
 #include "io/Epoll.hpp"
 #include "net/ServerSocketFileDescriptor.hpp"
+#include "net/VirtualHostFactory.hpp"
 #include "net/http/GetMimeType.hpp"
 #include "start/CreateDefaultErrorPagesFactory.hpp"
 #include "start/CreateMimeTypeMap.hpp"
@@ -68,6 +69,9 @@ Start::~Start() {
 
   // free the map in the CreateDefaultErrorPagesFactory
   CreateDefaultErrorPagesFactory::destroyFactory();
+
+  // free all VirtualHostDefault in the VirtualHostFactory
+  VirtualHostFactory::destroyFactory();
 }
 
 void Start::startTheProgram(int argc, char **argv) {

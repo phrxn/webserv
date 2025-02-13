@@ -94,6 +94,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/VirtualHost.cpp\
 		src/net/VirtualHostDefault.cpp\
 		src/net/VirtualHostFactory.cpp\
+		src/net/VirtualHostFake.cpp\
 		src/start/CreateDefaultErrorPages.cpp\
 		src/start/CreateDefaultErrorPagesFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
@@ -135,7 +136,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/SocketFileDescriptorImplTest.cpp\
 				src/net/URLTest.cpp\
 				src/net/VirtualHostFactoryTest.cpp\
-				src/net/VirtualHostDefaultTest.cpp\
+				src/net/VirtualHostFakeTest.cpp\
 				src/start/CreateDefaultErrorPagesFactoryTest.cpp\
 				src/start/CreateDefaultErrorPagesTest.cpp\
 				src/start/CreateMimeTypeMapTest.cpp\
