@@ -29,6 +29,12 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/error/LogWriter.cpp\
 		src/error/LogWriteToConsole.cpp\
 		src/error/Status.cpp\
+		src/file_configuration/CheckConfiguration.cpp\
+		src/file_configuration/Config.cpp\
+		src/file_configuration/ConfigExtract.cpp\
+		src/file_configuration/ConfigUtils.cpp\
+		src/file_configuration/RouteConfig.cpp\
+		src/file_configuration/ServerConfig.cpp\
 		src/io/DirectoryListing.cpp\
 		src/io/Epoll.cpp\
 		src/io/File.cpp\
@@ -101,6 +107,7 @@ SRC =	src/config/ProgramConfiguration.cpp\
 
 SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
                 src/error/LogWriterTest.cpp\
+				src/file_configuration/ConfigTest.cpp\
 				src/io/DirectoryListingTest.cpp\
 				src/io/EpollTest.cpp\
 				src/io/FileTest.cpp\
