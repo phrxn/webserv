@@ -34,9 +34,12 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/io/Poll.cpp\
 		src/error/LogWriter.cpp\
 		src/error/LogWriteToConsole.cpp\
+		src/file_configuration/CheckConfiguration.cpp\
 		src/file_configuration/Config.cpp\
 		src/file_configuration/ConfigExtract.cpp\
 		src/file_configuration/ConfigUtils.cpp\
+		src/file_configuration/RouteConfig.cpp\
+		src/file_configuration/ServerConfig.cpp\
 		src/net/http/html/CreateDirectoryHTMLPage.cpp\
 		src/net/http/html/DirectoryHTMLDocument.cpp\
 		src/net/http/html/ErrorPageFileHTMLDocument.cpp\

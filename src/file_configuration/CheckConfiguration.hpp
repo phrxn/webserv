@@ -8,13 +8,15 @@
 
 class CheckConfiguration {
 public:
-    virtual bool isPathValid(const URL& url) const = 0;
-    virtual std::string isPathARedirection(const URL& url) const = 0;
-    virtual bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const = 0;
-    virtual bool isUrlAPathToCGI(const URL& url) const = 0;
-    virtual std::string getThePhysicalPath(const URL& url) const = 0;
-    virtual bool isDirectoryListingAllowedForThisPath(const URL& url) const = 0;
-    virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const = 0;
+  virtual ~CheckConfiguration();
+
+  virtual bool isPathValid(const URL& url) const = 0;
+  virtual std::string isPathARedirection(const URL& url) const = 0;
+  virtual bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const = 0;
+  virtual bool isUrlAPathToCGI(const URL& url) const = 0;
+  virtual std::string getThePhysicalPath(const URL& url) const = 0;
+  virtual bool isDirectoryListingAllowedForThisPath(const URL& url) const = 0;
+  virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const = 0;
 };
 
 #endif // CHECKCONFIGURATION_HPP

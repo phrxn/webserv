@@ -30,7 +30,7 @@ namespace ServerExtraction
             {
                 throw std::runtime_error(ERROR_INVALID_PORT);
             }
-            server.port = static_cast<unsigned short>(portValue);
+			server.setPort(static_cast<unsigned short>(portValue));
         }
         else
         {
@@ -41,34 +41,30 @@ namespace ServerExtraction
     void extractHost(std::vector<std::string> &tokens, ServerConfig &server)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        server.host = tokens[1];
+		server.setHost(tokens[1]);
     }
 
     // Função para extrair e definir o nome do servidor
     void extractServerName(std::vector<std::string> &tokens, ServerConfig &server)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        server.serverName = tokens[1];
+		server.setServerName(tokens[1]);
     }
 
     // Função para extrair e definir o limite de tamanho do corpo da requisição
-    void extractLimitBodySize(std::vector<std::string> &tokens, ServerConfig &server)
-    {
+    void extractLimitBodySize(std::vector<std::string> &tokens, ServerConfig &server){
+
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
 
         std::stringstream stringSize(tokens[1]);
         size_t limitBodySizeMB;
 
-        if (stringSize >> limitBodySizeMB)
-        {
-            server.limitBodySize = limitBodySizeMB * 1024 * 1024;
-            if (tokens[1][0] == '-')
-            {
+        if (stringSize >> limitBodySizeMB){
+			server.setLimitBodySize(limitBodySizeMB * 1024 * 1024);
+            if (tokens[1][0] == '-'){
                 throw std::runtime_error(ERROR_INVALID_LIMIT_BODY_SIZE);
             }
-        }
-        else
-        {
+        }else{
             throw std::runtime_error(ERROR_INVALID_LIMIT_BODY_SIZE);
         }
     }
@@ -90,7 +86,7 @@ namespace ServerExtraction
         }
         else
         {
-            server.errorPages[errorCode] = fileName;
+			server.addErrorPage(errorCode, fileName);
         }
     }
 }
@@ -112,25 +108,21 @@ namespace RouteExtraction
     void extractMethods(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        location.methods.clear();
+		location.clearMethods();
 
         for (std::vector<std::string>::iterator it = tokens.begin() + 1; it != tokens.end(); ++it)
         {
             std::transform(it->begin(), it->end(), it->begin(), ::toupper);
-            if (*it == "GET" && !ConfigUtils::isRepeatedMethod(location.methods, HTTPMethods::GET))
-            {
-                location.methods.push_back(HTTPMethods::GET);
+            if (*it == "GET" && !ConfigUtils::isRepeatedMethod(location.getMethods(), HTTPMethods::GET)){
+				location.addMethod(HTTPMethods::GET);
             }
-            else if (*it == "POST" && !ConfigUtils::isRepeatedMethod(location.methods, HTTPMethods::POST))
-            {
-                location.methods.push_back(HTTPMethods::POST);
+            else if (*it == "POST" && !ConfigUtils::isRepeatedMethod(location.getMethods(), HTTPMethods::POST)){
+				location.addMethod(HTTPMethods::POST);
             }
-            else if (*it == "DELETE" && !ConfigUtils::isRepeatedMethod(location.methods, HTTPMethods::DELETE))
-            {
-                location.methods.push_back(HTTPMethods::DELETE);
+            else if (*it == "DELETE" && !ConfigUtils::isRepeatedMethod(location.getMethods(), HTTPMethods::DELETE)){
+				location.addMethod(HTTPMethods::DELETE);
             }
-            else
-            {
+            else{
                 throw std::runtime_error(ERROR_INVALID_METHOD);
             }
         }
@@ -140,7 +132,7 @@ namespace RouteExtraction
     void extractLocationPath(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        location.locationPath = tokens[1];
+		location.setLocationPath( tokens[1]);
     }
 
     // Função para extrair e definir o diretório raiz da localização
@@ -153,11 +145,11 @@ namespace RouteExtraction
         if (!ConfigUtils::directoryExists(rootPath))
         {
             throw std::runtime_error(ERROR_INVALID_ROOT);
-        }   
+        }
         else
         {
-            location.rootDir = rootPath;
-            location.rootSet = true;
+			location.setRootDir(rootPath);
+			location.setRootSet(true);
         }
     }
 
@@ -165,15 +157,15 @@ namespace RouteExtraction
     void extractIndexFile(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        location.indexFile = tokens[1];
+		location.setIndexFile(tokens[1]);
     }
 
     // Função para extrair e definir o redirecionamento da localização
     void extractRedirect(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        location.redirect = tokens[1];
-        location.redirectSet = true;
+		location.setRedirect(tokens[1]);
+		location.setRedirectSet(true);
     }
 
     // Função para extrair e definir o caminho de upload da localização
@@ -181,7 +173,7 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         ConfigUtils::formatPath(tokens[1]);
-        location.uploadPath = tokens[1];
+		location.setUploadPath(tokens[1]);
     }
 
     // Função para extrair e definir o autoindex da localização
@@ -189,12 +181,10 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
-        if (tokens[1] == "on")
-        {
-            location.autoindex = true;
+        if (tokens[1] == "on"){
+			location.setAutoindex(true);
         }
-        else
-        {
+        else{
             throw std::runtime_error(ERROR_INVALID_AUTOINDEX);
         }
     }
@@ -203,12 +193,10 @@ namespace RouteExtraction
     void extractUploadEnabled(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        if (tokens[1] == "on")
-        {
-            location.uploadEnabled = true;
+        if (tokens[1] == "on"){
+			location.setUploadEnabled(true);
         }
-        else
-        {
+        else{
             throw std::runtime_error(ERROR_INVALID_UPLOAD_ENABLED);
         }
     }
@@ -223,8 +211,9 @@ namespace RouteExtraction
         if (lastDot != std::string::npos &&
             (cgiPath.substr(lastDot) == EXTENSION_PHP || cgiPath.substr(lastDot) == EXTENSION_PY))
         {
-            location.cgiEnabled = true;
-            location.cgiPath = cgiPath;
+			location.setCgiEnabled(true);
+            location.setCgiPath(cgiPath);
+
         }
         else
         {
@@ -240,8 +229,8 @@ namespace RouteExtraction
 
         if (cgiExtension == EXTENSION_PHP || cgiExtension == EXTENSION_PY)
         {
-            location.cgiEnabled = true;
-            location.cgiExtension = cgiExtension;
+			location.setCgiEnabled(true);
+			location.setCgiExtension(cgiExtension);
         }
         else
         {

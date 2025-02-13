@@ -23,6 +23,8 @@
 #define DEFAULT_HOST "127.0.0.1"
 #define DEFAULT_SERVER_NAME "localhost"
 #define DEFAULT_LIMIT_BODY_SIZE 1000000 // 1MB
+
+// Default Error pages
 #define DEFAULT_ERROR_PAGE_400 "./static/error_pages/400.html" // Bad Request
 #define DEFAULT_ERROR_PAGE_401 "./static/error_pages/401.html" // Unauthorized
 #define DEFAULT_ERROR_PAGE_403 "./static/error_pages/403.html" // Forbidden

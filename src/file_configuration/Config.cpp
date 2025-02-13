@@ -1,14 +1,9 @@
 
 #include "Config.hpp"
 #include "Define.hpp"
-#include <sstream> 
+#include <sstream>
 
-// Construtor da estrutura RouteConfig
-RouteConfig::RouteConfig(void)
-    : autoindex(false), uploadEnabled(false), rootSet(false), redirectSet(false), cgiEnabled(false) {}
 
-// Construtor da estrutura ServerConfig
-ServerConfig::ServerConfig(void) : port(8080), limitBodySize(1000000) {}
 
 // Construtor da classe Config
 Config::Config(const std::string &fileName) : _configFile(fileName)
@@ -227,7 +222,7 @@ void Config::_parseRouteStream(std::istringstream &serverStream, ServerConfig &s
                 locationBracketsCount = 0;
                 insideLocationBlock = false;
                 _parseRouteBlock(locationBlock, location);
-                server.routes.push_back(location);
+				server.addRoute(location);
                 locationBlock.clear();
                 return;
             }
@@ -331,136 +326,4 @@ void Config::_parseRouteBlock(const std::string &locationBlock, RouteConfig &loc
 std::vector<ServerConfig> Config::getServers(void) const
 {
     return this->_servers;
-}
-
-bool Config::isPathValid(const URL& url) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota
-            // Se encontrar uma correspondência, retorna true indicando que o caminho é válido
-            if (path.find(route->locationPath) == 0) {
-                return true;
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna false indicando que o caminho não é válido
-    return false;
-}
-
-std::string Config::isPathARedirection(const URL& url) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota e se a rota tem um redirecionamento configurado
-            if (path.find(route->locationPath) == 0 && route->redirectSet) {
-                // Retorna o caminho de redirecionamento configurado para a rota
-                return route->redirect;
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna uma string vazia
-    return "";
-}
-
-bool Config::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota
-            if (path.find(route->locationPath) == 0) {
-                // Verifica se o método HTTP fornecido está na lista de métodos permitidos para a rota
-                for (std::vector<HTTPMethods::Method>::const_iterator it = route->methods.begin(); it != route->methods.end(); ++it) {
-                    if (*it == method) {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna false indicando que o método não é permitido para o caminho
-    return false;
-}
-
-bool Config::isUrlAPathToCGI(const URL& url) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota e se a rota tem o CGI habilitado
-            if (path.find(route->locationPath) == 0 && route->cgiEnabled) {
-                // Retorna true indicando que o caminho aponta para um CGI
-                return true;
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna false indicando que o caminho não aponta para um CGI
-    return false;
-}
-
-
-std::string Config::getThePhysicalPath(const URL& url) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota
-            if (path.find(route->locationPath) == 0) {
-                // Constrói o caminho físico concatenando o diretório raiz da rota com a parte do caminho da URL que vem após o caminho da rota
-                std::string physicalPath = route->rootDir + path.substr(route->locationPath.length());
-                // Retorna o caminho físico construído
-                return physicalPath;
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna o caminho original da URL
-    return path;
-}
-
-bool Config::isDirectoryListingAllowedForThisPath(const URL& url) const {
-    // Extrai o caminho da URL fornecida
-    std::string path = url.getPath();
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Itera sobre todas as rotas configuradas para o servidor atual
-        for (std::vector<RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); ++route) {
-            // Verifica se o caminho da URL começa com o caminho da rota e se a listagem de diretório está habilitada para a rota
-            if (path.find(route->locationPath) == 0 && route->autoindex) {
-                // Retorna true indicando que a listagem de diretório está habilitada para o caminho
-                return true;
-            }
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna false indicando que a listagem de diretório não está habilitada para o caminho
-    return false;
-}
-
-std::string Config::getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const {
-    // Converte o código de status HTTP para uma string usando HTTPStatus::getStatusToString
-    HTTPStatus status;
-    std::string statusCode = status.getStatusToString(httpStatus);
-    // Itera sobre todos os servidores configurados
-    for (std::vector<ServerConfig>::const_iterator server = _servers.begin(); server != _servers.end(); ++server) {
-        // Procura o código de status HTTP nas páginas de erro configuradas para o servidor atual
-        std::map<std::string, std::string>::const_iterator it = server->errorPages.find(statusCode);
-        // Se encontrar uma correspondência, retorna o caminho da página de erro personalizada
-        if (it != server->errorPages.end()) {
-            return it->second;
-        }
-    }
-    // Se nenhuma correspondência for encontrada, retorna uma string vazia
-    return "";
 }

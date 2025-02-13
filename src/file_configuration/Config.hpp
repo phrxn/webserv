@@ -14,55 +14,23 @@
 #include <set>		 // Conjuntos
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "CheckConfiguration.hpp"
+
+
 #include "../net/http/HTTPMethods.hpp"
+#include "CheckConfiguration.hpp"
+#include "ServerConfig.hpp"
 
-struct RouteConfig {
-    std::vector<HTTPMethods::Method>	methods; // Vetor que armazena os métodos HTTP permitidos (GET, POST, DELETE)
-    std::string				locationPath; // Caminho da rota
-    std::string				rootDir; // Diretório raiz da rota
-    std::string				indexFile; // Nome do arquivo de índice (por exemplo, index.html)
-    std::string				redirect; // URL para redirecionamento, se aplicável
-    std::string				uploadPath; // Caminho onde os arquivos enviados serão armazenados
-    bool					autoindex; // Flag que indica se o autoindex está habilitado
-    bool					uploadEnabled; // Flag que indica se o upload de arquivos está habilitado
-    bool					rootSet; // Flag que indica se o diretório raiz foi configurado
-    bool					redirectSet; // Flag que indica se o redirecionamento foi configurado
-    bool					cgiEnabled; // Flag que indica se o CGI está habilitado
-    std::string				cgiPath; // Caminho para o script CGI
-    std::string				cgiExtension; // Extensão de arquivo para scripts CGI
-
-    /* Struct Constructor */
-    RouteConfig(void);
-};
-
-struct ServerConfig{
-    unsigned int						port; // Porta do servidor
-    std::string							host; // Endereço IP do servidor (localhost)
-    std::string							serverName; // Nome do servidor
-    size_t								limitBodySize; // Tamanho máximo do corpo da requisição
-    std::map<std::string, std::string> 	errorPages; // Mapa que armazena as páginas de erro
-    std::vector<RouteConfig>			routes; // Vetor que armazena as rotas configuradas
-
-    /* Struct Constructor */
-    ServerConfig(void);
-};
-
-
-
-class Config : public CheckConfiguration {
+class Config {
     private:
-            short								_countServer; // Índice do servidor atual
-            const std::string					_configFile; // Caminho do arquivo de configuração (nome do arquivo)
-            std::vector<ServerConfig>			_servers; // Vetor que armazena as configurações dos servidores
-            
+            short						_countServer; // Índice do servidor atual
+            const std::string			_configFile; // Caminho do arquivo de configuração (nome do arquivo)
+            std::vector<ServerConfig>	_servers; // Vetor que armazena as configurações dos servidores
+
             // Métodos privados
-            void		_parseConfigFile(std::ifstream &configFile); // é um método que lê o arquivo de configuração (configFile) e inicia o processo de interpretação das configurações contidas nele.
-            void		_parseServerBlock(const std::string &serverBlock); // processa cada "bloco" de configuração de servidor (serverBlock). Esse bloco define as configurações de um servidor específico.
-            void		_parseRouteStream(std::istringstream &serverStream, 
-            ServerConfig &server ); // analisa as configurações de localização de um servidor específico (server). Usa um istringstream para ler o bloco de configurações e atribuir valores apropriados ao servidor.
-            void		_parseRouteBlock(const std::string &locationBlock, 
-            RouteConfig &location); // processa cada "bloco" de configuração de localização (locationBlock). Esse bloco define as configurações de uma rota específica.
+            void	_parseConfigFile(std::ifstream &configFile); // é um método que lê o arquivo de configuração (configFile) e inicia o processo de interpretação das configurações contidas nele.
+            void	_parseServerBlock(const std::string &serverBlock); // processa cada "bloco" de configuração de servidor (serverBlock). Esse bloco define as configurações de um servidor específico.
+            void	_parseRouteStream(std::istringstream &serverStream, ServerConfig &server ); // analisa as configurações de localização de um servidor específico (server). Usa um istringstream para ler o bloco de configurações e atribuir valores apropriados ao servidor.
+            void	_parseRouteBlock(const std::string &locationBlock, RouteConfig &location); // processa cada "bloco" de configuração de localização (locationBlock). Esse bloco define as configurações de uma rota específica.
 
     public:
             // Construtor
@@ -73,22 +41,13 @@ class Config : public CheckConfiguration {
 
             // Métodos públicos
             std::vector<ServerConfig>		getServers(void) const; // Retorna o vetor de servidores
-
-            // Implementing CheckConfiguration interface
-            bool isPathValid(const URL& url) const;
-            std::string isPathARedirection(const URL& url) const;
-            bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const;
-            bool isUrlAPathToCGI(const URL& url) const;
-            std::string getThePhysicalPath(const URL& url) const;
-            bool isDirectoryListingAllowedForThisPath(const URL& url) const;
-            std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
 };
 
 //config utils functions
 namespace ConfigUtils {
     short			getServerCount(const std::string &configFile); // Retorna o número de servidores configurados
-    std::string		trim(const std::string &serverBlock ); // Remove espaços em branco do início e do final de uma strin
-    bool			isRepeatedMethod(std::vector<HTTPMethods::Method> &methodsVector, HTTPMethods::Method method); // Verifica se um método HTTP já foi configurado
+    std::string		trim(const std::string &serverBlock); // Remove espaços em branco do início e do final de uma strin
+    bool			isRepeatedMethod(const std::vector<HTTPMethods::Method> &methodsVector, HTTPMethods::Method method); // Verifica se um método HTTP já foi configurado
     bool			directoryExists(const std::string &path); // Verifica se um diretório existe
     bool			fileExists(const std::string &path); // Verifica se um arquivo existe
     void			formatPath(std::string &path); // Formata o caminho do arquivo
