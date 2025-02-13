@@ -7,19 +7,19 @@ TEST(VirtualHostDefault, equalsOperator){
 
 	VirtualHostDefault a;
 	a.setPort(100);
-	a.setServername("foo");
+	a.setServerName("foo");
 
 	VirtualHostDefault b;
 	b.setPort(100);
-	b.setServername("foo");
+	b.setServerName("foo");
 
 	VirtualHostDefault c;
 	c.setPort(42);
-	c.setServername("foo");
+	c.setServerName("foo");
 
 	VirtualHostDefault d;
 	d.setPort(100);
-	d.setServername("bar");
+	d.setServerName("bar");
 
 	EXPECT_TRUE((a == b));
 	EXPECT_FALSE((a == c));

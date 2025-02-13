@@ -29,7 +29,6 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/error/LogWriter.cpp\
 		src/error/LogWriteToConsole.cpp\
 		src/error/Status.cpp\
-		src/file_configuration/CheckConfiguration.cpp\
 		src/file_configuration/Config.cpp\
 		src/file_configuration/ConfigExtract.cpp\
 		src/file_configuration/ConfigUtils.cpp\

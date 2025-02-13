@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "CheckConfiguration.hpp"
+#include "../net/VirtualHost.hpp"
 #include "RouteConfig.hpp"
 
-class ServerConfig : public CheckConfiguration{
+class ServerConfig : public VirtualHost{
 
 public:
     ServerConfig(void);
@@ -17,23 +17,24 @@ public:
 	ServerConfig &operator=(const ServerConfig &src);
 
 	// Métodos de configuração
-	void setPort(unsigned int port);
 	void setHost(const std::string &host);
-	void setServerName(const std::string &serverName);
 	void setLimitBodySize(size_t limitBodySize);
 	void addErrorPage(const std::string &errorPage, const std::string &errorPath);
 	void addRoute(const RouteConfig &route);
 
 	// Métodos de acesso
-	unsigned int getPort(void) const;
 	std::string getHost(void) const;
-	std::string getServerName(void) const;
 	size_t getLimitBodySize(void) const;
 	const std::map<std::string, std::string> &getErrorPages(void) const;
 	std::string getErrorPage(const std::string &errorPage) const;
 	std::vector<RouteConfig> getRoutes(void) const;
 
 	//inteface methods
+	unsigned int getPort(void) const;
+	void setPort(unsigned int port);
+	std::string getServerName(void) const;
+	void setServerName(const std::string &serverName);
+
 	bool isPathValid(const URL& url) const;
     std::string isPathARedirection(const URL& url) const;
     bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const;

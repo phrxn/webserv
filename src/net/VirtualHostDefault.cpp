@@ -23,33 +23,33 @@ bool VirtualHostDefault::operator==(const VirtualHostDefault &src) const {
   return true;
 }
 
-int VirtualHostDefault::getPort() const { return _port; }
+unsigned int VirtualHostDefault::getPort() const { return _port; }
 
-void VirtualHostDefault::setPort(int port) { _port = port; }
+void VirtualHostDefault::setPort(unsigned int port) { _port = port; }
 
-std::string VirtualHostDefault::getServername() const { return _serverName; }
+std::string VirtualHostDefault::getServerName() const { return _serverName; }
 
-void VirtualHostDefault::setServername(const std::string &serverName) {
+void VirtualHostDefault::setServerName(const std::string &serverName) {
   _serverName = serverName;
 }
 
-bool VirtualHostDefault::isPathValid(URL url) const {
+bool VirtualHostDefault::isPathValid(const URL& url)  const {
 	(void)url;
 	return true;
 }
 
-std::string VirtualHostDefault::isPathARedirection(URL url) const{
+std::string VirtualHostDefault::isPathARedirection(const URL& url) const{
 	(void)url;
 	return "";
 }
 
-bool VirtualHostDefault::isTheMethodAllowedForThisPath(URL url, HTTPMethods::Method method) const{
+bool VirtualHostDefault::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const{
 		(void)url;
 		(void)method;
 	return true;
 }
 
-bool VirtualHostDefault::isUrlAPathToCGI(URL url) const{
+bool VirtualHostDefault::isUrlAPathToCGI(const URL& url) const{
 
   std::string path = url.getPathFull(false);
 
@@ -58,12 +58,12 @@ bool VirtualHostDefault::isUrlAPathToCGI(URL url) const{
   return false;
 }
 
-std::string VirtualHostDefault::getThePhysicalPath(URL url) const{
+std::string VirtualHostDefault::getThePhysicalPath(const URL& url) const{
 	std::string prefix = "www";
 	return prefix + url.getPathFull(false);
 }
 
-bool VirtualHostDefault::isDirectoryListingAllowedForThisPath(URL url) const{
+bool VirtualHostDefault::isDirectoryListingAllowedForThisPath(const URL& url) const{
   std::string path = url.getPathFull(false);
 
   std::string::size_type phpExtesion = path.find("dir");

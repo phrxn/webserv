@@ -17,7 +17,6 @@
 
 
 #include "../net/http/HTTPMethods.hpp"
-#include "CheckConfiguration.hpp"
 #include "ServerConfig.hpp"
 
 class Config {

@@ -16,21 +16,21 @@ class VirtualHostDefault : public VirtualHost{
   VirtualHostDefault &operator=(const VirtualHostDefault &src);
   bool operator==(const VirtualHostDefault &src) const;
 
-  int getPort() const;
-  void setPort(int port);
-  std::string getServername() const;
-  void setServername(const std::string &serverName);
+  unsigned int getPort() const;
+  void setPort(unsigned int port);
+  std::string getServerName() const;
+  void setServerName(const std::string &serverName);
 
-  bool isPathValid(URL url) const;
-  std::string isPathARedirection(URL url) const;
-  bool isTheMethodAllowedForThisPath(URL url, HTTPMethods::Method method) const;
-  bool isUrlAPathToCGI(URL url) const;
-  std::string getThePhysicalPath(URL url) const;
-  bool isDirectoryListingAllowedForThisPath(URL url) const;
+  bool isPathValid(const URL& url) const;
+  std::string isPathARedirection(const URL& url) const;
+  bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const;
+  bool isUrlAPathToCGI(const URL& url) const;
+  std::string getThePhysicalPath(const URL& url) const;
+  bool isDirectoryListingAllowedForThisPath(const URL& url) const;
   std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
 
  private:
-  int _port;
+  unsigned int _port;
   std::string _serverName;
 };
 

@@ -1,23 +1,31 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include "CheckConfiguration.hpp"
+#include "../../libs/googletest/googlemock/include/gmock/gmock.h"
+#include "../../libs/googletest/googletest/include/gtest/gtest.h"
+
 #include "../net/URL.hpp"
 #include "../net/http/HTTPMethods.hpp"
 #include "../net/http/HTTPStatus.hpp"
 
+#include "../net/VirtualHost.hpp"
+
 using ::testing::Return;
 
-class CheckConfigurationMock : public CheckConfiguration {
+class VirtualHostMockToCheckConfiguration : public VirtualHost {
 public:
-    MOCK_METHOD(bool, isPathValid, (const URL& url), (const, override));
-    MOCK_METHOD(std::string, isPathARedirection, (const URL& url), (const, override));
-    MOCK_METHOD(bool, isTheMethodAllowedForThisPath, (const URL& url, HTTPMethods::Method method), (const, override));
-    MOCK_METHOD(bool, isUrlAPathToCGI, (const URL& url), (const, override));
-    MOCK_METHOD(std::string, getThePhysicalPath, (const URL& url), (const, override));
-    MOCK_METHOD(bool, isDirectoryListingAllowedForThisPath, (const URL& url), (const, override));
-    MOCK_METHOD(std::string, getThePathToCustomPageForHTTPStatus, (HTTPStatus::Status httpStatus), (const, override));
 
-    virtual ~CheckConfigurationMock() {} // Adiciona um destrutor virtual
+  MOCK_METHOD(unsigned int, getPort, (),  (const, override));
+  MOCK_METHOD(void, setPort, (unsigned int port),  (override));
+  MOCK_METHOD(std::string, getServerName, (), (const, override));
+  MOCK_METHOD(void, setServerName, (const std::string &serverName), (override));
+
+  MOCK_METHOD(bool, isPathValid, (const URL& url), (const, override));
+  MOCK_METHOD(std::string, isPathARedirection, (const URL& url), (const, override));
+  MOCK_METHOD(bool, isTheMethodAllowedForThisPath, (const URL& url, HTTPMethods::Method method), (const, override));
+  MOCK_METHOD(bool, isUrlAPathToCGI, (const URL& url), (const, override));
+  MOCK_METHOD(std::string, getThePhysicalPath, (const URL& url), (const, override));
+  MOCK_METHOD(bool, isDirectoryListingAllowedForThisPath, (const URL& url), (const, override));
+  MOCK_METHOD(std::string, getThePathToCustomPageForHTTPStatus, (HTTPStatus::Status httpStatus), (const, override));
+
+  virtual ~VirtualHostMockToCheckConfiguration() {} // Adiciona um destrutor virtual
 };
 
 class URLMock : public URL {
@@ -30,10 +38,10 @@ public:
 
 class CheckConfigurationTest : public ::testing::Test {
 protected:
-    CheckConfigurationMock* configMock;
+VirtualHostMockToCheckConfiguration* configMock;
 
     void SetUp() override {
-        configMock = new CheckConfigurationMock();
+        configMock = new VirtualHostMockToCheckConfiguration();
     }
 
     void TearDown() override {
