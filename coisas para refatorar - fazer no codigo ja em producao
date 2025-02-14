@@ -20,3 +20,9 @@
 
 *** Na logica de perguntar se EH CGI soh faz sentido se o CGI estiver habilitado!!! Se para a Location o CGI estiver desabilitado, logo,
     nao estiver habilidato Nao eh CGI;
+
+
+*** arrumar o header do sockeServerImpl
+
+
+*** adicionar ao VirtualHost para pegar o max_body_size! E colocar essa checagem no HTTPServerRequest, e pegar o tamanho no HTTPRequest

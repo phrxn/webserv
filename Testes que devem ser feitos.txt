@@ -1,3 +1,8 @@
+-- 2 HOSTS NA MESMA PORTA
+
+-- ARQUIVO COM ESPACOS NO NOME
+
+-- index file para CGI e Static, com e sem listagem de diretorio
 
 
 GET:
