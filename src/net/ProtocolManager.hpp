@@ -1,5 +1,5 @@
-#ifndef PROTOCOL_MANAGER_HPP
-#define PROTOCOL_MANAGER_HPP
+#ifndef NET_PROTOCOL_MANAGER_HPP
+#define NET_PROTOCOL_MANAGER_HPP
 
 
 //interface ProtocolManager

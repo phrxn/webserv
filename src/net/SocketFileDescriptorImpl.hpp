@@ -1,5 +1,5 @@
-#ifndef NET_SOCKET_FILE_DESCRIPTOR_IMPL
-#define NET_SOCKET_FILE_DESCRIPTOR_IMPL
+#ifndef NET_SOCKET_FILE_DESCRIPTOR_IMPL_HPP
+#define NET_SOCKET_FILE_DESCRIPTOR_IMPL_HPP
 
 #include "../error/Log.hpp"
 #include "../system/Errno.hpp"

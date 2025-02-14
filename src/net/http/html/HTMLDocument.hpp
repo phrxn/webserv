@@ -1,5 +1,5 @@
-#ifndef SRC_HTTP_HTML_HTML_DOCUMENT_HPP
-#define SRC_HTTP_HTML_HTML_DOCUMENT_HPP
+#ifndef NET_HTTP_HTML_HTML_DOCUMENT_HPP
+#define NET_HTTP_HTML_HTML_DOCUMENT_HPP
 
 #include <string>
 #include "../HTTPStatus.hpp"

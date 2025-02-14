@@ -1,5 +1,5 @@
-#ifndef DEFINES_HPP
-#define DEFINES_HPP
+#ifndef FILE_CONFIGURATION_DEFINES_HPP
+#define FILE_CONFIGURATION_DEFINES_HPP
 
 /* Config File Formatting Error */
 # define ERROR_INVALID_SERVER "Invalid Server Block!"
