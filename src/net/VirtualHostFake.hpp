@@ -23,6 +23,8 @@ class VirtualHostFake : public VirtualHostDefault{
   bool isDirectoryListingAllowedForThisPath(const URL& url) const;
   std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
   std::string getRootDir(const URL& url) const;
+  std::string getIndexFile(const URL& url) const;
+
 };
 
 #endif

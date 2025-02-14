@@ -46,8 +46,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
 
   std::string pathRedirection = _virtualHost->isPathARedirection(url);
   if (pathRedirection != "") {
-    return _handlerHTTPStatus.doStatusFamily300(
-        response, HTTPStatus::MOVED_PERMANENTLY, pathRedirection);
+    return _handlerHTTPStatus.doStatusFamily300(response, HTTPStatus::MOVED_PERMANENTLY, pathRedirection);
   }
 
   if (!_virtualHost->isTheMethodAllowedForThisPath(url, request.getMethod())) {
@@ -56,12 +55,31 @@ void HTTPServletManager::doService(HTTPRequest &request,
 
   bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
   std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
-  _logger->log(Log::DEBUG, "HTTPServletManager", "doService",
-                   "absolute path to resource", absolutePathToResource);
+
+  _logger->log(Log::DEBUG, "HTTPServletManager", "doService", "absolute path to resource", absolutePathToResource);
 
   // If nothing is returned, then the URL did not match any possible location, so there is nothing to search for
   if (absolutePathToResource.empty()) {
-	return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
+    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
+  }
+
+  // If the path does not point to a CGI we can look for an indexFile if the
+  // path ends with / and etc...
+  // If the path is to a CGI we do not do this, because what you see after the CGI script is
+  // an extra path, a path to the CGI script according to RFC CGI 1.1
+  if (!pathPointsToCGI){
+	std::string indexFile = _virtualHost->getIndexFile(url);
+
+	if (absolutePathEndsWithSlash(absolutePathToResource) && !indexFile.empty()) {
+		std::string absolutePathToIndexFile = absolutePathToResource + indexFile;
+
+		File file(absolutePathToIndexFile);
+		if (file.exist()) {
+			absolutePathToResource = absolutePathToIndexFile;
+			url.parserStringToURL(request.getURLStr() + indexFile);
+			pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
+		}
+	}
   }
 
   bool canListDirectory = _virtualHost->isDirectoryListingAllowedForThisPath(url);
@@ -69,12 +87,11 @@ void HTTPServletManager::doService(HTTPRequest &request,
   if (pathPointsToCGI) {
     _hTTPServlet = new HTTPServletCGI(absolutePathToResource, _virtualHost->getRootDir(url));
   } else {
-    _hTTPServlet =
-        new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);
+    _hTTPServlet = new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);
   }
 
-  HTTPStatus::Status methodReturn = HTTPStatus::INTERNAL_SERVER_ERROR;
   // based on the http verb call the corresponding method
+  HTTPStatus::Status methodReturn = HTTPStatus::INTERNAL_SERVER_ERROR;
   switch (request.getMethod()) {
     case HTTPMethods::GET:
       methodReturn = _hTTPServlet->doGet(request, response);
@@ -93,15 +110,13 @@ void HTTPServletManager::doService(HTTPRequest &request,
   }
 
   if (methodReturn == HTTPStatus::OK) {
-    return _handlerHTTPStatus.doStatusFamily200(request, response,
-                                                methodReturn);
+    return _handlerHTTPStatus.doStatusFamily200(request, response, methodReturn);
   }
 
-  // If the return was 301, at this point in the code, it means that the
+  // If the methodReturn return was 301, at this point in the code, it means that the
   // redirection is due to the lack of a slash in some path to a directory
   if (methodReturn == HTTPStatus::MOVED_PERMANENTLY) {
-    return _handlerHTTPStatus.doStatusFamily300(response, methodReturn,
-                                                url.getPathFull(true) + "/");
+    return _handlerHTTPStatus.doStatusFamily300(response, methodReturn, url.getPathFull(true) + "/");
   }
 
   _handlerHTTPStatus.doStatusError(response, methodReturn);
@@ -114,4 +129,8 @@ void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &respon
   HandlerHTTPStatus _handlerHTTPStatus(NULL);
 
   _handlerHTTPStatus.doStatusError(response, status);
+}
+
+bool HTTPServletManager::absolutePathEndsWithSlash(const std::string &absolutePathToResource){
+	return (!absolutePathToResource.empty() && absolutePathToResource[absolutePathToResource.size() - 1] == '/');
 }

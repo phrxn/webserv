@@ -24,6 +24,9 @@ public:
   MOCK_METHOD(std::string, getThePhysicalPath, (const URL& url), (const, override));
   MOCK_METHOD(bool, isDirectoryListingAllowedForThisPath, (const URL& url), (const, override));
   MOCK_METHOD(std::string, getThePathToCustomPageForHTTPStatus, (HTTPStatus::Status httpStatus), (const, override));
+  MOCK_METHOD(std::string, getRootDir, (const URL& url), (const, override));
+  MOCK_METHOD(std::string, getIndexFile, (const URL& url), (const, override));
+
 
   virtual ~VirtualHostMockToCheckConfiguration() {} // Adiciona um destrutor virtual
 };

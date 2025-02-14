@@ -127,6 +127,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPRequestToolTest.cpp\
 				src/net/http/HTTPResponseTest.cpp\
+				src/net/http/HTTPServletManagerTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
 				src/net/http/HTTPTypeOfPagesTest.cpp\
 				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\

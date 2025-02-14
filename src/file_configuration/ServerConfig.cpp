@@ -213,3 +213,15 @@ std::string ServerConfig::getRootDir(const URL& url) const{
 	// Se nenhuma correspondência for encontrada, retorna uma string vazia
 	return "";
 }
+
+std::string ServerConfig::getIndexFile(const URL& url) const{
+
+	std::string path = url.getPathFull(true);
+
+	if (isUrlAPathToCGI(url)){
+		path = url.getPath(true);
+	}
+	return "";
+
+	//implementar aqui a obtecao
+}

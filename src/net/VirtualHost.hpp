@@ -24,6 +24,7 @@ class VirtualHost {
   virtual bool isDirectoryListingAllowedForThisPath(const URL& url) const = 0;
   virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const = 0;
   virtual std::string getRootDir(const URL& url) const = 0;
+  virtual std::string getIndexFile(const URL& url) const = 0;
 
 };
 

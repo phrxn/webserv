@@ -17,6 +17,9 @@ class HTTPServletManager {
   void doService(HTTPRequest &request, HTTPResponse &response);
   void doError(HTTPStatus::Status status, HTTPResponse &response);
 
+  //utils
+  bool absolutePathEndsWithSlash(const std::string &absolutePathToResource);
+
  private:
   HTTPServletManager(const HTTPServletManager &src);
   HTTPServletManager &operator=(const HTTPServletManager &src);

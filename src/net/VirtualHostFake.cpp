@@ -54,9 +54,8 @@ std::string VirtualHostFake::getThePhysicalPath(const URL& url) const{
 bool VirtualHostFake::isDirectoryListingAllowedForThisPath(const URL& url) const{
   std::string path = url.getPathFull(false);
 
-  std::string::size_type phpExtesion = path.find("dir");
-
-  return (phpExtesion != std::string::npos);
+  if (path.find("dir") != std::string::npos) return true;
+  return false;
 }
 
 std::string VirtualHostFake::getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const{
@@ -67,4 +66,20 @@ std::string VirtualHostFake::getThePathToCustomPageForHTTPStatus(HTTPStatus::Sta
 std::string VirtualHostFake::getRootDir(const URL& url) const{
 	(void)url;
 	return "www";
+}
+
+std::string VirtualHostFake::getIndexFile(const URL& url) const{
+	std::string path = url.getPathFull(true);
+
+	if (isUrlAPathToCGI(url)){
+		path = url.getPath(true);
+	}
+
+
+	// just for demonstration purposes, if the URL is just the slash / we will
+	// return a index.html file
+	if (path == "/") return "index.php";
+	if (path.find("dir_and_index_php") != std::string::npos) return "index.php";
+	if (path.find("dir_and_index_html") != std::string::npos) return "index.html";
+	return "";
 }
