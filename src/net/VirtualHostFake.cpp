@@ -34,7 +34,7 @@ bool VirtualHostFake::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods:
 
 bool VirtualHostFake::isUrlAPathToCGI(const URL& url) const{
 
-  std::string path = url.getPathFull(false);
+  std::string path = url.getPathFull(true);
 
   if (path.find(".php") != std::string::npos || path.find(".py") != std::string::npos) return true;
 
@@ -48,11 +48,11 @@ std::string VirtualHostFake::getThePhysicalPath(const URL& url) const{
 	if (isUrlAPathToCGI(url)){
 		return prefix + url.getPath(true);
 	}
-	return prefix + url.getPathFull(false);
+	return prefix + url.getPathFull(true);
 }
 
 bool VirtualHostFake::isDirectoryListingAllowedForThisPath(const URL& url) const{
-  std::string path = url.getPathFull(false);
+  std::string path = url.getPathFull(true);
 
   if (path.find("dir") != std::string::npos) return true;
   return false;
