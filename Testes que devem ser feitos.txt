@@ -4,6 +4,9 @@
 
 -- index file para CGI e Static, com e sem listagem de diretorio
 
+-- redirecionamento
+
+-- sessao com os cookies
 
 GET:
 	1) Get em um diretório:
