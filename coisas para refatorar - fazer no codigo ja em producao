@@ -2,12 +2,12 @@
 ** quando for STATIC usar o fullPath
 
 !!! rever os VirtualHost:
-	getAbsolutePath(){
-		STATIC sempre usar URL getFullPATH para concatenar ao caminho ja existente
-	    CGI (PHP, PYTHON) vai sempre usar o getPath para concatenar ao arquivo existente
-    }
-    isTypeOfPage  //trocar pelo isPathTOCGI
-    adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
+        isTypeOfPage  //trocar pelo isPathTOCGI
+        adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
+   OK * ajustar o getThePhysicalPath do ServerConfig para usar o getPathFull ou getPath (se for CGI)
+      * ajustar o getThePhysicalPath para retornar vazio se nao achar nada, pois tipo se nao deu match com nenhum location, e retornarmos o caminho verdadeiro, pode dar match com algo que NAO ERA PRA RETORNAR, TIPO O USUARIO NAO PROGRAMOU
+        OU QUERIA AQUILO!! E no HTTPServletManager ser getThePhysicalPath retornar vazio dar 404
+
 
 ** arrumar no HTTPServetManager, pois soh faz sentido perguntar sobre se pode listar diretorios se
    o caminho aponta para STATIC pagw
@@ -16,3 +16,14 @@
    Além do caminho Absoluto como a criacao do CGI (CreateCGIVariables) está criando as variaveis???? para o CGI obviamente
 
 ** Provavelmente colocar O_EXCLO nos fds abertos
+
+** ver a questao da pagina index!!!! isso nao foi testado! ver como o nginx se comporta
+   caminho sem barra, caminho com barra, diretorio, arquivo
+
+** quando criando a array de serverconfig e adicionar eles ao clusterOfVirtualHost, remover aqueles que nao foram adicionados para o cluster
+
+** ver essa barrinha no fim do CGI (http://localhost:8110/a.php/)  pode ser a questao de como o VH retorna o caminho! Nao esquecer que no CGI o quem depois da extensao
+   eh caminho extra... lembrei! o problema eh no VHFake mesmo xD!! ele soh está junto tudo! www + getPath()
+   alias aonde está a criação do extra-path? Ah! Ta no CGIEnvironmentVariables
+
+!!!!!!!!1 LAH NHO HTTPSERVERLETMANAGER SE RETONAR 301 EH DIRETORIO E PODEMOS PERGUNTAR PELA PAGINA PADRAO! ...... .... ....... ... ou ver isso antes????

@@ -65,8 +65,9 @@ Interface CheckConfiguration:
         // esse metodo deve "converter", ou seja, pegar a URI, pesquisar nas location e retornar o caminho absoluto
         // Por exemplo:  /pasta/a.txt, pode dar match com:  /textos/de_matematica/pasta
         // Logo, /pasta/a.txt, na verdade, vai apontar para  /textos/de_matematica/pasta/a.txt
-        // E por obvio, se a URI apontar para um caminho fisico mesmo, esse metodo deve retornar a URI
+        // Se o caminho nao der match com nenhum "location" retornar uma string vazia, isso vai dizer que não há caminho para aquela URL! (404)
         // Enfim esse metodo deve converter o caminho URI para o caminho verdadeiro
+
 
   C++ -> virtual bool isDirectoryListingAllowedForThisPath(URL url) const;
   bool  aListagemDeDiretorioEstaHabilitadaParaEsseCaminho(CaminhoURI);
