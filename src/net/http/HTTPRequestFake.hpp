@@ -14,6 +14,8 @@ class HTTPRequestFake : public HTTPRequest {
 
   StateOfCreation createRequest();
 
+  std::string getHost() const;
+
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
   HTTPMethods::Method getMethod() const;
@@ -23,6 +25,8 @@ class HTTPRequestFake : public HTTPRequest {
   URL getURL() const;
 
   HTTPStatus::Status getStatus() const;
+
+
 
  private:
   HTTPRequestFake(const HTTPRequestFake &src);
@@ -35,6 +39,7 @@ class HTTPRequestFake : public HTTPRequest {
   std::string _method;
   std::string _url;
   HTTPStatus::Status _status;
+  std::string _host;
 
 
 };

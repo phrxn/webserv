@@ -34,14 +34,23 @@ HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
 
   std::stringstream ss(_buffer);
 
+  std::string version;
+
   ss >> _method;
   ss >> _url;
+  ss >> version;
+
+  ss >> _host;
 
   _status = HTTPStatus::OK;
 
   _logger->log(Log::DEBUG, "HTTPRequestFake", "createRequest", _buffer, "");
 
   return REQUEST_CREATED;
+}
+
+std::string HTTPRequestFake::getHost() const{
+	return _host;
 }
 
 bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer) {

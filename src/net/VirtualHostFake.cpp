@@ -23,6 +23,7 @@ bool VirtualHostFake::isPathValid(const URL& url)  const {
 
 std::string VirtualHostFake::isPathARedirection(const URL& url) const{
 	(void)url;
+	if (url.getPathFull(true).find("redirect") != std::string::npos) return "https://www.google.com.br";
 	return "";
 }
 
@@ -43,7 +44,7 @@ bool VirtualHostFake::isUrlAPathToCGI(const URL& url) const{
 
 std::string VirtualHostFake::getThePhysicalPath(const URL& url) const{
 
-	std::string prefix = "www";
+	std::string prefix = "www/" + _serverName;
 
 	if (isUrlAPathToCGI(url)){
 		return prefix + url.getPath(true);

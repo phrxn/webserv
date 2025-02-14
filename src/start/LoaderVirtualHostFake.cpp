@@ -20,11 +20,13 @@ LoaderVirtualHostFake &LoaderVirtualHostFake::operator=(const LoaderVirtualHostF
 error::StatusOr<std::vector<VirtualHostDefault *> > LoaderVirtualHostFake::loadVirtualHosts(){
 
 	std::vector<VirtualHostDefault *> virtualHostsFromFile;
-	VirtualHostFake *a = new VirtualHostFake(8111, "abc");
-	VirtualHostFake *b = new VirtualHostFake(8110, "xyz");
+	VirtualHostFake *a = new VirtualHostFake(8111, "ha");
+	VirtualHostFake *b = new VirtualHostFake(8111, "hb");
+	VirtualHostFake *c = new VirtualHostFake(8110, "ha");
 
 	virtualHostsFromFile.push_back(a);
 	virtualHostsFromFile.push_back(b);
+	virtualHostsFromFile.push_back(c);
 
 	return virtualHostsFromFile;
 }
