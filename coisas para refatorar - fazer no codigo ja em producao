@@ -2,8 +2,7 @@
 ** quando for STATIC usar o fullPath
 
 !!! rever os VirtualHost:
-        isTypeOfPage  //trocar pelo isPathTOCGI
-        adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
+   OK * adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
    OK * ajustar o getThePhysicalPath do ServerConfig para usar o getPathFull ou getPath (se for CGI)
    OK * ajustar o getThePhysicalPath para retornar vazio se nao achar nada, pois tipo se nao deu match com nenhum location, e retornarmos o caminho verdadeiro, pode dar match com algo que NAO ERA PRA RETORNAR, TIPO O USUARIO NAO PROGRAMOU
         OU QUERIA AQUILO!! E no HTTPServletManager ser getThePhysicalPath retornar vazio dar 404
@@ -27,3 +26,7 @@
    alias aonde está a criação do extra-path? Ah! Ta no CGIEnvironmentVariables
 
 !!!!!!!!1 LAH NHO HTTPSERVERLETMANAGER SE RETONAR 301 EH DIRETORIO E PODEMOS PERGUNTAR PELA PAGINA PADRAO! ...... .... ....... ... ou ver isso antes????
+
+
+TEM INDEX | TEM BARRA NO CAMINHO |    EH CGI | pode listar diretorio  | Resultado Nginx
+   0      |         0            |      0    |    | 
