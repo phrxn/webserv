@@ -63,3 +63,8 @@ std::string VirtualHostFake::getThePathToCustomPageForHTTPStatus(HTTPStatus::Sta
 	(void)httpStatus;
 	return "";
 }
+
+std::string VirtualHostFake::getRootDir(const URL& url) const{
+	(void)url;
+	return "www";
+}

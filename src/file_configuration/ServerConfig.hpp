@@ -38,6 +38,7 @@ public:
     std::string getThePhysicalPath(const URL& url) const;
     bool isDirectoryListingAllowedForThisPath(const URL& url) const;
     std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
+	std::string getRootDir(const URL& url) const;
 
 private:
     std::string							_host; // Endereço IP do servidor (localhost)

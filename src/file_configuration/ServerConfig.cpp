@@ -69,7 +69,7 @@ std::vector<RouteConfig> ServerConfig::getRoutes(void) const{
 bool ServerConfig::isPathValid(const URL& url) const {
 
 	// Extrai o caminho da URL fornecida
-	std::string path = url.getPath(true);
+	std::string path = url.getPathFull(true);
 	// Itera sobre todas as rotas configuradas para o servidor atual
 
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
@@ -87,7 +87,7 @@ bool ServerConfig::isPathValid(const URL& url) const {
 std::string ServerConfig::isPathARedirection(const URL& url) const {
 
 	// Extrai o caminho da URL fornecida
-	std::string path = url.getPath(true);
+	std::string path = url.getPathFull(true);
 
 	// Itera sobre todas as rotas configuradas para o servidor atual
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
@@ -104,7 +104,7 @@ std::string ServerConfig::isPathARedirection(const URL& url) const {
 
 bool ServerConfig::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const {
     // Extrai o caminho da URL fornecida
-    std::string path = url.getPath(true);
+    std::string path = url.getPathFull(true);
 
 	// Itera sobre todas as rotas configuradas para o servidor atual
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
@@ -125,7 +125,7 @@ bool ServerConfig::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Me
 
 bool ServerConfig::isUrlAPathToCGI(const URL& url) const {
 	// Extrai o caminho da URL fornecida
-	std::string path = url.getPath(true);
+	std::string path = url.getPathFull(true);
 
 	// Itera sobre todas as rotas configuradas para o servidor atual
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
@@ -165,7 +165,7 @@ std::string ServerConfig::getThePhysicalPath(const URL& url) const {
 
 bool ServerConfig::isDirectoryListingAllowedForThisPath(const URL& url) const {
 	// Extrai o caminho da URL fornecida
-	std::string path = url.getPath(true);
+	std::string path = url.getPathFull(true);
 
 	// Itera sobre todas as rotas configuradas para o servidor atual
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
@@ -191,6 +191,23 @@ std::string ServerConfig::getThePathToCustomPageForHTTPStatus(HTTPStatus::Status
 	// Se encontrar uma correspondência, retorna o caminho da página de erro personalizada
 	if (it != _errorPages.end()) {
 		return it->second;
+	}
+
+	// Se nenhuma correspondência for encontrada, retorna uma string vazia
+	return "";
+}
+
+std::string ServerConfig::getRootDir(const URL& url) const{
+	// Extrai o caminho da URL fornecida
+	std::string path = url.getPathFull(true);
+
+	// Itera sobre todas as rotas configuradas para o servidor atual
+	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
+		// Verifica se o caminho da URL começa com o caminho da rota
+		if (path.find(route->getLocationPath()) == 0) {
+			// Retorna o diretório raiz da rota
+			return route->getRootDir();
+		}
 	}
 
 	// Se nenhuma correspondência for encontrada, retorna uma string vazia
