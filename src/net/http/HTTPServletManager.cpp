@@ -59,6 +59,11 @@ void HTTPServletManager::doService(HTTPRequest &request,
   _logger->log(Log::DEBUG, "HTTPServletManager", "doService",
                    "absolute path to resource", absolutePathToResource);
 
+  // If nothing is returned, then the URL did not match any possible location, so there is nothing to search for
+  if (absolutePathToResource.empty()) {
+	return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
+  }
+
   bool canListDirectory = _virtualHost->isDirectoryListingAllowedForThisPath(url);
 
   if (pathPointsToCGI) {
@@ -81,11 +86,8 @@ void HTTPServletManager::doService(HTTPRequest &request,
       methodReturn = _hTTPServlet->doDelete(request, response);
       break;
     default:
-      _logger->log(Log::FATAL, "HTTPServletManager", "doService",
-                   "an HTTP verb passed through the filters on the fd",
-                   _socketFD->getFileDescriptor());
-      _logger->log(Log::FATAL, "HTTPServletManager", "doService",
-                   "the verb value", request.getMethod());
+      _logger->log(Log::FATAL, "HTTPServletManager", "doService", "an HTTP verb passed through the filters on the fd", _socketFD->getFileDescriptor());
+      _logger->log(Log::FATAL, "HTTPServletManager", "doService", "the verb value", request.getMethod());
       methodReturn = HTTPStatus::NOT_IMPLEMENTED;
       break;
   }

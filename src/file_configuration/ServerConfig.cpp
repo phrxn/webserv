@@ -159,8 +159,8 @@ std::string ServerConfig::getThePhysicalPath(const URL& url) const {
 		}
 	}
 
-	// Se nenhuma correspondência for encontrada, retorna o caminho original da URL
-	return path;
+	// Se nenhuma correspondência for encontrada, retorna uma string vazia indicando que o caminho físico não foi encontrado
+	return "";
 }
 
 bool ServerConfig::isDirectoryListingAllowedForThisPath(const URL& url) const {
