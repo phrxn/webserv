@@ -4,3 +4,19 @@
 ** Provavelmente colocar O_EXCLO nos fds abertos
 
 ** quando criando a array de ServerConfig e adicionar eles ao clusterOfVirtualHost, dar free aqueles que nao foram adicionados para o cluster
+
+*** possivel bug na logica do ServerConfig
+
+	location /
+
+	location /mais_expecifico/
+
+	url   /mais_expecifico/manga_verde
+
+	Testar no NGINX qual URL vai ser chamada, qual a logica
+		1) Do mais especifico para o mais generico
+		2) O da match primeiro de cima para baixo?
+
+
+*** Na logica de perguntar se EH CGI soh faz sentido se o CGI estiver habilitado!!! Se para a Location o CGI estiver desabilitado, logo,
+    nao estiver habilidato Nao eh CGI;
