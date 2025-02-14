@@ -142,7 +142,11 @@ bool ServerConfig::isUrlAPathToCGI(const URL& url) const {
 
 std::string ServerConfig::getThePhysicalPath(const URL& url) const {
 	// Extrai o caminho da URL fornecida
-	std::string path = url.getPath(true);
+	std::string path = url.getPathFull(true);
+
+	if (isUrlAPathToCGI(url)) {
+		path = url.getPath(true);
+	}
 
 	// Itera sobre todas as rotas configuradas para o servidor atual
 	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {

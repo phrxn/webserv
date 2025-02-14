@@ -42,7 +42,12 @@ bool VirtualHostFake::isUrlAPathToCGI(const URL& url) const{
 }
 
 std::string VirtualHostFake::getThePhysicalPath(const URL& url) const{
+
 	std::string prefix = "www";
+
+	if (isUrlAPathToCGI(url)){
+		return prefix + url.getPath(true);
+	}
 	return prefix + url.getPathFull(false);
 }
 
