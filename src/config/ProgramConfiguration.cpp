@@ -39,6 +39,7 @@ ProgramConfiguration &ProgramConfiguration::operator=(
   _cgiVersion = src._cgiVersion;
   _timeToWaitTheChildCGIProcessInSeconds =
       src._timeToWaitTheChildCGIProcessInSeconds;
+  _createVirtualHostsFromConfigurationFile = src._createVirtualHostsFromConfigurationFile;
   return *this;
 }
 
@@ -135,4 +136,11 @@ std::size_t ProgramConfiguration::getTimeToWaitTheChildCGIProcessInSeconds()
 void ProgramConfiguration::setTimeToWaitTheChildCGIProcessInSeconds(
     std::size_t timeInSeconds) {
   _timeToWaitTheChildCGIProcessInSeconds = timeInSeconds;
+}
+
+bool ProgramConfiguration::getCreateVirtualHostsFromConfigurationFile() const{
+	return _createVirtualHostsFromConfigurationFile;
+}
+void ProgramConfiguration::setCreateVirtualHostsFromConfigurationFile(bool createVirtualHosts){
+	_createVirtualHostsFromConfigurationFile = createVirtualHosts;
 }

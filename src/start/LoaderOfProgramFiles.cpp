@@ -11,11 +11,16 @@
 #include "CreateDefaultErrorPagesFactory.hpp"
 #include "CreateMimeTypeMap.hpp"
 
-LoaderOfProgramFiles::LoaderOfProgramFiles(Log *logger) : _logger(logger) {}
+LoaderOfProgramFiles::LoaderOfProgramFiles(Log *logger) : _logger(logger),
+   _programConfiguration(ProgramConfiguration::getInstance()) {}
+
+LoaderOfProgramFiles::LoaderOfProgramFiles(Log *logger, const ProgramConfiguration &programConfiguration) :
+   _logger(logger), _programConfiguration(programConfiguration) {}
 
 LoaderOfProgramFiles::~LoaderOfProgramFiles() {}
 
-LoaderOfProgramFiles::LoaderOfProgramFiles(const LoaderOfProgramFiles &src) {
+LoaderOfProgramFiles::LoaderOfProgramFiles(const LoaderOfProgramFiles &src) :
+_logger(src._logger), _programConfiguration(src._programConfiguration) {
   *this = src;
 }
 
@@ -102,20 +107,40 @@ bool LoaderOfProgramFiles::checkParameters(int argc) const {
 
 bool LoaderOfProgramFiles::loadConfigurarionFile(char **argv) {
 
-  std::list<VirtualHostFake *> virtualHostsFromFile;
-  VirtualHostFake *a = new VirtualHostFake(8111, "abc");
-  VirtualHostFake *b = new VirtualHostFake(8110, "xyz");
+  std::vector<VirtualHostDefault *> virtualHostsFromFile;
 
-  virtualHostsFromFile.push_back(a);
-  virtualHostsFromFile.push_back(b);
+  LoaderVirtualHost *loaderVirtualHost = NULL;
 
-  std::list<VirtualHostFake *>::const_iterator it = virtualHostsFromFile.begin();
-  std::list<VirtualHostFake *>::const_iterator end = virtualHostsFromFile.end();
+  if (_programConfiguration.getCreateVirtualHostsFromConfigurationFile()) {
+	loaderVirtualHost = new LoaderVirtualHostFromFile(std::string(argv[1]));
+  } else {
+	loaderVirtualHost = new LoaderVirtualHostFake();
+  }
+
+  error::StatusOr<std::vector<VirtualHostDefault *> > virtualHosts = loaderVirtualHost->loadVirtualHosts();
+
+  if (virtualHosts.ok()) {
+	virtualHostsFromFile = virtualHosts.value();
+  }
+  delete loaderVirtualHost;
+  if (!virtualHosts.ok()){
+	_logger->log(Log::FATAL, "LoaderOfProgramFiles", "loadConfigurarionFile", virtualHosts.status().message(), "");
+	return false;
+  }
+  if (virtualHostsFromFile.empty()) {
+	_logger->log(Log::FATAL, "LoaderOfProgramFiles", "loadConfigurarionFile", "No configured server found!", "");
+	return false;
+  }
+
+  std::vector<VirtualHostDefault *>::const_iterator it = virtualHostsFromFile.begin();
+  std::vector<VirtualHostDefault *>::const_iterator end = virtualHostsFromFile.end();
 
   ClusterOfVirtualHost virtualHostCluster;
 
   for (; it != end; ++it) {
-    virtualHostCluster.addVirtualHostToCluster(*it);
+    if (!virtualHostCluster.addVirtualHostToCluster(*it)){
+		delete *it;
+	}
   }
 
   VirtualHostFactory::fillTheFactory(virtualHostCluster);

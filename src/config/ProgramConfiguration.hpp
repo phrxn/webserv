@@ -11,7 +11,10 @@ class ProgramConfiguration {
  public:
   static ProgramConfiguration &getInstance();
 
+  ProgramConfiguration();
   ~ProgramConfiguration();
+  ProgramConfiguration(const ProgramConfiguration &src);
+  ProgramConfiguration &operator=(const ProgramConfiguration &src);
 
   TypesOfProtocol getTypeOfProtocol() const;
   void setTypeOfProtocol(TypesOfProtocol typeOfProtocol);
@@ -49,9 +52,8 @@ class ProgramConfiguration {
   std::size_t getTimeToWaitTheChildCGIProcessInSeconds() const;
   void setTimeToWaitTheChildCGIProcessInSeconds(std::size_t timeInSeconds);
 
-  ProgramConfiguration();
-  ProgramConfiguration(const ProgramConfiguration &src);
-  ProgramConfiguration &operator=(const ProgramConfiguration &src);
+  bool getCreateVirtualHostsFromConfigurationFile() const;
+  void setCreateVirtualHostsFromConfigurationFile(bool createVirtualHosts);
 
  protected:
   TypesOfProtocol _typeOfProtocol;
@@ -65,7 +67,7 @@ class ProgramConfiguration {
   std::string _httpVersion;
   std::string _cgiVersion;
   std::size_t _timeToWaitTheChildCGIProcessInSeconds;
-
+  bool _createVirtualHostsFromConfigurationFile;
 };
 
 #endif

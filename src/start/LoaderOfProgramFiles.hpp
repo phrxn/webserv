@@ -3,12 +3,16 @@
 
 #include <list>
 
+#include "../config/ProgramConfiguration.hpp"
 #include "../error/Log.hpp"
+#include "LoaderVirtualHostFake.hpp"
+#include "LoaderVirtualHostFromFile.hpp"
 
 class LoaderOfProgramFiles{
 
 public:
 	LoaderOfProgramFiles(Log *logger);
+	LoaderOfProgramFiles(Log *logger, const ProgramConfiguration &programConfiguration);
 	~LoaderOfProgramFiles();
 	LoaderOfProgramFiles(const LoaderOfProgramFiles &src);
 	LoaderOfProgramFiles &operator=(const LoaderOfProgramFiles &src);
@@ -31,6 +35,7 @@ public:
 private:
 	Log *_logger;
 	std::list<int> _allVirtualHostPorts;
+	const ProgramConfiguration &_programConfiguration;
 
 };
 

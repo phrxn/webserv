@@ -99,6 +99,9 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/start/CreateDefaultErrorPagesFactory.cpp\
 		src/start/CreateMimeTypeMap.cpp\
 		src/start/LoaderOfProgramFiles.cpp\
+		src/start/LoaderVirtualHost.cpp\
+		src/start/LoaderVirtualHostFake.cpp\
+		src/start/LoaderVirtualHostFromFile.cpp\
 		src/system/Errno.cpp\
 		src/system/SystemCalls.cpp\
 		src/time/Time.cpp\

@@ -138,6 +138,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setHTTPVersion("HTTP/1.1");
   _programConfiguration.setCGIVersion("CGI/1.1");
   _programConfiguration.setTimeToWaitTheChildCGIProcessInSeconds(4);
+  _programConfiguration.setCreateVirtualHostsFromConfigurationFile(true);
 }
 
 void Start::startLog() {
