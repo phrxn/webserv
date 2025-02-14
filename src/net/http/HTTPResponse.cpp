@@ -96,10 +96,7 @@ bool HTTPResponse::setLastModified(const std::string &lastModified) {
   return _addHeader("Last-Modified", lastModified);
 }
 
-#include <iostream>
 bool HTTPResponse::setConnection(const std::string &connection) {
-
-  std::cout << "Connection: " << connection << std::endl;
 
   std::string theConnection = connection;
 
