@@ -33,12 +33,15 @@ public:
     std::string parseChunkedBody(const std::string& input) ;
     int hexStringToInt(const std::string& hex);
 
-    //check 09 jx54yeSQ  GYT5*8/5942160
+    //check 
     bool isBodyComplete(const std::string& buffer) ;
     bool isChunkedEnd(const std::string& buffer);
     bool isChunked();
     bool isTheHTTPHeaderComplete(std::string _buffer);
     bool isParsed();
+
+    //validate
+    bool isValidHeader();
 
 private:
 

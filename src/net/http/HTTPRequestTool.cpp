@@ -1,5 +1,7 @@
 
 #include "HTTPRequestTool.hpp"
+#include "HTTPMethods.hpp"
+#include "URL.hpp"
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -132,6 +134,12 @@ bool HTTPRequestTool::isTheHTTPHeaderComplete(std::string _buffer){
 
 bool HTTPRequestTool::isParsed(){
     if(_header.empty())
+        return false;
+    return true;
+}
+
+bool HTTPRequestTool::isValidHeader(){
+    if(HTTPMethods::getMethodToString(_header["Method"]) || _header["HTTP-Version"] == "HTTP/1.1")
         return false;
     return true;
 }
