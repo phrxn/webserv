@@ -82,6 +82,12 @@ Interface CheckConfiguration:
         // Essas paginas sao as paginas personalizadas que o cliente possa ter passado
         // No arquivo de configuracao
 
+  C++ -> virtual std::string VirtualHostFake::getRootDir(const URL& url) const;
+  string retornarAPastaQueOLocationEstaUsando(caminhoURI)
+        // Esse metodo deve retornar a pasta/diretório que uma location está como "raiz", ou seja"
+        // A pasta root dessa location. Isso é importante para definir uma Variavel de Ambiente do CGI
+        // Se o caminhoURI nao der match com nenhuma location, retornar uma string vazia
+
 ===================================================================================
 
 Como funciona a selecao do server pelo ngnix?

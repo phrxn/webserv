@@ -5,7 +5,7 @@
         isTypeOfPage  //trocar pelo isPathTOCGI
         adicionar um metodo para pegar o caminho real para o diretorio, tipo o do location /var/www/html
    OK * ajustar o getThePhysicalPath do ServerConfig para usar o getPathFull ou getPath (se for CGI)
-      * ajustar o getThePhysicalPath para retornar vazio se nao achar nada, pois tipo se nao deu match com nenhum location, e retornarmos o caminho verdadeiro, pode dar match com algo que NAO ERA PRA RETORNAR, TIPO O USUARIO NAO PROGRAMOU
+   OK * ajustar o getThePhysicalPath para retornar vazio se nao achar nada, pois tipo se nao deu match com nenhum location, e retornarmos o caminho verdadeiro, pode dar match com algo que NAO ERA PRA RETORNAR, TIPO O USUARIO NAO PROGRAMOU
         OU QUERIA AQUILO!! E no HTTPServletManager ser getThePhysicalPath retornar vazio dar 404
 
 
