@@ -35,6 +35,9 @@ Perguntas:
 ===================================================================================
 
 Interface CheckConfiguration:
+  
+  **Apenas uma observacao, com excecao do geThePysicalPath, devemos usar o método getPathFull da classe URL.
+    E na hora da conversão da URL para um caminho real, por óbvio usar o getPath() se for CGI e getPathFull se for static
 
   C++ -> virtual bool isPathValid(URL url) const;
   bool oCaminhoEhValid(String caminhoURI);
