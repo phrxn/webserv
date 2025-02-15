@@ -49,7 +49,7 @@ HTTPStatus::Status CreateCGIHTMLDocument::createTheCGIResponse(const std::string
 
   size_t pos = outputCGIFullStream.find("\r\n\r\n");
   if (pos == std::string::npos) {
-    _logger->log(Log::ERROR, "CreateCGIHTMLDocument", "createTheCGIResponse", "the outputCGIFullStream malformed", "the file doesn't have an \r\n\r\n");
+    _logger->log(Log::ERROR, "CreateCGIHTMLDocument", "createTheCGIResponse", "the outputCGIFullStream malformed", "the CGI output file doesn't have a (\\r\\n) separating the header from the body");
     return HTTPStatus::INTERNAL_SERVER_ERROR;
   }
 
