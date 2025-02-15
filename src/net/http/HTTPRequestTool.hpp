@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "HTTPStatus.hpp"
+#include "HTTPMethods.hpp"
 
 
 
@@ -16,8 +17,9 @@ public:
     ~HTTPRequestTool();
 
     // Getters
-    std::map<std::string, std::string> getHeader(const std::string method);
+    std::string getHeader(const std::string method);
     std::string getBody();
+    HTTPStatus::Status getStatus();
 
     // Split the first line of the HTTP request
     void splitFirstLine(const std::string& buffer);
@@ -48,10 +50,11 @@ private:
     HTTPRequestTool& operator=(const HTTPRequestTool& other);
     HTTPRequestTool(const HTTPRequestTool& other);
 
-    long int stringParaLongInt(const std::string& str);
-
+    std::size_t stringParaLongInt(const std::string& str);
+    
+    HTTPMethods _method;
     std::map<std::string, std::string> _header;
-    int _status;
+    HTTPStatus::Status _status;
     std::string line;
     std::size_t pos;
     std::string _body;

@@ -25,6 +25,7 @@ class HTTPRequest : public Request {
   HTTPStatus::Status _status;
   HTTPRequestTool _HTTPTool;
   Log *_logger;
+  HTTPMethods _method;
 
  public:
   HTTPRequest(SocketFileDescriptor *socketFD, Log *logger);
@@ -35,7 +36,7 @@ class HTTPRequest : public Request {
   std::string getHost();
 
   virtual HTTPMethods::Method getMethod();
-
+  
   virtual std::string getURL();
 
   virtual HTTPStatus::Status getStatus();

@@ -1,4 +1,5 @@
 #include "HTTPRequest.hpp"
+#include "HTTPMethods.hpp"
 #include <iostream>
 #include <vector>
 
@@ -54,8 +55,8 @@ HTTPStatus::Status HTTPRequest::getStatus() {
 	return _HTTPTool.getStatus();
 }
 
-HTTPMethods::Method HTTPRequest::getMethod(const std::string method){
-	return _HTTPTool.getHeader(method);
+HTTPMethods::Method HTTPRequest::getMethod(){
+	return _method.getStringToMethod( _HTTPTool.getHeader("method"));
 }
 
 std::string HTTPRequest::getURL(){
