@@ -215,7 +215,6 @@ namespace RouteExtraction
         {
 			location.setCgiEnabled(true);
             location.setCgiPath(cgiPath);
-
         }
         else
         {

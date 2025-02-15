@@ -221,7 +221,15 @@ std::string ServerConfig::getIndexFile(const URL& url) const{
 	if (isUrlAPathToCGI(url)){
 		path = url.getPath(true);
 	}
-	return "";
 
-	//implementar aqui a obtecao
+	// Itera sobre todas as rotas configuradas para o servidor atual
+	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
+		// Verifica se o caminho da URL começa com o caminho da rota
+		if (path.find(route->getLocationPath()) == 0) {
+			// Retorna o diretório raiz da rota
+			return route->getIndexFile();
+		}
+	}
+
+	return "";
 }
