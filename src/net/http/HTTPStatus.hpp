@@ -44,6 +44,7 @@ class HTTPStatus {
   HTTPStatus::Status getStringToStatus(const std::string &status);
   HTTPStatus::Status getIntToStatus(int status);
   std::string getStatusToString(HTTPStatus::Status status);
+  std::string getStatusCodeToString(HTTPStatus::Status status);
 
   private:
 	static const std::map<HTTPStatus::Status, std::string> mapStatus;

@@ -1,5 +1,7 @@
 #include "HTTPStatus.hpp"
 
+#include <sstream>
+
 const std::string HTTPStatus::INVALID_STRING_TEXT = "INVALID";
 
 const std::map<HTTPStatus::Status, std::string> HTTPStatus::mapStatus = HTTPStatus::startMapStatus();
@@ -80,6 +82,21 @@ std::string HTTPStatus::getStatusToString(HTTPStatus::Status status){
 	while(start != end){
 		if (start->first == status)
 			return start->second;
+		start++;
+	}
+	return INVALID_STRING_TEXT;
+}
+
+std::string HTTPStatus::getStatusCodeToString(HTTPStatus::Status status){
+	std::map<HTTPStatus::Status, std::string>::const_iterator start = mapStatus.begin();
+	std::map<HTTPStatus::Status, std::string>::const_iterator end = mapStatus.end();
+
+	while(start != end){
+		if (start->first == status){
+			std::stringstream ss;
+			ss << status;
+			return ss.str();
+		}
 		start++;
 	}
 	return INVALID_STRING_TEXT;

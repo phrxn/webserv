@@ -184,7 +184,7 @@ std::string ServerConfig::getThePathToCustomPageForHTTPStatus(HTTPStatus::Status
 
 	// Converte o código de status HTTP para uma string usando HTTPStatus::getStatusToString
 	HTTPStatus status;
-	std::string statusCode = status.getStatusToString(httpStatus);
+	std::string statusCode = status.getStatusCodeToString(httpStatus);
 
 	// Procura o código de status HTTP nas páginas de erro configuradas para o servidor atual
 	std::map<std::string, std::string>::const_iterator it = _errorPages.find(statusCode);
