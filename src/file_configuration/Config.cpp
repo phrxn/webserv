@@ -309,17 +309,15 @@ void Config::_parseRouteBlock(const std::string &locationBlock, RouteConfig &loc
         {
             RouteExtraction::extractCGIPath(tokens, location);
         }
-        else if (tokens[0] == "cgi_extension")
+        else if (tokens[0] == "cgi_enable")
         {
-            RouteExtraction::extractCGIExtension(tokens, location);
+            RouteExtraction::extractCGIEnable(tokens, location);
         }
         else
         {
             throw std::runtime_error("ERROR_INVALID_KEY");
         }
     }
-    ConfigUtils::validateFullLocationPath(location);
-    ConfigUtils::validateFullCGIPath(location);
 }
 
 // Método público para obter os servidores

@@ -22,14 +22,14 @@
 # define ERROR_INVALID_AUTOINDEX "Location: Invalid Autoindex Value!"
 # define ERROR_INVALID_UPLOAD_ENABLED "Location: Invalid Upload Enabled Value!"
 # define ERROR_INVALID_CGI_PATH "Location: Invalid CGI Path!"
-# define ERROR_INVALID_CGI_EXTENSION "Location: Invalid CGI Extension!"
+# define ERROR_INVALID_CGI_ENABLE_OPTION "Location: Invalid CGI Enabled Value!"
 
 /* Default Location Configs */
 # define DEFAULT_ROOT "./static"
 
-/* CGI Macros */
-# define EXTENSION_PHP ".php"
-# define EXTENSION_PY ".py"
+/* CGI Macros enable */
+# define ENABLE "on"
+# define DISENABLE "off"
 
 /* File Error Macros */
 # define ERROR_OPEN_CONFIG_FILE "Could Not Opening Config File!"

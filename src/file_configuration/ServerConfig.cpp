@@ -70,18 +70,14 @@ bool ServerConfig::isPathValid(const URL& url) const {
 
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
-	// Itera sobre todas as rotas configuradas para o servidor atual
 
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota
-		// Se encontrar uma correspondência, retorna true indicando que o caminho é válido
-		if (path.find(route->getLocationPath()) == 0) {
-			return true;
-		}
+    std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		return true;
 	}
 
-	// Se nenhuma correspondência for encontrada, retorna false indicando que o caminho não é válido
-	return false;
+    return false;
 }
 
 std::string ServerConfig::isPathARedirection(const URL& url) const {
@@ -89,16 +85,14 @@ std::string ServerConfig::isPathARedirection(const URL& url) const {
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota e se a rota tem um redirecionamento configurado
-		if (path.find(route->getLocationPath()) == 0 && route->getRedirectSet()) {
-			// Retorna o caminho de redirecionamento configurado para a rota
+    std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+    if (route != _routes.end()){
+		if (route->getRedirectSet()){
 			return route->getRedirect();
 		}
 	}
 
-	// Se nenhuma correspondência for encontrada, retorna uma string vazia
 	return "";
 }
 
@@ -106,15 +100,13 @@ bool ServerConfig::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Me
     // Extrai o caminho da URL fornecida
     std::string path = url.getPathFull(true);
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota
-		if (path.find(route->getLocationPath()) == 0) {
-			// Verifica se o método HTTP fornecido está na lista de métodos permitidos para a rota
-			for (std::vector<HTTPMethods::Method>::const_iterator it = route->getMethods().begin(); it != route->getMethods().end(); ++it) {
-				if (*it == method) {
-					return true;
-				}
+    std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		// Verifica se o método HTTP fornecido está na lista de métodos permitidos para a rota
+		for (std::vector<HTTPMethods::Method>::const_iterator it = route->getMethods().begin(); it != route->getMethods().end(); ++it) {
+			if (*it == method) {
+				return true;
 			}
 		}
 	}
@@ -124,13 +116,15 @@ bool ServerConfig::isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Me
 }
 
 bool ServerConfig::isUrlAPathToCGI(const URL& url) const {
+
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
+    std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
 		// Verifica se o caminho da URL começa com o caminho da rota e se a rota tem o CGI habilitado
-		if (path.find(route->getLocationPath()) == 0 && route->getCgiEnabled()) {
+		if (route->getCgiEnabled() && (path.find(route->getCgiPath()) == 0)){
 			// Retorna true indicando que o caminho aponta para um CGI
 			return true;
 		}
@@ -148,15 +142,13 @@ std::string ServerConfig::getThePhysicalPath(const URL& url) const {
 		path = url.getPath(true);
 	}
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota
-		if (path.find(route->getLocationPath()) == 0) {
-			// Constrói o caminho físico concatenando o diretório raiz da rota com a parte do caminho da URL que vem após o caminho da rota
-			std::string physicalPath = route->getRootDir() + path.substr(route->getLocationPath().length());
-			// Retorna o caminho físico construído
-			return physicalPath;
-		}
+	std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		// Constrói o caminho físico concatenando o diretório raiz da rota com a parte do caminho da URL que vem após o caminho da rota
+		std::string physicalPath = route->getRootDir() + path.substr(route->getLocationPath().length());
+		// Retorna o caminho físico construído
+		return physicalPath;
 	}
 
 	// Se nenhuma correspondência for encontrada, retorna uma string vazia indicando que o caminho físico não foi encontrado
@@ -167,10 +159,10 @@ bool ServerConfig::isDirectoryListingAllowedForThisPath(const URL& url) const {
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota e se a listagem de diretório está habilitada para a rota
-		if (path.find(route->getLocationPath()) == 0 && route->getAutoindex()) {
+	std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		if (route->getAutoindex()){
 			// Retorna true indicando que a listagem de diretório está habilitada para o caminho
 			return true;
 		}
@@ -201,13 +193,11 @@ std::string ServerConfig::getRootDir(const URL& url) const{
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota
-		if (path.find(route->getLocationPath()) == 0) {
-			// Retorna o diretório raiz da rota
-			return route->getRootDir();
-		}
+	std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		// Retorna o diretório raiz da rota
+		return route->getRootDir();
 	}
 
 	// Se nenhuma correspondência for encontrada, retorna uma string vazia
@@ -222,14 +212,50 @@ std::string ServerConfig::getIndexFile(const URL& url) const{
 		path = url.getPath(true);
 	}
 
-	// Itera sobre todas as rotas configuradas para o servidor atual
-	for (std::vector<RouteConfig>::const_iterator route = _routes.begin(); route != _routes.end(); ++route) {
-		// Verifica se o caminho da URL começa com o caminho da rota
-		if (path.find(route->getLocationPath()) == 0) {
-			// Retorna o diretório raiz da rota
-			return route->getIndexFile();
-		}
+	std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+		// Retorna o diretório raiz da rota
+		return route->getIndexFile();
 	}
 
 	return "";
+}
+
+std::vector<RouteConfig>::const_iterator ServerConfig::getMatchedRouteConfig(const std::vector<RouteConfig> &_routes, const std::string &path) const{
+
+	std::vector<RouteConfig>::const_iterator matched = _routes.begin();
+    std::string locationMatch;
+    bool isRouteConfigMatch = false;
+
+    std::vector<RouteConfig>::const_iterator route = _routes.begin();
+    std::vector<RouteConfig>::const_iterator end = _routes.end();
+
+    // Itera sobre todas as rotas configuradas para o servidor atual
+	for (; route != end; ++route){
+
+        // Verifica se o caminho da URL começa com o caminho da rota e se a rota tem um redirecionamento configurado
+		if (path.find(route->getLocationPath()) == 0){
+		    isRouteConfigMatch = true;
+
+			if (matched == _routes.begin() && locationMatch.empty()){
+				locationMatch = route->getLocationPath();
+				matched = route;
+				continue;
+			}
+
+			std::string locationTmp = route->getLocationPath();
+
+            if (locationTmp > locationMatch){
+            	locationMatch = locationTmp;
+            	matched = route;
+            }
+		}
+	}
+
+    if (isRouteConfigMatch){
+    	return matched;
+	}
+
+	return _routes.end();
 }

@@ -50,8 +50,6 @@ namespace ConfigUtils {
     bool			directoryExists(const std::string &path); // Verifica se um diretório existe
     bool			fileExists(const std::string &path); // Verifica se um arquivo existe
     void			formatPath(std::string &path); // Formata o caminho do arquivo
-    void			validateFullLocationPath(RouteConfig &location); // Valida o caminho completo da localização
-    void			validateFullCGIPath(RouteConfig &location); // Valida o caminho completo do CGI
     void			printServerStruct(const ServerConfig &server); // Imprime a estrutura do servidor
 }
 
@@ -75,7 +73,7 @@ namespace RouteExtraction {
     void			extractAutoindex(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o autoindex
     void			extractUploadEnabled(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o upload habilitado
     void			extractCGIPath(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o caminho do CGI
-    void			extractCGIExtension(std::vector<std::string> &tokens, RouteConfig &location); // Extrai a extensão do arquivo CGI
+    void			extractCGIEnable(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o CGI habilitado
 }
 
 typedef std::map<std::string, std::string> errorMap;

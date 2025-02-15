@@ -29,6 +29,9 @@ public:
 	std::string getErrorPage(const std::string &errorPage) const;
 	std::vector<RouteConfig> getRoutes(void) const;
 
+	//utils
+	std::vector<RouteConfig>::const_iterator getMatchedRouteConfig(const std::vector<RouteConfig> &_routes, const std::string &path) const;
+
 	//inteface methods
 
 	bool isPathValid(const URL& url) const;

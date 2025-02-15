@@ -208,34 +208,28 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::string cgiPath = tokens[1];
-        size_t lastDot = cgiPath.find_last_of('.');
 
-        if (lastDot != std::string::npos &&
-            (cgiPath.substr(lastDot) == EXTENSION_PHP || cgiPath.substr(lastDot) == EXTENSION_PY))
-        {
-			location.setCgiEnabled(true);
-            location.setCgiPath(cgiPath);
-        }
-        else
-        {
-            throw std::runtime_error(ERROR_INVALID_CGI_PATH);
-        }
+		location.setCgiPath(cgiPath);
     }
 
-    // Função para extrair e definir a extensão do CGI na localização
-    void extractCGIExtension(std::vector<std::string> &tokens, RouteConfig &location)
+    // Função para extrair e definir se o CGI esta ou nao habilitado
+    void extractCGIEnable(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::string cgiExtension = tokens[1];
 
-        if (cgiExtension == EXTENSION_PHP || cgiExtension == EXTENSION_PY)
+		if (cgiExtension == DISENABLE){
+			return;
+		}
+
+        if (cgiExtension == ENABLE)
         {
 			location.setCgiEnabled(true);
 			location.setCgiExtension(cgiExtension);
         }
-        else
+		else
         {
-            throw std::runtime_error(ERROR_INVALID_CGI_EXTENSION);
+            throw std::runtime_error(ERROR_INVALID_CGI_ENABLE_OPTION);
         }
     }
 }

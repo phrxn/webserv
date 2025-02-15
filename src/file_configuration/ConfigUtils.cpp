@@ -104,42 +104,6 @@ namespace ConfigUtils {
         }
     }
 
-    void	validateFullLocationPath( RouteConfig &location ) {
-        if (location.getCgiEnabled()) { return ; }
-        if (location.getRedirectSet()) { return ; }
-
-        std::string effectiveRoot;
-        if (location.getRootSet()) {
-            effectiveRoot = location.getRootDir();
-        } else { effectiveRoot = DEFAULT_ROOT; }
-
-        std::string fullPath = effectiveRoot + location.getLocationPath();
-        if (!ConfigUtils::directoryExists(fullPath)) {
-            throw std::runtime_error(ERROR_INVALID_LOCATION_PATH);
-        }
-    }
-
-    void	validateFullCGIPath( RouteConfig &location ) {
-        if (!location.getCgiEnabled()) { return ; }
-
-        std::string cgiPath = location.getCgiPath();
-        size_t	lastDot = cgiPath.find_last_of('.');
-        if (cgiPath.substr(lastDot) != location.getCgiExtension()) {
-            throw std::runtime_error(ERROR_INVALID_CGI_EXTENSION);
-        }
-
-        std::string effectiveRoot;
-        if (location.getRootSet()) {
-            effectiveRoot = location.getRootDir();
-        } else { effectiveRoot = DEFAULT_ROOT; }
-
-        std::string fullPath = effectiveRoot + "/" + cgiPath;
-        if (!ConfigUtils::fileExists(fullPath)) {
-            throw std::runtime_error(ERROR_INVALID_CGI_PATH);
-        }
-    }
-
-
  	void	printServerStruct( const ServerConfig &server ) {
 		std::cout << "              Server Configs " << std::endl;
 		std::cout << "=========================================" << std::endl;
