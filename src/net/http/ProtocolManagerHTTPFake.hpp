@@ -10,7 +10,7 @@
 
 class ProtocolManagerHTTPFake : public ProtocolManager {
  public:
-  ProtocolManagerHTTPFake(SocketFileDescriptor *socket, Log *_logger);
+  ProtocolManagerHTTPFake(Log *_logger, SocketFileDescriptor *socket);
   ~ProtocolManagerHTTPFake();
 
   RequestCreationStatus createRequest();
@@ -22,11 +22,12 @@ class ProtocolManagerHTTPFake : public ProtocolManager {
   ProtocolManagerHTTPFake(const ProtocolManagerHTTPFake &src);
   ProtocolManagerHTTPFake &operator=(const ProtocolManagerHTTPFake &src);
 
-  HTTPServletManager _hTTPServletManager;
+  Log *_logger;
   HTTPRequestFake _hTTPRequestFake;
   HTTPResponseFake _hTTPResponseFake;
+  HTTPServletManager _hTTPServletManager;
   SocketFileDescriptor *_socketFD;
-  Log *_logger;
+
 };
 
 #endif
