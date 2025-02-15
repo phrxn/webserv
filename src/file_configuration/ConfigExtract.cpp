@@ -183,7 +183,9 @@ namespace RouteExtraction
         std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
         if (tokens[1] == "on"){
 			location.setAutoindex(true);
-        }
+        }else if (tokens[1] == "off"){
+			location.setAutoindex(false);
+		}
         else{
             throw std::runtime_error(ERROR_INVALID_AUTOINDEX);
         }
