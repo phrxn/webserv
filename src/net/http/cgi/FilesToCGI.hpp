@@ -19,7 +19,7 @@ class FilesToCGI {
   FilesToCGI(Log *logger);
   ~FilesToCGI();
 
-  bool createFileDescriptors(const HTTPRequest &request);
+  bool createFileDescriptors(HTTPRequest &request);
 
   bool prepareFileDescriptorsToChildProcess(int fdIn, int fdOut, int fdErr);
 

@@ -49,7 +49,7 @@ HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
   return REQUEST_CREATED;
 }
 
-std::string HTTPRequestFake::getHost() const{
+std::string HTTPRequestFake::getHost(){
 	return _host;
 }
 
@@ -58,12 +58,12 @@ bool HTTPRequestFake::isTheHTTPHeaderComplete(std::string _buffer) {
   return false;
 }
 
-HTTPMethods::Method HTTPRequestFake::getMethod() const{
+HTTPMethods::Method HTTPRequestFake::getMethod(){
 	HTTPMethods convert;
 	return convert.getStringToMethod(_method);
 }
 
-std::string HTTPRequestFake::getURLStr() const{
+std::string HTTPRequestFake::getURLStr(){
 	return _url;
 }
 
@@ -71,6 +71,6 @@ URL HTTPRequestFake::getURL() const{
 	return _url;
 }
 
-HTTPStatus::Status HTTPRequestFake::getStatus() const{
+HTTPStatus::Status HTTPRequestFake::getStatus(){
 	return _status;
 }

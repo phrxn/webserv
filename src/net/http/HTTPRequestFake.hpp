@@ -14,17 +14,17 @@ class HTTPRequestFake : public HTTPRequest {
 
   StateOfCreation createRequest();
 
-  std::string getHost() const;
+  std::string getHost();
 
   bool isTheHTTPHeaderComplete(std::string _buffer);
 
-  HTTPMethods::Method getMethod() const;
+  HTTPMethods::Method getMethod();
 
-  std::string getURLStr() const;
+  std::string getURLStr();
 
   URL getURL() const;
 
-  HTTPStatus::Status getStatus() const;
+  HTTPStatus::Status getStatus();
 
 
 

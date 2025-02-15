@@ -41,7 +41,7 @@ FilesToCGI &FilesToCGI::operator=(const FilesToCGI &src) {
   return *this;
 }
 
-bool FilesToCGI::createFileDescriptors(const HTTPRequest &request) {
+bool FilesToCGI::createFileDescriptors(HTTPRequest &request) {
   std::string inputFileNameFullPath =
       defaultDirectoryToSaveTheFiles + inputFileName;
   std::string outputFileNameFullPath =

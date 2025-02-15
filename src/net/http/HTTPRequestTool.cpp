@@ -1,14 +1,16 @@
 
 #include "HTTPRequestTool.hpp"
+#include "HTTPMethods.hpp"
+#include "../URL.hpp"
+#include "../../config/ProgramConfiguration.hpp"
+#include <sstream>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <vector>
-#include <iomanip>
 
 HTTPRequestTool::HTTPRequestTool() {}
 
-HTTPRequestTool::HTTPRequestTool(const HTTPRequestTool &other) : HTTPStatus(other) {
+HTTPRequestTool::HTTPRequestTool(const HTTPRequestTool &other) {
     (void)other;
 }
 HTTPRequestTool &HTTPRequestTool::operator=(const HTTPRequestTool &other) {
@@ -23,7 +25,7 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
     std::size_t spacePos1 = buffer.find(' ');
     std::size_t spacePos2 = buffer.find(' ', spacePos1 + 1);
     if (spacePos1 == std::string::npos || spacePos2 == std::string::npos) {
-        _status = 0;
+        _status = HTTPStatus::NOT_ALLOWED;
         return;
     }
 
@@ -32,6 +34,15 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
     std::string httpVersion = buffer.substr(spacePos2 + 1);
     // Remover caracteres de nova linha (\r e \n)
     _header["HTTP-Version"] = httpVersion.substr(0, httpVersion.size());
+
+    if(!isValidHeader())
+    {
+        _status = HTTPStatus::NOT_ALLOWED;
+    }
+    else
+    {
+        _status = HTTPStatus::OK;
+    }
 }
 
 void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
@@ -56,22 +67,27 @@ void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
             std::string value = line.substr(colonPos + 2); // Skip ": "
             _header[key] = value;
         } else {
-            _status = 0;
+            _status = HTTPStatus::NOT_ALLOWED;
         }
     }
+    
 }
 
 void HTTPRequestTool::parserHeader(const std::string& buffer) {
     pos = 0;
     std::string tmp = buffer.substr(0, buffer.find("\r\n"));
     splitFirstLine(tmp);
-    if (_status != 0) {
+    if (_status == HTTPStatus::OK) {
         splitOtherLines(buffer.substr(buffer.find("\r\n") + 2));
     }
 }
 
-std::map<std::string, std::string> HTTPRequestTool::getHeaders() {
-    return _header;
+std::string HTTPRequestTool::getHeader(const std::string method) {
+    return _header[method];
+}
+
+HTTPStatus::Status HTTPRequestTool::getStatus() {
+    return _status;
 }
 
 std::string HTTPRequestTool::getBody() {
@@ -87,9 +103,9 @@ void HTTPRequestTool::setBody(const std::string& body) {
     }
 }
 
-long int HTTPRequestTool::stringParaLongInt(const std::string& str) {
+std::size_t HTTPRequestTool::stringParaLongInt(const std::string& str) {
     std::istringstream iss(str);
-    long int resultado = 0;
+    std::size_t resultado = 0;
 
     if (iss >> resultado)
         return resultado;
@@ -105,31 +121,66 @@ int HTTPRequestTool::hexStringToInt(const std::string& hex) {
     return value;
 }
 
-void HTTPRequestTool::parserChunked(const std::string& buffer) {
-    std::string body;
-    std::string line;
-    std::istringstream stream(buffer);
+bool HTTPRequestTool::isChunked() {
+    return _header["Transfer-Encoding"] == "chunked";
+}
 
-    while (std::getline(stream, line)) {
-        if (line.empty()) continue;
+bool HTTPRequestTool::isChunkedEnd(const std::string& buffer) {
+    return buffer.find("0\r\n\r\n") != std::string::npos;
+}
 
-        int chunkSize = hexStringToInt(line);
-        if (chunkSize == 0) break; // Final chunk - DO NOT include this in the body
-
-        std::vector<char> _buffer(chunkSize + 1);
-        if (stream.read(&_buffer[0], chunkSize)) {
-            _buffer[chunkSize] = '\0';
-            body.append(&_buffer[0], chunkSize);  // Append ONLY the chunk data
-        } else {
-            std::cerr << "Error: Could not read chunk data." << std::endl;
-            return;
-        }
-
-        std::getline(stream, line); // Read the trailing \r\n - DO NOT include this
-        if (line != "\r") {
-          std::cerr << "Warning: Expected \\r\\n, but got: " << line << std::endl;
-        }
+bool HTTPRequestTool::isBodyComplete(const std::string& buffer) {
+    if (_header["Content-Length"].empty()) {
+        return isChunkedEnd(buffer);
+    } else {
+        return buffer.size() >= stringParaLongInt(_header["Content-Length"]);
     }
+}
 
-    _body = body;
+bool HTTPRequestTool::isTheHTTPHeaderComplete(std::string _buffer){
+	if (_buffer.find("\r\n\r\n") != std::string::npos)
+		return true;
+	return false;
+}
+
+bool HTTPRequestTool::isParsed(){
+    if(_header.empty())
+        return false;
+    return true;
+}
+
+bool HTTPRequestTool::isValidHeader(){
+    if(_method.getStringToMethod (_header["Method"]) || _header["HTTP-Version"] == "HTTP/1.1" 
+        || stringParaLongInt(_header["Content-Length"]) > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes())
+        return false;
+    return true;
+
+}
+
+
+std::string HTTPRequestTool::parseChunkedBody(const std::string& input) {
+    std::string output;
+    std::size_t pos = 0;
+    while (pos < input.size()) {
+        std::size_t endPos = input.find("\r\n", pos);
+        if (endPos == std::string::npos) {
+            endPos = input.find('\n', pos);
+            if (endPos == std::string::npos) {
+                endPos = input.size();
+            }
+        }
+        std::string chunkSizeStr = input.substr(pos, endPos - pos);
+        pos = endPos + (input[endPos] == '\r' ? 2 : 1); // Skip the line and the \r\n or \n
+        int chunkSize = hexStringToInt(chunkSizeStr);
+        if (chunkSize == 0) {
+            break;
+        }
+        else if (pos + chunkSize > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes()) {
+            _status = HTTPStatus::NOT_ALLOWED;
+            return "";
+        }
+        output += input.substr(pos, chunkSize);
+        pos += chunkSize + 2; // Skip the chunk and the \r\n
+    }
+    return output;
 }

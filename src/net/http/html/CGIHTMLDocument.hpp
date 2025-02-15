@@ -22,7 +22,7 @@ class CGIHTMLDocument : public HTMLDocument {
 
   HTTPStatus::Status createPage(const std::string &virtualHostRootPath,
                                 const std::string &physicalPathToResource,
-                                const HTTPRequest &request);
+                                HTTPRequest &request);
 
   HTMLDocument *clone() const;
 

@@ -7,7 +7,7 @@ CGIEnvironmentVariables::CGIEnvironmentVariables()
 
 CGIEnvironmentVariables::CGIEnvironmentVariables(
     const std::string &physicalPathToResource,
-    const std::string &rootVirtualHostLocation, const HTTPRequest *httpRequest)
+    const std::string &rootVirtualHostLocation, HTTPRequest *httpRequest)
     : _cgiCreateEnvironmentVariables(physicalPathToResource,
                                      rootVirtualHostLocation),
       _httpRequest(httpRequest),
@@ -15,7 +15,7 @@ CGIEnvironmentVariables::CGIEnvironmentVariables(
 
 CGIEnvironmentVariables::CGIEnvironmentVariables(
     const std::string &physicalPathToResource,
-    const std::string &rootVirtualHostLocation, const HTTPRequest *httpRequest,
+    const std::string &rootVirtualHostLocation, HTTPRequest *httpRequest,
     ProgramConfiguration programConfiguration)
     : _cgiCreateEnvironmentVariables(physicalPathToResource,
                                      rootVirtualHostLocation),

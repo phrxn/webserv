@@ -11,8 +11,8 @@ class CGIEnvironmentVariables{
 
 public:
   CGIEnvironmentVariables();
-  CGIEnvironmentVariables(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation, const HTTPRequest *httpRequest);
-  CGIEnvironmentVariables(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation, const HTTPRequest *httpRequest, ProgramConfiguration programConfiguration);
+  CGIEnvironmentVariables(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation, HTTPRequest *httpRequest);
+  CGIEnvironmentVariables(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation, HTTPRequest *httpRequest, ProgramConfiguration programConfiguration);
 
   ~CGIEnvironmentVariables();
   CGIEnvironmentVariables(const CGIEnvironmentVariables &src);
@@ -23,7 +23,7 @@ public:
 private:
 	EnvironmentVariables _env;
 	CGICreateEnvironmentVariables _cgiCreateEnvironmentVariables;
-	const HTTPRequest *_httpRequest;
+	HTTPRequest *_httpRequest;
 	ProgramConfiguration _programConfiguration;
 
 };

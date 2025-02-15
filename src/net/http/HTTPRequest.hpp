@@ -26,6 +26,7 @@ class HTTPRequest : public Request {
   HTTPStatus::Status _status;
   HTTPRequestTool _HTTPTool;
   Log *_logger;
+  HTTPMethods _method;
 
  public:
   HTTPRequest(SocketFileDescriptor *socketFD, Log *logger);
@@ -33,33 +34,34 @@ class HTTPRequest : public Request {
 
   StateOfCreation createRequest();
 
-  virtual std::string getHost() const;
+  virtual HTTPStatus::Status getStatus();
 
-  virtual HTTPMethods::Method getMethod() const;
+  virtual HTTPMethods::Method getMethod();
 
-  virtual std::string getURLStr() const;
+  virtual std::string getURLStr();
 
-  virtual URL getURL() const;
+  virtual std::string getHost();
 
-  virtual HTTPStatus::Status getStatus() const;
+  virtual std::string isToKeepTheConnection();
 
-  virtual bool isTheHTTPHeaderComplete(std::string _buffer);
 
-  virtual HTTPMethods::Method getAnythingFromHeader(const std::string &key);
+
+
+
 
   virtual int getPort() const;
 
-  virtual std::string isToKeepTheConnection() const;
+  virtual std::string getClientAddressIPv4() const;
+
+  virtual URL getURL() const;
 
   virtual std::string getContentType() const;
 
   virtual std::string getContentLength() const;
 
-  virtual std::string getClientAddressIPv4() const;
-
   virtual std::string getCookie() const;
 
-  virtual std::string getBody() const;
+  virtual std::string getBody();
 };
 
 #endif
