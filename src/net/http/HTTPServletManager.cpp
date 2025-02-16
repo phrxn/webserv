@@ -33,6 +33,8 @@ void HTTPServletManager::doService(HTTPRequest &request,
 
   HandlerHTTPStatus _handlerHTTPStatus(_virtualHost);
 
+  _logger->log(Log::WARNING, "HTTPServletManager", "doService", "http request body:\n", request.getBody());
+
   if (request.getStatus() != HTTPStatus::OK) {
     return _handlerHTTPStatus.doStatusError(response, request.getStatus());
   }

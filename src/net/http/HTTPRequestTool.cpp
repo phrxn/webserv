@@ -109,6 +109,7 @@ void HTTPRequestTool::setBody(const std::string& body) {
        long int len = stringParaLongInt(_header["Content-Length"]);
         _body = body.substr(0, len);
     }
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "HAS BODY", body);
 }
 
 std::size_t HTTPRequestTool::stringParaLongInt(const std::string& str) {
@@ -138,10 +139,10 @@ bool HTTPRequestTool::isChunkedEnd(const std::string& buffer) {
 }
 
 bool HTTPRequestTool::isBodyComplete(const std::string& buffer) {
-    if (_header["Content-Length"].empty()) {
-        return isChunkedEnd(buffer);
+    if (_header["Content-Length"].empty() || isChunkedEnd(buffer)) {
+        return true;
     } else {
-        return buffer.size() >= stringParaLongInt(_header["Content-Length"]);
+        return false;
     }
 }
 

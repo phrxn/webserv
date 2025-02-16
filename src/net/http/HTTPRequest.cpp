@@ -31,9 +31,10 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 
 	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _HTTPTool.isBodyComplete(_buffer) || _HTTPTool.isChunked()) {
 		//FAZER  IF PARA O HEADER
+		_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "HAS BODY", _HTTPTool.isBodyComplete(_buffer));
 		if(_HTTPTool.isTheHTTPHeaderComplete(_buffer) && !_HTTPTool.isParsed()){
 			_HTTPTool.parserHeader(_buffer);
-			_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4);
+			_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4, _buffer.size());
 			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *1", _HTTPTool.getStatus());
 		}
 		if(_HTTPTool.isChunked()){
@@ -46,12 +47,13 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 				return REQUEST_CREATING;
 		}
 		if(!_HTTPTool.HasBody()){
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "buffer", _buffer);
 			_HTTPTool.setBody(_buffer);
 		}
 		_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *3", _HTTPTool.getStatus());
 		return REQUEST_CREATED;
 	}
-	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
+	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "buffer", _buffer);
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status when request is created *4", _HTTPTool.getStatus());
 	return REQUEST_CREATING;
 }
