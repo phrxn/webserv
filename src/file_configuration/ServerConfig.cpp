@@ -1,5 +1,7 @@
 #include "ServerConfig.hpp"
 
+#include "../net/http/HTTPTypeOfPages.hpp"
+
 // Construtor da estrutura ServerConfig
 ServerConfig::ServerConfig(void) : VirtualHostDefault(8080), _limitBodySize(1000000) {}
 
@@ -125,8 +127,12 @@ bool ServerConfig::isUrlAPathToCGI(const URL& url) const {
 	if (route != _routes.end()){
 		// Verifica se o caminho da URL começa com o caminho da rota e se a rota tem o CGI habilitado
 		if (route->getCgiEnabled() && (path.find(route->getCgiPath()) == 0)){
-			// Retorna true indicando que o caminho aponta para um CGI
-			return true;
+
+            // Retorna true indicando que o caminho aponta para um CGI
+			if (HTTPTypeOfPages().getTypeOfPathFromPath(path) != HTTPTypeOfPages::STATIC){
+				return true;
+			}
+			return false;
 		}
 	}
 
