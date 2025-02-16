@@ -8,7 +8,9 @@
 #include <string>
 #include <vector>
 
-HTTPRequestTool::HTTPRequestTool() {}
+HTTPRequestTool::HTTPRequestTool(Log *logger) : _logger(logger) {
+	pos = 0;
+}
 
 HTTPRequestTool::HTTPRequestTool(const HTTPRequestTool &other) {
     (void)other;
@@ -25,7 +27,7 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
     std::size_t spacePos1 = buffer.find(' ');
     std::size_t spacePos2 = buffer.find(' ', spacePos1 + 1);
     if (spacePos1 == std::string::npos || spacePos2 == std::string::npos) {
-        _status = HTTPStatus::NOT_ALLOWED;
+        _status = HTTPStatus::OK;
         return;
     }
 
@@ -43,17 +45,16 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
     {
         _status = HTTPStatus::OK;
     }
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _status);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["Method"]);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["URL"]);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["HTTP-Version"]);
 }
 
 void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
     while (pos < buffer.size()) {
         std::size_t endPos = buffer.find("\r\n", pos);
-        if (endPos == std::string::npos) {
-            endPos = buffer.find('\n', pos);
-            if (endPos == std::string::npos) {
-                endPos = buffer.size();
-            }
-        }
+
         line = buffer.substr(pos, endPos - pos);
         pos = endPos + (buffer[endPos] == '\r' ? 2 : 1); // Skip the line and the \r\n or \n
 
@@ -66,11 +67,17 @@ void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
             std::string key = line.substr(0, colonPos);
             std::string value = line.substr(colonPos + 2); // Skip ": "
             _header[key] = value;
-        } else {
+        }
+
+		if(!isValidContentlength()) {
             _status = HTTPStatus::NOT_ALLOWED;
         }
+		else{
+		_status = HTTPStatus::OK;
+		}
     }
-    
+  _logger->log(Log::DEBUG, "HTTPRequestTool", "splitOtherLines", "the status", _status);
+ // _logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header[]);
 }
 
 void HTTPRequestTool::parserHeader(const std::string& buffer) {
@@ -80,6 +87,7 @@ void HTTPRequestTool::parserHeader(const std::string& buffer) {
     if (_status == HTTPStatus::OK) {
         splitOtherLines(buffer.substr(buffer.find("\r\n") + 2));
     }
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "parserHeader", "the status", _status);
 }
 
 std::string HTTPRequestTool::getHeader(const std::string method) {
@@ -109,9 +117,9 @@ std::size_t HTTPRequestTool::stringParaLongInt(const std::string& str) {
 
     if (iss >> resultado)
         return resultado;
-    else 
+    else
         throw ("Erro na conversão: string inválida para long int.");
-    
+
 }
 
 int HTTPRequestTool::hexStringToInt(const std::string& hex) {
@@ -150,13 +158,24 @@ bool HTTPRequestTool::isParsed(){
 }
 
 bool HTTPRequestTool::isValidHeader(){
-    if(_method.getStringToMethod (_header["Method"]) || _header["HTTP-Version"] == "HTTP/1.1" 
-        || stringParaLongInt(_header["Content-Length"]) > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes())
-        return false;
-    return true;
-
+    if(_method.getStringToMethod (_header["Method"]) &&  _header["HTTP-Version"] == "HTTP/1.1")
+        return true;
+	else{
+		return false;
+	}
 }
 
+bool HTTPRequestTool::isValidContentlength(){
+	if(_header["Content-Length"] != "" && stringParaLongInt(_header["Content-Length"]) > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes())
+		return false;
+	return true;
+}
+
+bool HTTPRequestTool::HasBody(){
+	if(_header["Content-Length"] != "" )
+		return true;
+	return false;
+}
 
 std::string HTTPRequestTool::parseChunkedBody(const std::string& input) {
     std::string output;
@@ -176,7 +195,7 @@ std::string HTTPRequestTool::parseChunkedBody(const std::string& input) {
             break;
         }
         else if (pos + chunkSize > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes()) {
-            _status = HTTPStatus::NOT_ALLOWED;
+            _status = HTTPStatus::OK;
             return "";
         }
         output += input.substr(pos, chunkSize);

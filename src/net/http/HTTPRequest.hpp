@@ -17,7 +17,7 @@ class HTTPRequest : public Request {
  private:
   HTTPRequest(const HTTPRequest &src);
   HTTPRequest &operator=(const HTTPRequest &src);
-  HTTPRequest();
+  HTTPRequest(Log *logger);
 
   StateOfCreation headerRequest();
 

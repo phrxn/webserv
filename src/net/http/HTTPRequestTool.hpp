@@ -5,13 +5,13 @@
 #include <string>
 #include "HTTPStatus.hpp"
 #include "HTTPMethods.hpp"
-
+#include "../../error/LogDefault.hpp"
 
 
 class HTTPRequestTool : public HTTPStatus {
 public:
     // Default constructor
-    HTTPRequestTool();
+    HTTPRequestTool(Log *logger);
 
     // Destructor
     ~HTTPRequestTool();
@@ -41,9 +41,11 @@ public:
     bool isChunked();
     bool isTheHTTPHeaderComplete(std::string _buffer);
     bool isParsed();
+	bool isValidContentlength();
 
     //validate
     bool isValidHeader();
+	bool HasBody();
 
 private:
 
@@ -58,6 +60,8 @@ private:
     std::string line;
     std::size_t pos;
     std::string _body;
+	Log *_logger;
+
 };
 
 #endif // HTTPREQUESTTOOL_HPP
