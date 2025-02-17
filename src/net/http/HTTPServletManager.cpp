@@ -144,6 +144,10 @@ HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDe
 		return request.getStatus();
 	}
 
+	if (request.getBody().size() > virtualHost->getLimitBodySizeInBytes()) {
+		return HTTPStatus::REQUEST_ENTITY_TOO_LARGE;
+	}
+
 	if (!virtualHost->isPathValid(url)) {
 		return HTTPStatus::NOT_FOUND;
 	}

@@ -24,6 +24,8 @@ class VirtualHostFake : public VirtualHostDefault{
   std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
   std::string getRootDir(const URL& url) const;
   std::string getIndexFile(const URL& url) const;
+  size_t getLimitBodySizeInBytes(void) const;
+
 
 };
 

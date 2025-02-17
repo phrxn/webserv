@@ -110,7 +110,7 @@ namespace ConfigUtils {
 		std::cout << "port: " << server.getPort() << std::endl;
 		std::cout << "host: " << server.getHost() << std::endl;
 		std::cout << "server_name: " << server.getServerName() << std::endl;
-		std::cout << "limit_body_size: " << server.getLimitBodySize() << std::endl;
+		std::cout << "limit_body_size: " << server.getLimitBodySizeInBytes() << std::endl;
 
 		for (errorMap::const_iterator it = server.getErrorPages().begin();
 			it != server.getErrorPages().end(); ++it) {

@@ -24,7 +24,6 @@ public:
 
 	// Métodos de acesso
 	std::string getHost(void) const;
-	size_t getLimitBodySize(void) const;
 	const std::map<std::string, std::string> &getErrorPages(void) const;
 	std::string getErrorPage(const std::string &errorPage) const;
 	std::vector<RouteConfig> getRoutes(void) const;
@@ -43,6 +42,7 @@ public:
     std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const;
 	std::string getRootDir(const URL& url) const;
 	std::string getIndexFile(const URL& url) const;
+	size_t getLimitBodySizeInBytes(void) const;
 
 private:
     std::string							_host; // Endereço IP do servidor (localhost)

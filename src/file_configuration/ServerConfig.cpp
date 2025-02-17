@@ -43,10 +43,6 @@ std::string ServerConfig::getHost(void) const{
 	return _host;
 }
 
-size_t ServerConfig::getLimitBodySize(void) const{
-	return _limitBodySize;
-}
-
 const std::map<std::string, std::string> &ServerConfig::getErrorPages(void) const{
 	return _errorPages;
 }
@@ -59,8 +55,9 @@ std::string ServerConfig::getErrorPage(const std::string &errorPage) const{
 	return "";
 }
 
-
-
+size_t ServerConfig::getLimitBodySizeInBytes(void) const{
+	return _limitBodySize;
+}
 
 std::vector<RouteConfig> ServerConfig::getRoutes(void) const{
 	return _routes;

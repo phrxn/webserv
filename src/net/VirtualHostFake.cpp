@@ -1,5 +1,7 @@
 #include "VirtualHostFake.hpp"
 
+#include "../config/ProgramConfiguration.hpp"
+
 VirtualHostFake::VirtualHostFake() {}
 
 VirtualHostFake::VirtualHostFake(int port, const std::string &serverName)
@@ -76,11 +78,14 @@ std::string VirtualHostFake::getIndexFile(const URL& url) const{
 		path = url.getPath(true);
 	}
 
-
 	// just for demonstration purposes, if the URL is just the slash / we will
 	// return a index.html file
 	if (path == "/") return "index.php";
 	if (path.find("dir_and_index_php") != std::string::npos) return "index.php";
 	if (path.find("dir_and_index_html") != std::string::npos) return "index.html";
 	return "";
+}
+
+size_t VirtualHostFake::getLimitBodySizeInBytes(void) const{
+	return ProgramConfiguration::getInstance().getMaxRequestSizeInBytes();
 }
