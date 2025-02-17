@@ -1,5 +1,6 @@
 #include "HTTPServletManager.hpp"
 
+#include "../../config/ProgramConfiguration.hpp"
 #include "../../error/Log.hpp"
 #include "../VirtualHostFactory.hpp"
 #include "HTTPServletCGI.hpp"
@@ -25,35 +26,23 @@ HTTPServletManager &HTTPServletManager::operator=(
   return *this;
 }
 
-void HTTPServletManager::doService(HTTPRequest &request,
-                                   HTTPResponse &response) {
-  VirtualHostFactory vhf;
+void HTTPServletManager::doService(HTTPRequest &request, HTTPResponse &response) {
 
-  _virtualHost = vhf.getVirtualHost(request.getPort(), request.getHost());
+  _virtualHost = VirtualHostFactory().getVirtualHost(request.getPort(), request.getHost());
 
   HandlerHTTPStatus _handlerHTTPStatus(_virtualHost);
 
-  if (request.getStatus() != HTTPStatus::OK) {
-    return _handlerHTTPStatus.doStatusError(response, request.getStatus());
+  URL url(request.getURLStr());
+
+  HTTPStatus::Status validRequest = checkIfRequestIsValid(_virtualHost, request);
+
+  if (validRequest != HTTPStatus::OK) {
+	if (validRequest == HTTPStatus::MOVED_PERMANENTLY) {
+		return _handlerHTTPStatus.doStatusFamily300(response, validRequest, _virtualHost->isPathARedirection(url));
+	}
+	return _handlerHTTPStatus.doStatusError(response, validRequest);
   }
 
-  URL url;
-  url.parserStringToURL(request.getURLStr());
-
-  if (!_virtualHost->isPathValid(url)) {
-    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
-  }
-
-  std::string pathRedirection = _virtualHost->isPathARedirection(url);
-  if (pathRedirection != "") {
-    return _handlerHTTPStatus.doStatusFamily300(response, HTTPStatus::MOVED_PERMANENTLY, pathRedirection);
-  }
-
-  if (!_virtualHost->isTheMethodAllowedForThisPath(url, request.getMethod())) {
-    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_ALLOWED);
-  }
-
-  bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
   std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
 
   _logger->log(Log::DEBUG, "HTTPServletManager", "doService", "absolute path to resource", absolutePathToResource);
@@ -63,10 +52,12 @@ void HTTPServletManager::doService(HTTPRequest &request,
     return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
   }
 
-  // If the path does not point to a CGI we can look for an indexFile if the
-  // path ends with / and etc...
-  // If the path is to a CGI we do not do this, because what you see after the CGI script is
-  // an extra path, a path to the CGI script according to RFC CGI 1.1
+  bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
+
+ // If the path does not point to a CGI and it ends with "/" we can search for an index file
+ // Why can't you search for an index file in a path that ends with a slash and is CGI?
+ // Because what comes after the path to the CGI script is an extra path to the same
+ // according to RFC CGI 1.1
   if (!pathPointsToCGI){
 	std::string indexFile = _virtualHost->getIndexFile(url);
 
@@ -91,23 +82,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
   }
 
   // based on the http verb call the corresponding method
-  HTTPStatus::Status methodReturn = HTTPStatus::INTERNAL_SERVER_ERROR;
-  switch (request.getMethod()) {
-    case HTTPMethods::GET:
-      methodReturn = _hTTPServlet->doGet(request, response);
-      break;
-    case HTTPMethods::POST:
-      methodReturn = _hTTPServlet->doPost(request, response);
-      break;
-    case HTTPMethods::DELETE:
-      methodReturn = _hTTPServlet->doDelete(request, response);
-      break;
-    default:
-      _logger->log(Log::FATAL, "HTTPServletManager", "doService", "an HTTP verb passed through the filters on the fd", _socketFD->getFileDescriptor());
-      _logger->log(Log::FATAL, "HTTPServletManager", "doService", "the verb value", request.getMethod());
-      methodReturn = HTTPStatus::NOT_IMPLEMENTED;
-      break;
-  }
+  HTTPStatus::Status methodReturn = executeMethod(_hTTPServlet, request, response);
 
   if (methodReturn == HTTPStatus::OK) {
     return _handlerHTTPStatus.doStatusFamily200(request, response, methodReturn);
@@ -122,6 +97,7 @@ void HTTPServletManager::doService(HTTPRequest &request,
   _handlerHTTPStatus.doStatusError(response, methodReturn);
 }
 
+
 void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &response){
 
   VirtualHostFactory vhf;
@@ -131,6 +107,58 @@ void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &respon
   _handlerHTTPStatus.doStatusError(response, status);
 }
 
+
 bool HTTPServletManager::absolutePathEndsWithSlash(const std::string &absolutePathToResource){
 	return (!absolutePathToResource.empty() && absolutePathToResource[absolutePathToResource.size() - 1] == '/');
+}
+
+
+HTTPStatus::Status HTTPServletManager::executeMethod(HTTPServlet *_hTTPServlet, HTTPRequest &request, HTTPResponse &response){
+
+	// based on the http verb call the corresponding method
+	HTTPStatus::Status methodReturn = HTTPStatus::INTERNAL_SERVER_ERROR;
+	switch (request.getMethod()) {
+	  case HTTPMethods::GET:
+		methodReturn = _hTTPServlet->doGet(request, response);
+		break;
+	  case HTTPMethods::POST:
+		methodReturn = _hTTPServlet->doPost(request, response);
+		break;
+	  case HTTPMethods::DELETE:
+		methodReturn = _hTTPServlet->doDelete(request, response);
+		break;
+	  default:
+		_logger->log(Log::FATAL, "HTTPServletManager", "doService", "an HTTP verb passed through the filters on the fd", _socketFD->getFileDescriptor());
+		_logger->log(Log::FATAL, "HTTPServletManager", "doService", "the verb value", request.getMethod());
+		methodReturn = HTTPStatus::NOT_IMPLEMENTED;
+		break;
+	}
+	return methodReturn;
+}
+
+HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDefault *virtualHost, HTTPRequest &request){
+
+	URL url(request.getURLStr());
+
+	if (request.getStatus() != HTTPStatus::OK) {
+		return request.getStatus();
+	}
+
+	if (!virtualHost->isPathValid(url)) {
+		return HTTPStatus::NOT_FOUND;
+	}
+
+	if (!virtualHost->isPathARedirection(url).empty()) {
+		return HTTPStatus::MOVED_PERMANENTLY;
+	}
+
+	if (!ProgramConfiguration::getInstance().theServerSupportsThisHTTPMethod(request.getMethod())) {
+		return HTTPStatus::NOT_IMPLEMENTED;
+	}
+
+	if (!virtualHost->isTheMethodAllowedForThisPath(url, request.getMethod())) {
+		return HTTPStatus::NOT_ALLOWED;
+	}
+
+	return HTTPStatus::OK;
 }
