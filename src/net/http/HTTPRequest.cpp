@@ -45,13 +45,15 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 			else
 				return REQUEST_CREATING;
 		}
-		if(!_HTTPTool.HasBody()){
+		if(_HTTPTool.HasBody()){
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BUFFER", _buffer);
 			_HTTPTool.setBody(_buffer);
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the body", _HTTPTool.getBody());
 		}
 		_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *3", _HTTPTool.getStatus());
 		return REQUEST_CREATED;
 	}
-	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
+	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "", _buffer);
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status when request is created *4", _HTTPTool.getStatus());
 	return REQUEST_CREATING;
 }

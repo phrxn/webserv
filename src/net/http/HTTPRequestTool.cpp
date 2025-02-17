@@ -46,9 +46,9 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
         _status = HTTPStatus::OK;
     }
 	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _status);
-	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["Method"]);
-	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["URL"]);
-	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "the status", _header["HTTP-Version"]);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "METHOD", _header["Method"]);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "URL", _header["URL"]);
+	_logger->log(Log::DEBUG, "HTTPRequestTool", "splitFirstLine", "HTTP", _header["HTTP-Version"]);
 }
 
 void HTTPRequestTool::splitOtherLines(const std::string& buffer) {
@@ -107,7 +107,11 @@ void HTTPRequestTool::setBody(const std::string& body) {
         _body = body;
     } else {
        long int len = stringParaLongInt(_header["Content-Length"]);
+        // long int start = body.find("\r\n\r\n") + 4;
+        _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the body", body);
         _body = body.substr(0, len);
+        _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the _body", _body);
+        
     }
 }
 
