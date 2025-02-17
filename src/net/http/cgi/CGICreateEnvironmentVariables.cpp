@@ -54,6 +54,9 @@ CGICreateEnvironmentVariables::createCGIVariables(
     std::string extraPathDecoded =
         hTTPRequest->getURL().getExtraPathFromFullPath(true);
     _mapVariables["PATH_INFO"] = extraPathDecoded;
+	if (!_rootVirtualHostLocation.empty() && _rootVirtualHostLocation[_rootVirtualHostLocation.length() - 1] == '/') {
+        _rootVirtualHostLocation.erase(_rootVirtualHostLocation.length() - 1);
+    }
     _mapVariables["PATH_TRANSLATED"] =
         _rootVirtualHostLocation + extraPathDecoded;
   }
