@@ -1,9 +1,12 @@
 #include "ServerConfig.hpp"
 
 #include "../net/http/HTTPTypeOfPages.hpp"
+#include "../config/ProgramConfiguration.hpp"
 
 // Construtor da estrutura ServerConfig
-ServerConfig::ServerConfig(void) : VirtualHostDefault(8080), _limitBodySize(1000000) {}
+ServerConfig::ServerConfig(void)
+	: VirtualHostDefault(8080),
+	_limitBodySize(ProgramConfiguration::getInstance().getMaxRequestSizeInBytes()) {}
 
 ServerConfig::~ServerConfig(){}
 
