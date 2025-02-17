@@ -18,6 +18,7 @@ class HTTPStatus {
 
     // --- 300 family
     MOVED_PERMANENTLY = 301,
+	FOUND = 302,
 
     // --- 400 family
     BAD_REQUEST = 400,

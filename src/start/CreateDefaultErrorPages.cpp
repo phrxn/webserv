@@ -36,6 +36,7 @@ CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
 
   // 300 family
   listStatusWithPage.push_back(HTTPStatus::MOVED_PERMANENTLY);
+  listStatusWithPage.push_back(HTTPStatus::FOUND);
 
   // 400 family
   listStatusWithPage.push_back(HTTPStatus::BAD_REQUEST);

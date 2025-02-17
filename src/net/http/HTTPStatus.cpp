@@ -19,6 +19,7 @@ std::map<HTTPStatus::Status, std::string> HTTPStatus::startMapStatus(){
 
     // --- 301 family
 	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::MOVED_PERMANENTLY, "Moved Permanently"));
+	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::FOUND, "Found"));
 
     // --- 400 family
 	theMapToReturn.insert(std::pair<HTTPStatus::Status, std::string>(HTTPStatus::BAD_REQUEST, "Bad Request"));
