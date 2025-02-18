@@ -218,16 +218,12 @@ namespace RouteExtraction
     void extractCGIEnable(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        std::string cgiExtension = tokens[1];
 
-		if (cgiExtension == DISENABLE){
-			return;
-		}
-
-        if (cgiExtension == ENABLE)
-        {
+		if (tokens[1] == "on"){
 			location.setCgiEnabled(true);
-			location.setCgiExtension(cgiExtension);
+		}else if (tokens[1] == "off")
+        {
+			location.setCgiEnabled(false);
         }
 		else
         {

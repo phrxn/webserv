@@ -144,7 +144,6 @@ namespace ConfigUtils {
 			std::cout << "\troot_set: " << it->getRootSet() << std::endl;
 			std::cout << "\tredirect_set: " << it->getRedirectSet() << std::endl;
 			std::cout << "\tCGI path: " << it->getCgiPath() << std::endl;
-			std::cout << "\tCGI extension: " << it->getCgiExtension() << std::endl;
 			std::cout << "\tCGI enabled: " << it->getCgiEnabled() << std::endl;
 			std::cout << std::endl;
 		}

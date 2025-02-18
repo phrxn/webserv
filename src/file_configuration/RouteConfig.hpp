@@ -26,7 +26,6 @@ public:
 	bool								getRedirectSet(void) const; // Retorna o valor da flag redirectSet
 	bool								getCgiEnabled(void) const; // Retorna o valor da flag cgiEnabled
 	std::string							getCgiPath(void) const; // Retorna o caminho do script CGI
-	std::string							getCgiExtension(void) const; // Retorna a extensão do script CGI
 	void								addMethod(const HTTPMethods::Method &method);
 
 	void	setMethods(const std::vector<HTTPMethods::Method> &methods); // Define os métodos HTTP permitidos
@@ -41,7 +40,6 @@ public:
 	void	setRedirectSet(const bool &redirectSet); // Define o valor da flag redirectSet
 	void	setCgiEnabled(const bool &cgiEnabled); // Define o valor da flag cgiEnabled
 	void	setCgiPath(const std::string &cgiPath); // Define o caminho do script CGI
-	void	setCgiExtension(const std::string &cgiExtension); // Define a extensão do script CGI
 	void	clearMethods(void); // Limpa o vetor de métodos
 
 
@@ -58,7 +56,6 @@ private:
     bool					_redirectSet; // Flag que indica se o redirecionamento foi configurado
     bool					_cgiEnabled; // Flag que indica se o CGI está habilitado
     std::string				_cgiPath; // Caminho para o script CGI
-    std::string				_cgiExtension; // Extensão de arquivo para scripts CGI
 };
 
 #endif

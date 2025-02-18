@@ -28,7 +28,6 @@ RouteConfig &RouteConfig::operator=(const RouteConfig &src) {
   _redirectSet = src._redirectSet;
   _cgiEnabled = src._cgiEnabled;
   _cgiPath = src._cgiPath;
-  _cgiExtension = src._cgiExtension;
   return *this;
 }
 
@@ -55,8 +54,6 @@ bool RouteConfig::getRedirectSet(void) const { return _redirectSet; }
 bool RouteConfig::getCgiEnabled(void) const { return _cgiEnabled; }
 
 std::string RouteConfig::getCgiPath(void) const { return _cgiPath; }
-
-std::string RouteConfig::getCgiExtension(void) const { return _cgiExtension; }
 
 void RouteConfig::addMethod(const HTTPMethods::Method &method){
 	_methods.push_back(method);
@@ -103,10 +100,6 @@ void RouteConfig::setCgiEnabled(const bool &cgiEnabled){
 }
 void RouteConfig::setCgiPath(const std::string &cgiPath){
 	_cgiPath = cgiPath;
-}
-
-void RouteConfig::setCgiExtension(const std::string &cgiExtension){
-	_cgiExtension = cgiExtension;
 }
 
 void RouteConfig::clearMethods(void){
