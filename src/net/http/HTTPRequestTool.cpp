@@ -111,6 +111,8 @@ void HTTPRequestTool::setBody(const std::string& body) {
         _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the body", body);
         _body = body.substr(0, len);
         _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the _body", _body);
+        _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the Content-Length", _header["Content-Length"]);
+        _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the _body size", _body.size());
         
     }
 }
