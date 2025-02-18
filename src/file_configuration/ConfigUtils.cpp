@@ -104,6 +104,12 @@ namespace ConfigUtils {
         }
     }
 
+	bool	pathEndsWithSlash(const std::string &path) {
+		if (!path.empty() && path[path.size() - 1] == '/') {
+			return true;
+		} else { return false; }
+	}
+
  	void	printServerStruct( const ServerConfig &server ) {
 		std::cout << "              Server Configs " << std::endl;
 		std::cout << "=========================================" << std::endl;

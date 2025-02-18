@@ -17,7 +17,9 @@
 /* Location Extraction Error */
 # define ERROR_INVALID_METHOD "Location: Invalid HTTP Method!"
 # define ERROR_INVALID_LOCATION_PATH "Location: Invalid Location Path!"
+# define ERROR_INVALID_LOCATION_PATH_WITHOUT_END_SLASH "Location: Invalid Location Path. Location Path must ends with a slash!"
 # define ERROR_INVALID_ROOT "Location: Invalid Root Path!"
+# define ERROR_INVALID_ROOT_WITHOUT_END_SLASH "Location: Invalid Root Path. Root Path must ends with a slash!"
 # define ERROR_INVALID_UPLOAD_PATH "Location: Invalid Upload Path!"
 # define ERROR_INVALID_AUTOINDEX "Location: Invalid Autoindex Value!"
 # define ERROR_INVALID_UPLOAD_ENABLED "Location: Invalid Upload Enabled Value!"

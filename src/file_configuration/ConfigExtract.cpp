@@ -132,7 +132,11 @@ namespace RouteExtraction
     void extractLocationPath(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-		location.setLocationPath( tokens[1]);
+		if (!ConfigUtils::pathEndsWithSlash(tokens[1]))
+		{
+			throw std::runtime_error(ERROR_INVALID_LOCATION_PATH_WITHOUT_END_SLASH);
+		}
+		location.setLocationPath(tokens[1]);
     }
 
     // Função para extrair e definir o diretório raiz da localização
@@ -141,6 +145,10 @@ namespace RouteExtraction
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::string rootPath = tokens[1];
         ConfigUtils::formatPath(rootPath);
+		if (!ConfigUtils::pathEndsWithSlash(rootPath))
+		{
+			throw std::runtime_error(ERROR_INVALID_ROOT_WITHOUT_END_SLASH);
+		}
 
         if (!ConfigUtils::directoryExists(rootPath))
         {
