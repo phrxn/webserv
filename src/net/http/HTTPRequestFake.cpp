@@ -1,5 +1,7 @@
 #include "HTTPRequestFake.hpp"
 
+#include <sstream>
+
 #include "../SocketFileDescriptorImpl.hpp"
 
 HTTPRequestFake::HTTPRequestFake(SocketFileDescriptor *socketFD, Log *logger)
@@ -19,8 +21,6 @@ HTTPRequestFake &HTTPRequestFake::operator=(const HTTPRequestFake &src) {
   return *this;
 }
 
-
-#include <sstream>
 HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
   std::vector<char> &date = _socketFD->getInputStream();
 
@@ -44,7 +44,7 @@ HTTPRequestFake::StateOfCreation HTTPRequestFake::createRequest() {
 
   _status = HTTPStatus::OK;
 
-  _logger->log(Log::DEBUG, "HTTPRequestFake", "createRequest", _buffer, "");
+  _logger->log(Log::DEBUG, "HTTPRequestFake", "createRequest", "full client request\n", _buffer);
 
   return REQUEST_CREATED;
 }
