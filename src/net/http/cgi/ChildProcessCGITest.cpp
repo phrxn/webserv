@@ -24,7 +24,7 @@ int createFakeFDToTest(std::string pos){
 
     size_t length = 0;
 
-    // Criação e mapeamento do arquivo de memória compartilhada
+    // Creating and mapping the shared memory file
     int fd = shm_open(name.c_str(), O_CREAT | O_RDWR, 0666);
     if (fd == -1) {
         perror("Erro ao criar/shm_open");
@@ -60,11 +60,7 @@ public:
 		}
 
 		char buffer_in[20];
-		// char buffer_out[20];
-		// char buffer_err[20];
 		memset(buffer_in, 0, 20);
-		// memset(buffer_out, 0, 20);
-		// memset(buffer_err, 0, 20);
 
 		int readed_in = ::read(0, buffer_in, 20);
 
@@ -146,7 +142,7 @@ TEST(ChildProcessCGITest, execute_fileDescriptordup2){
 		}
 	}
 
-    // Ler os dados de saída
+    // read the output and stderr data
 	std::ifstream &output = _filesToCGI.getOutputFile();
 	std::ifstream &stderr = _filesToCGI.getStderrFile();
 
