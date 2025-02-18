@@ -273,48 +273,27 @@ void Config::_parseRouteBlock(const std::string &locationBlock, RouteConfig &loc
             locationKeys.insert(tokens[0]);
         }
 
-        if (tokens[0] == "methods")
-        {
+        if (tokens[0] == "methods"){
             RouteExtraction::extractMethods(tokens, location);
-        }
-        else if (tokens[0] == "location_path")
-        {
+        }else if (tokens[0] == "location_path"){
             RouteExtraction::extractLocationPath(tokens, location);
-        }
-        else if (tokens[0] == "root")
-        {
+		}else if (tokens[0] == "root"){
             RouteExtraction::extractRootDir(tokens, location);
-        }
-        else if (tokens[0] == "index")
-        {
+        }else if (tokens[0] == "index"){
             RouteExtraction::extractIndexFile(tokens, location);
-        }
-        else if (tokens[0] == "redirect")
-        {
+        }else if (tokens[0] == "redirect"){
             RouteExtraction::extractRedirect(tokens, location);
-        }
-        else if (tokens[0] == "upload_path")
-        {
-            RouteExtraction::extractUploadPath(tokens, location);
-        }
-        else if (tokens[0] == "autoindex")
-        {
+        }else if (tokens[0] == "autoindex"){
             RouteExtraction::extractAutoindex(tokens, location);
-        }
-        else if (tokens[0] == "upload_enabled")
-        {
+        }else if (tokens[0] == "upload_path"){
+            RouteExtraction::extractUploadPath(tokens, location);
+        }else if (tokens[0] == "upload_enabled"){
             RouteExtraction::extractUploadEnabled(tokens, location);
-        }
-        else if (tokens[0] == "cgi_path")
-        {
+        }else if (tokens[0] == "cgi_path"){
             RouteExtraction::extractCGIPath(tokens, location);
-        }
-        else if (tokens[0] == "cgi_enable")
-        {
+		}else if (tokens[0] == "cgi_enable"){
             RouteExtraction::extractCGIEnable(tokens, location);
-        }
-        else
-        {
+        }else{
             throw std::runtime_error("ERROR_INVALID_KEY");
         }
     }

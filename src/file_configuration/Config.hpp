@@ -69,8 +69,8 @@ namespace RouteExtraction {
     void			extractRootDir(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o diretório raiz
     void			extractIndexFile(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o arquivo de índice
     void			extractRedirect(std::vector<std::string> &tokens, RouteConfig &location); // Extrai a URL de redirecionamento
+	void			extractAutoindex(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o autoindex
     void			extractUploadPath(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o caminho de upload
-    void			extractAutoindex(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o autoindex
     void			extractUploadEnabled(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o upload habilitado
     void			extractCGIPath(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o caminho do CGI
     void			extractCGIEnable(std::vector<std::string> &tokens, RouteConfig &location); // Extrai o CGI habilitado

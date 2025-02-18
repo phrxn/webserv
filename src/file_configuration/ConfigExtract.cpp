@@ -168,14 +168,6 @@ namespace RouteExtraction
 		location.setRedirectSet(true);
     }
 
-    // Função para extrair e definir o caminho de upload da localização
-    void extractUploadPath(std::vector<std::string> &tokens, RouteConfig &location)
-    {
-        validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        ConfigUtils::formatPath(tokens[1]);
-		location.setUploadPath(tokens[1]);
-    }
-
     // Função para extrair e definir o autoindex da localização
     void extractAutoindex(std::vector<std::string> &tokens, RouteConfig &location)
     {
@@ -191,13 +183,23 @@ namespace RouteExtraction
         }
     }
 
+    // Função para extrair e definir o caminho de upload da localização
+    void extractUploadPath(std::vector<std::string> &tokens, RouteConfig &location)
+    {
+        validateToken(tokens, 1, ERROR_MISSING_VALUE);
+        ConfigUtils::formatPath(tokens[1]);
+		location.setUploadPath(tokens[1]);
+    }
+
     // Função para extrair e definir se o upload está habilitado na localização
     void extractUploadEnabled(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         if (tokens[1] == "on"){
 			location.setUploadEnabled(true);
-        }
+        }else if (tokens[1] == "off"){
+			location.setUploadEnabled(false);
+		}
         else{
             throw std::runtime_error(ERROR_INVALID_UPLOAD_ENABLED);
         }
