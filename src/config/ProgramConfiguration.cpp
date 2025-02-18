@@ -40,6 +40,7 @@ ProgramConfiguration &ProgramConfiguration::operator=(
   _timeToWaitTheChildCGIProcessInSeconds =
       src._timeToWaitTheChildCGIProcessInSeconds;
   _createVirtualHostsFromConfigurationFile = src._createVirtualHostsFromConfigurationFile;
+  _extendedHttpBehavior = src._extendedHttpBehavior;
   return *this;
 }
 
@@ -141,6 +142,15 @@ void ProgramConfiguration::setTimeToWaitTheChildCGIProcessInSeconds(
 bool ProgramConfiguration::getCreateVirtualHostsFromConfigurationFile() const{
 	return _createVirtualHostsFromConfigurationFile;
 }
+
 void ProgramConfiguration::setCreateVirtualHostsFromConfigurationFile(bool createVirtualHosts){
 	_createVirtualHostsFromConfigurationFile = createVirtualHosts;
+}
+
+bool ProgramConfiguration::isExtendedHttpBehavior() const{
+	return _extendedHttpBehavior;
+}
+
+void ProgramConfiguration::setExtendedHttpBehavior(bool extendedHttpBehavior){
+	_extendedHttpBehavior = extendedHttpBehavior;
 }

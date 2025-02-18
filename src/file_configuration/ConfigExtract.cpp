@@ -196,6 +196,11 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         ConfigUtils::formatPath(tokens[1]);
+		if (!ConfigUtils::pathEndsWithSlash(tokens[1]))
+		{
+			throw std::runtime_error(ERROR_INVALID_UPLOAD_PATH_WITHOUT_END_SLASH);
+		}
+
 		location.setUploadPath(tokens[1]);
     }
 

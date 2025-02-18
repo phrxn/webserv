@@ -3,8 +3,8 @@
 #include "../../config/ProgramConfiguration.hpp"
 #include "../../error/Log.hpp"
 #include "../VirtualHostFactory.hpp"
-#include "HTTPServletCGI.hpp"
-#include "HTTPServletStatic.hpp"
+#include "CGIHTTPServlet.hpp"
+#include "StaticHTTPServlet.hpp"
 
 HTTPServletManager::HTTPServletManager(SocketFileDescriptor *socketFD,
                                        Log *logger)
@@ -43,42 +43,10 @@ void HTTPServletManager::doService(HTTPRequest &request, HTTPResponse &response)
 	return _handlerHTTPStatus.doStatusError(response, validRequest);
   }
 
-  std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
-
-  _logger->log(Log::DEBUG, "HTTPServletManager", "doService", "absolute path to resource", absolutePathToResource);
-
-  // If nothing is returned, then the URL did not match any possible location, so there is nothing to search for
-  if (absolutePathToResource.empty()) {
-    return _handlerHTTPStatus.doStatusError(response, HTTPStatus::NOT_FOUND);
-  }
-
-  bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
-
- // If the path does not point to a CGI and it ends with "/" we can search for an index file
- // Why can't you search for an index file in a path that ends with a slash and is CGI?
- // Because what comes after the path to the CGI script is an extra path to the same
- // according to RFC CGI 1.1
-  if (!pathPointsToCGI){
-	std::string indexFile = _virtualHost->getIndexFile(url);
-
-	if (absolutePathEndsWithSlash(absolutePathToResource) && !indexFile.empty()) {
-		std::string absolutePathToIndexFile = absolutePathToResource + indexFile;
-
-		File file(absolutePathToIndexFile);
-		if (file.exist()) {
-			absolutePathToResource = absolutePathToIndexFile;
-			url.parserStringToURL(request.getURLStr() + indexFile);
-			pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
-		}
-	}
-  }
-
-  bool canListDirectory = _virtualHost->isDirectoryListingAllowedForThisPath(url);
-
-  if (pathPointsToCGI) {
-    _hTTPServlet = new HTTPServletCGI(absolutePathToResource, _virtualHost->getRootDir(url));
+  if (_virtualHost->isUrlAPathToCGI(url)) {
+    _hTTPServlet = new CGIHTTPServlet(_virtualHost, url);
   } else {
-    _hTTPServlet = new HTTPServletStatic(absolutePathToResource, url.getPathFull(false), canListDirectory);
+    _hTTPServlet = new StaticHTTPServlet(_virtualHost, url);
   }
 
   // based on the http verb call the corresponding method
@@ -106,12 +74,6 @@ void HTTPServletManager::doError(HTTPStatus::Status status, HTTPResponse &respon
 
   _handlerHTTPStatus.doStatusError(response, status);
 }
-
-
-bool HTTPServletManager::absolutePathEndsWithSlash(const std::string &absolutePathToResource){
-	return (!absolutePathToResource.empty() && absolutePathToResource[absolutePathToResource.size() - 1] == '/');
-}
-
 
 HTTPStatus::Status HTTPServletManager::executeMethod(HTTPServlet *_hTTPServlet, HTTPRequest &request, HTTPResponse &response){
 
@@ -148,6 +110,8 @@ HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDe
 		return HTTPStatus::REQUEST_ENTITY_TOO_LARGE;
 	}
 
+	// if no location matches, then return from here, since nothing was found.
+	// And all other things will depend on the location
 	if (!virtualHost->isPathValid(url)) {
 		return HTTPStatus::NOT_FOUND;
 	}
@@ -162,6 +126,15 @@ HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDe
 
 	if (!virtualHost->isTheMethodAllowedForThisPath(url, request.getMethod())) {
 		return HTTPStatus::NOT_ALLOWED;
+	}
+
+	std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
+
+	_logger->log(Log::DEBUG, "HTTPServletManager", "doService", "absolute path to resource", absolutePathToResource);
+
+	// If nothing is returned, then the URL did not match any possible location, so there is nothing to search for
+	if (absolutePathToResource.empty()) {
+		return HTTPStatus::NOT_FOUND;
 	}
 
 	return HTTPStatus::OK;

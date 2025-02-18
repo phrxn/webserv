@@ -34,6 +34,10 @@ error::StatusOr<std::map<HTTPStatus::Status, ErrorPageFileHTMLDocument*> >
 CreateDefaultErrorPages::loadDefaultPageErrorsMap() {
   std::list<HTTPStatus::Status> listStatusWithPage;
 
+  // 200 family
+  listStatusWithPage.push_back(HTTPStatus::CREATED);
+  listStatusWithPage.push_back(HTTPStatus::NO_CONTENT);
+
   // 300 family
   listStatusWithPage.push_back(HTTPStatus::MOVED_PERMANENTLY);
   listStatusWithPage.push_back(HTTPStatus::FOUND);

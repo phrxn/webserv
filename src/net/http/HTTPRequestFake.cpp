@@ -74,3 +74,7 @@ URL HTTPRequestFake::getURL() const{
 HTTPStatus::Status HTTPRequestFake::getStatus() const{
 	return _status;
 }
+
+std::string HTTPRequestFake::getBody() const{
+	return "fake body";
+}

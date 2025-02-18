@@ -7,10 +7,10 @@
 #include "html/FillHTTPResponse.hpp"
 #include "html/HTMLDocument.hpp"
 
-class HTTPServletCGI : public HTTPServlet {
+class CGIHTTPServlet : public HTTPServlet {
  public:
-  HTTPServletCGI(const std::string &physicalPathToResource, const std::string &rootVirtualHostLocation);
-  ~HTTPServletCGI();
+  CGIHTTPServlet(const VirtualHost *virtualHost, const URL &url);
+  ~CGIHTTPServlet();
 
   HTTPStatus::Status doGet(HTTPRequest &request, HTTPResponse &response);
   HTTPStatus::Status doPost(HTTPRequest &request, HTTPResponse &response);
@@ -18,8 +18,8 @@ class HTTPServletCGI : public HTTPServlet {
   HTTPStatus::Status makePage(HTTPRequest &request, HTTPResponse &response);
 
  private:
-  HTTPServletCGI(const HTTPServletCGI &src);
-  HTTPServletCGI &operator=(const HTTPServletCGI &src);
+  CGIHTTPServlet(const CGIHTTPServlet &src);
+  CGIHTTPServlet &operator=(const CGIHTTPServlet &src);
 
   std::string _physicalPathToResource;
   std::string _rootVirtualHostLocation;

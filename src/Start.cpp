@@ -131,14 +131,13 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setListSupportedMethodsByServer(listSupportedMethodsByServer);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
-
-  // 5MB
-  _programConfiguration.setMaxRequestSizeInBytes(5242880);
+  _programConfiguration.setMaxRequestSizeInBytes(5242880);  // 5MB
   _programConfiguration.setServerName("Webserv");
   _programConfiguration.setHTTPVersion("HTTP/1.1");
   _programConfiguration.setCGIVersion("CGI/1.1");
   _programConfiguration.setTimeToWaitTheChildCGIProcessInSeconds(4);
   _programConfiguration.setCreateVirtualHostsFromConfigurationFile(true);
+  _programConfiguration.setExtendedHttpBehavior(true);
 }
 
 void Start::startLog() {

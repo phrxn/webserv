@@ -59,7 +59,9 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/html/FillHTTPResponse.cpp\
 		src/net/http/html/HTMLDocument.cpp\
 		src/net/http/html/ItemDirectoryHTMLDocument.cpp\
+		src/net/http/CGIHTTPServlet.cpp\
 		src/net/http/CGIPagesPhysicalPathChecker.cpp\
+		src/net/http/ExtendedBehaviorStaticHTTP.cpp\
 		src/net/http/GetMimeType.cpp\
 		src/net/http/HandlerHTTPStatus.cpp\
 		src/net/http/HTTPMethods.cpp\
@@ -69,14 +71,13 @@ SRC =	src/config/ProgramConfiguration.cpp\
 		src/net/http/HTTPResponse.cpp\
 		src/net/http/HTTPResponseFake.cpp\
 		src/net/http/HTTPServlet.cpp\
-		src/net/http/HTTPServletCGI.cpp\
 		src/net/http/HTTPServletManager.cpp\
-		src/net/http/HTTPServletStatic.cpp\
 		src/net/http/HTTPStatus.cpp\
 		src/net/http/HTTPTypeOfPages.cpp\
 		src/net/http/PhysicalPathChecker.cpp\
 		src/net/http/ProtocolManagerHTTP.cpp\
 		src/net/http/ProtocolManagerHTTPFake.cpp\
+		src/net/http/StaticHTTPServlet.cpp\
 		src/net/http/StaticPagesPhysicalPathChecker.cpp\
 		src/net/FileDescriptorVisitor.cpp\
 		src/net/ClusterOfVirtualHost.cpp\
@@ -130,7 +131,6 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPRequestToolTest.cpp\
 				src/net/http/HTTPResponseTest.cpp\
-				src/net/http/HTTPServletManagerTest.cpp\
 				src/net/http/HTTPStatusTest.cpp\
 				src/net/http/HTTPTypeOfPagesTest.cpp\
 				src/net/http/StaticPagesPhysicalPathCheckerTest.cpp\

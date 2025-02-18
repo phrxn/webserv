@@ -54,6 +54,8 @@ class ProgramConfiguration {
 
   bool getCreateVirtualHostsFromConfigurationFile() const;
   void setCreateVirtualHostsFromConfigurationFile(bool createVirtualHosts);
+  bool isExtendedHttpBehavior() const;
+  void setExtendedHttpBehavior(bool extendedHttpBehavior);
 
  protected:
   TypesOfProtocol _typeOfProtocol;
@@ -68,6 +70,7 @@ class ProgramConfiguration {
   std::string _cgiVersion;
   std::size_t _timeToWaitTheChildCGIProcessInSeconds;
   bool _createVirtualHostsFromConfigurationFile;
+  bool _extendedHttpBehavior;
 };
 
 #endif

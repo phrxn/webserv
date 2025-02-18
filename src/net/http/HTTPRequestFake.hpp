@@ -26,7 +26,7 @@ class HTTPRequestFake : public HTTPRequest {
 
   HTTPStatus::Status getStatus() const;
 
-
+  std::string getBody() const;
 
  private:
   HTTPRequestFake(const HTTPRequestFake &src);

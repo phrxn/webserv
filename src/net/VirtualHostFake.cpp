@@ -54,6 +54,13 @@ std::string VirtualHostFake::getThePhysicalPath(const URL& url) const{
 	return prefix + url.getPathFull(true);
 }
 
+std::string VirtualHostFake::getTheRelativePhysicalPath(const URL& url) const{
+	if (isUrlAPathToCGI(url)){
+		return url.getPath(true);
+	}
+	return url.getPathFull(true);
+}
+
 bool VirtualHostFake::isDirectoryListingAllowedForThisPath(const URL& url) const{
   std::string path = url.getPathFull(true);
 
@@ -88,4 +95,11 @@ std::string VirtualHostFake::getIndexFile(const URL& url) const{
 
 size_t VirtualHostFake::getLimitBodySizeInBytes(void) const{
 	return ProgramConfiguration::getInstance().getMaxRequestSizeInBytes();
+}
+
+
+std::string VirtualHostFake::getUploadFolderPath(const URL& url) const{
+	std::string path = url.getPathFull(true);
+	if (path.find("upload/") != std::string::npos) return "upload/";
+	return "";
 }

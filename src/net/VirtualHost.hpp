@@ -21,11 +21,13 @@ class VirtualHost {
   virtual bool isTheMethodAllowedForThisPath(const URL& url, HTTPMethods::Method method) const = 0;
   virtual bool isUrlAPathToCGI(const URL& url) const = 0;
   virtual std::string getThePhysicalPath(const URL& url) const = 0;
+  virtual std::string getTheRelativePhysicalPath(const URL& url) const = 0;
   virtual bool isDirectoryListingAllowedForThisPath(const URL& url) const = 0;
   virtual std::string getThePathToCustomPageForHTTPStatus(HTTPStatus::Status httpStatus) const = 0;
   virtual std::string getRootDir(const URL& url) const = 0;
   virtual std::string getIndexFile(const URL& url) const = 0;
   virtual size_t getLimitBodySizeInBytes(void) const = 0;
+  virtual std::string getUploadFolderPath(const URL& url) const = 0;
 
 };
 

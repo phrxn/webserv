@@ -75,11 +75,7 @@ bool ServerConfig::isPathValid(const URL& url) const {
 
     std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
 
-	if (route != _routes.end()){
-		return true;
-	}
-
-    return false;
+	return (route != _routes.end());
 }
 
 std::string ServerConfig::isPathARedirection(const URL& url) const {
@@ -161,6 +157,29 @@ std::string ServerConfig::getThePhysicalPath(const URL& url) const {
 	return "";
 }
 
+std::string ServerConfig::getTheRelativePhysicalPath(const URL& url) const {
+
+		// Extrai o caminho da URL fornecida
+		std::string path = url.getPathFull(true);
+
+		if (isUrlAPathToCGI(url)) {
+			path = url.getPath(true);
+		}
+
+		std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+		if (route != _routes.end()){
+			// Constrói o caminho físico relative para o recurso, removendo o locationPath do path
+			std::string physicalRelativePath = path.substr(route->getLocationPath().length());
+			// Retorna o caminho físico construído
+			return physicalRelativePath;
+		}
+
+		// Se nenhuma correspondência for encontrada, retorna uma string vazia indicando que o caminho físico não foi encontrado
+		return "";
+}
+
+
 bool ServerConfig::isDirectoryListingAllowedForThisPath(const URL& url) const {
 	// Extrai o caminho da URL fornecida
 	std::string path = url.getPathFull(true);
@@ -227,6 +246,30 @@ std::string ServerConfig::getIndexFile(const URL& url) const{
 
 	return "";
 }
+
+std::string ServerConfig::getUploadFolderPath(const URL& url) const{
+
+	std::string path = url.getPathFull(true);
+
+	std::vector<RouteConfig>::const_iterator route =  getMatchedRouteConfig(_routes, path);
+
+	if (route != _routes.end()){
+
+		// Se o upload está ativo para rota
+		if (route->getUploadEnabled()){
+			// Retorna o diretório de upload da rota
+			return route->getUploadPath();
+		}
+
+	}
+	return "";
+}
+
+
+
+
+
+
 
 std::vector<RouteConfig>::const_iterator ServerConfig::getMatchedRouteConfig(const std::vector<RouteConfig> &_routes, const std::string &path) const{
 

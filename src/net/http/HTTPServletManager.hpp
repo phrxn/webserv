@@ -19,10 +19,6 @@ class HTTPServletManager {
   HTTPStatus::Status executeMethod(HTTPServlet *_hTTPServlet, HTTPRequest &request, HTTPResponse &response);
   HTTPStatus::Status checkIfRequestIsValid(const VirtualHostDefault *virtualHost, HTTPRequest &request);
 
-  //utils
-  bool absolutePathEndsWithSlash(const std::string &absolutePathToResource);
-
-
  private:
   HTTPServletManager(const HTTPServletManager &src);
   HTTPServletManager &operator=(const HTTPServletManager &src);
