@@ -39,7 +39,7 @@ void HTTPRequestTool::splitFirstLine(const std::string& buffer) {
 
     if(!isValidHeader())
     {
-        _status = HTTPStatus::NOT_ALLOWED;
+        _status = HTTPStatus::BAD_REQUEST;
     }
     else
     {
@@ -113,7 +113,7 @@ void HTTPRequestTool::setBody(const std::string& body) {
         _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the _body", _body);
         _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the Content-Length", _header["Content-Length"]);
         _logger->log(Log::DEBUG, "HTTPRequestTool", "setBody", "the _body size", _body.size());
-        
+
     }
 }
 
@@ -145,14 +145,14 @@ bool HTTPRequestTool::isChunkedEnd(const std::string& buffer) {
 
 bool HTTPRequestTool::isBodyComplete(const std::string& buffer) {
     if (_header["Content-Length"].empty()) {
-        return isChunkedEnd(buffer);
+        return true;
     } else {
         return buffer.size() >= stringParaLongInt(_header["Content-Length"]);
     }
 }
 
 bool HTTPRequestTool::isTheHTTPHeaderComplete(std::string _buffer){
-	if (_buffer.find("\r\n\r\n") != std::string::npos)
+	if (_buffer.find("\r\n\r\n") != std::string::npos || _status != HTTPStatus::OK)
 		return true;
 	return false;
 }
@@ -194,7 +194,7 @@ void HTTPRequestTool::parseChunkedBody(const std::string& input) {
     std::string remainingInput = input;
     _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the input", input);
     _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the remainingInput", remainingInput);
-    
+
     //enquanto houver chunks
     while (true) {
         std::size_t endPos = remainingInput.find("\r\n");
@@ -210,7 +210,7 @@ void HTTPRequestTool::parseChunkedBody(const std::string& input) {
     }
     _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the output", output);
     _body = output;
-    
+
     // Converte o tamanho do corpo para string usando stringstream
     std::stringstream ss;
     ss << _body.size();

@@ -129,6 +129,10 @@ HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDe
 		return request.getStatus();
 	}
 
+	if (request.getHost().empty()) {
+		return HTTPStatus::BAD_REQUEST;
+	}
+
 	if (request.getBody().size() > virtualHost->getLimitBodySizeInBytes()) {
 		return HTTPStatus::REQUEST_ENTITY_TOO_LARGE;
 	}

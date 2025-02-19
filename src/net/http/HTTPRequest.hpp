@@ -27,6 +27,9 @@ class HTTPRequest : public Request {
   HTTPRequestTool _HTTPTool;
   Log *_logger;
   HTTPMethods _method;
+  std::size_t _countBodySizeWhileReadRequest;
+  bool        _wasTheHeaderPartFound;
+
 
  public:
   HTTPRequest(SocketFileDescriptor *socketFD, Log *logger);

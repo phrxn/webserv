@@ -3,8 +3,10 @@
 #include <iostream>
 #include <vector>
 
+#include "../../config/ProgramConfiguration.hpp"
+
 HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD, Log *logger)
-: _HTTPTool(logger)
+: _HTTPTool(logger), _countBodySizeWhileReadRequest(0), _wasTheHeaderPartFound(false)
 {
 	_socketFD = socketFD;
 	_logger = logger;
@@ -23,11 +25,27 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 	return *this;
 }
 
+#include <iostream>
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 	std::vector<char> &data = _socketFD->getInputStream();
 	std::string strTmp(data.begin(), data.begin() + data.size());
 	data.clear();
 	_buffer += strTmp;
+
+	// CHECA PELO PAYLOAD! SE FOR MAIOR QUE O PERMITIDO, RETORNA QUE A REQUEST FOI CRIADA
+	// MAS COMO PAYLOAD GRANDE DEMAIS
+	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _wasTheHeaderPartFound){
+		if (_wasTheHeaderPartFound){
+			_countBodySizeWhileReadRequest += strTmp.size();
+		}else{
+			_countBodySizeWhileReadRequest = _buffer.size() - (_buffer.find("\r\n\r\n") + 4);
+			_wasTheHeaderPartFound = true;
+		}
+		if (_countBodySizeWhileReadRequest > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes()) {
+			_status = HTTPStatus::REQUEST_ENTITY_TOO_LARGE;
+			return REQUEST_CREATED;
+		}
+	}
 
 	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _HTTPTool.isBodyComplete(_buffer) || _HTTPTool.isChunked()) {
 		//FAZER  IF PARA O HEADER
@@ -39,8 +57,8 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 		if(_HTTPTool.isChunked()){
 			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *2", _HTTPTool.getStatus());
 			_HTTPTool.parseChunkedBody(_buffer);
-			if(_HTTPTool.getBody().size() > 0){
-				_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BODY", _HTTPTool.getBody());
+			if(_HTTPTool.getBody().size() > 0 && _HTTPTool.isChunkedEnd(_buffer)){
+				_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BODY CHUNKED", _HTTPTool.getBody());
 				return REQUEST_CREATED;
 			}
 			else
@@ -51,8 +69,12 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 			_HTTPTool.setBody(_buffer);
 			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the body", _HTTPTool.getBody());
 		}
-		_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *3", _HTTPTool.getStatus());
-		return REQUEST_CREATED;
+		if (_HTTPTool.isBodyComplete(_buffer)){
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *3", _HTTPTool.getStatus());
+			return REQUEST_CREATED;
+		}else{
+			return REQUEST_CREATING;
+		}
 	}
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "", _buffer);
 	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status when request is created *4", _HTTPTool.getStatus());
