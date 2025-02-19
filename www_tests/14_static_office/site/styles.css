@@ -1,0 +1,186 @@
+/* Resetting some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('images/background.png') no-repeat center center fixed;  /* Image as background */
+    background-size: cover;  /* Ensures the image covers the whole screen */
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+    position: relative; /* Necessary for the overlay */
+}
+
+/* Background Overlay */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2);  /* 80% transparency (0.2 opacity) */
+    z-index: -1;  /* Ensures the overlay stays behind the content */
+}
+
+/* Header */
+header {
+    background-color: rgba(0, 51, 102, 0.8);  /* Dark Blue with some transparency */
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #66b3ff; /* Light Blue */
+    text-transform: uppercase;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+header nav ul li {
+    margin: 0 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+header nav ul li a:hover {
+    color: #66b3ff; /* Light Blue */
+    text-decoration: underline;
+}
+
+/* Main Section */
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.file-section {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+}
+
+.file-list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* File items */
+.file-item {
+    background-color: rgba(255, 255, 255, 0.8);  /* White with transparency */
+    color: #333;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    margin: 20px 0;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.file-item2 {
+    background-color: rgba(255, 255, 255, 0.8);  /* White with transparency */
+    color: #333;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 20px 0;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.file-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.file-item, .file-item2 h3 {
+    font-size: 1.8rem;
+    color: #4CAF50;  /* Green */
+    margin-bottom: 15px;
+}
+
+.file-item ul {
+    list-style: none;
+}
+
+.file-item ul li {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.file-item ul li a {
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.file-item ul li a:hover {
+    color: #003366;  /* Dark Blue */
+    transform: translateX(10px);
+}
+
+.file-item ul li a .file-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.file-item ul li a:hover .file-icon {
+    transform: rotate(15deg);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    background-color: rgba(0, 51, 102, 0.8);  /* Dark Blue with some transparency */
+    color: white;
+    padding: 20px;
+    margin-top: 30px;
+    width: 100%;
+}
+
+/* Media Query */
+@media (max-width: 768px) {
+    .file-list {
+        flex-direction: column;
+    }
+
+    .file-item {
+        width: 80%;
+    }
+}

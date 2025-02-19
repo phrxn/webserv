@@ -1,0 +1,10 @@
+------WebKitFormBoundaryHQHWdTqMPKi2yg2d
+Content-Disposition: form-data; name="username"
+
+JohnDoe
+------WebKitFormBoundaryHQHWdTqMPKi2yg2d
+Content-Disposition: form-data; name="email"
+
+john.doe@example.com
+------WebKitFormBoundaryHQHWdTqMPKi2yg2d--
+

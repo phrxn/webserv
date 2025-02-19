@@ -1,0 +1,299 @@
+/* Estilos Gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.body_back {
+            margin: 0;
+            height: 100%;
+            background-image: url('images/site-background.png'); /* Caminho da sua imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Overlay com 50% de transparência */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4); /* Cor preta com 50% de opacidade */
+            z-index: -1; /* Garante que o overlay fique atrás do conteúdo */
+        }
+
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+/* Estilos de Formulário */
+input[type="text"], input[type="password"], input[type="file"] {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f2f2f2;
+    border: 1px solid #555;
+    border-radius: 5px;
+    width: 100%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos de Login */
+.login-container, .register-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 200px;
+}
+
+h2 {
+    font-size: 24px;
+    text-align: center;
+}
+
+.login-container input,
+.register-container input {
+    width: 95%;
+}
+
+.login-container button,
+.register-container button {
+    background-color: #0061fe;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.login-container button:hover,
+.register-container button:hover {
+    background-color: #555;
+}
+
+.login-container p,
+.register-container p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Barra de Navegação do Dashboard */
+.navbar {
+    background-color: #fff;
+    padding: 10px;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 55px;
+}
+
+.navbar .link {
+    color: black;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.navbar .link:hover{
+    color: #0061fe;
+}
+
+.navbar a:hover {
+    color: #fff;
+}
+
+/* Botão Logout */
+.logout-btn {
+    position: absolute;
+    right: 30px;
+    top: 18px;
+    background-color: #0061fe;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.logout-btn a{
+   color: white;
+}
+
+.logout-btn:hover {
+    background-color: #555;
+}
+
+/* Container do Dashboard */
+.container-dashboard {
+    margin-top: 60px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilos do Formulário de Upload */
+.upload-container {
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 70px;
+}
+
+.upload-container input[type="file"] {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f2f2f2;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+.upload-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.upload-container button:hover {
+    background-color: #45a049;
+}
+
+/* Mensagens de Sucesso ou Erro */
+.message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+/* Estilos para a Tabela de Arquivos */
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.file-table th, .file-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.file-table th {
+    background-color: #f2f2f2;
+}
+
+.file-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.file-table .delete-btn {
+    color: #ff4d4d;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #ffebeb;
+    border-radius: 5px;
+    border: 1px solid #ff4d4d;
+}
+
+.file-table .delete-btn:hover {
+    background-color: #ffcccc;
+}
+
+/* Estilos para o botão de download */
+.file-table .download-btn {
+    color: #4CAF50;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #e8f5e9;
+    border-radius: 5px;
+    border: 1px solid #4CAF50;
+}
+
+.file-table .download-btn:hover {
+    background-color: #c8e6c9;
+}
+
+/* Estilos para a Tabela de Arquivos (já mencionado) */
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.file-table th, .file-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.file-table th {
+    background-color: #f2f2f2;
+}
+
+.file-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.file-table .delete-btn {
+    color: #ff4d4d;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #ffebeb;
+    border-radius: 5px;
+    border: 1px solid #ff4d4d;
+}
+
+.file-table .delete-btn:hover {
+    background-color: #ffcccc;
+}
+
