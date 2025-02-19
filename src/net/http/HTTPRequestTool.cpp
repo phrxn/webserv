@@ -183,29 +183,31 @@ bool HTTPRequestTool::HasBody(){
 	return false;
 }
 
-std::string HTTPRequestTool::parseChunkedBody(const std::string& input) {
+void HTTPRequestTool::parseChunkedBody(const std::string& input) {
+    //variavel que armazena o tamanho do chunk
+    std::size_t chunkSize = 0;
+    //variavel que concatena os chunks
     std::string output;
-    std::size_t pos = 0;
-    while (pos < input.size()) {
-        std::size_t endPos = input.find("\r\n", pos);
-        if (endPos == std::string::npos) {
-            endPos = input.find('\n', pos);
-            if (endPos == std::string::npos) {
-                endPos = input.size();
-            }
-        }
-        std::string chunkSizeStr = input.substr(pos, endPos - pos);
-        pos = endPos + (input[endPos] == '\r' ? 2 : 1); // Skip the line and the \r\n or \n
-        int chunkSize = hexStringToInt(chunkSizeStr);
+    //variavel que armazena o tamanho do chunk em hexadecimal
+    std::string hexSize;
+    // Create a copy of input to modify
+    std::string remainingInput = input;
+    _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the input", input);
+    _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the remainingInput", remainingInput);
+    
+    //enquanto houver chunks
+    while (true) {
+        std::size_t endPos = remainingInput.find("\r\n");
+        hexSize = remainingInput.substr(0, endPos);
+        chunkSize = hexStringToInt(hexSize);
+        _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the chunkSize", chunkSize);
         if (chunkSize == 0) {
             break;
         }
-        else if (pos + chunkSize > ProgramConfiguration::getInstance().getMaxRequestSizeInBytes()) {
-            _status = HTTPStatus::OK;
-            return "";
-        }
-        output += input.substr(pos, chunkSize);
-        pos += chunkSize + 2; // Skip the chunk and the \r\n
+        output += remainingInput.substr(endPos + 2, chunkSize);
+        remainingInput = remainingInput.substr(endPos + 2 + chunkSize + 2);
+        _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the remainingInput", remainingInput);
     }
-    return output;
+    _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the output", output);
+    _body = output;
 }

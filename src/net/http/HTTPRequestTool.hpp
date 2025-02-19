@@ -32,7 +32,7 @@ public:
     void setBody(const std::string& body);
 
     //parser chunked
-    std::string parseChunkedBody(const std::string& input) ;
+    void parseChunkedBody(const std::string& input) ;
     int hexStringToInt(const std::string& hex);
 
     //check

@@ -37,9 +37,10 @@ HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
 			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *1", _HTTPTool.getStatus());
 		}
 		if(_HTTPTool.isChunked()){
-			_buffer = _HTTPTool.parseChunkedBody(_buffer);
-			if(_HTTPTool.isChunkedEnd(_buffer)){
-				_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *2", _HTTPTool.getStatus());
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *2", _HTTPTool.getStatus());
+			_HTTPTool.parseChunkedBody(_buffer);
+			if(_HTTPTool.getBody().size() > 0){
+				_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BODY", _HTTPTool.getBody());
 				return REQUEST_CREATED;
 			}
 			else
