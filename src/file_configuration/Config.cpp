@@ -287,7 +287,7 @@ void Config::_parseRouteBlock(const std::string &locationBlock, RouteConfig &loc
             RouteExtraction::extractAutoindex(tokens, location);
         }else if (tokens[0] == "upload_path"){
             RouteExtraction::extractUploadPath(tokens, location);
-        }else if (tokens[0] == "upload_enabled"){
+        }else if (tokens[0] == "upload_enable"){
             RouteExtraction::extractUploadEnabled(tokens, location);
         }else if (tokens[0] == "cgi_path"){
             RouteExtraction::extractCGIPath(tokens, location);
