@@ -1,9 +1,10 @@
 #include "HTTPRequest.hpp"
-
+#include "HTTPMethods.hpp"
 #include <iostream>
 #include <vector>
 
 HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD, Log *logger)
+: _HTTPTool(logger)
 {
 	_socketFD = socketFD;
 	_logger = logger;
@@ -11,10 +12,10 @@ HTTPRequest::HTTPRequest(SocketFileDescriptor *socketFD, Log *logger)
 
 HTTPRequest::~HTTPRequest() {}
 
-HTTPRequest::HTTPRequest() {}
+HTTPRequest::HTTPRequest(Log *logger) : _HTTPTool(logger) {}
 
 // deleted (this class MUST BE UNIQUE!)
-HTTPRequest::HTTPRequest(const HTTPRequest &src) { (void)src; }
+HTTPRequest::HTTPRequest(const HTTPRequest &src) : _HTTPTool(src._logger) { (void)src; }
 
 // deleted (this class MUST BE UNIQUE!)
 HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
@@ -23,110 +24,89 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &src) {
 }
 
 HTTPRequest::StateOfCreation HTTPRequest::createRequest() {
-
-	if(headerRequest() == REQUEST_CREATED){
-		return REQUEST_CREATING;
-	}
-
-	return REQUEST_CREATED;
-}
-
-HTTPRequest::StateOfCreation HTTPRequest::headerRequest() {
 	std::vector<char> &data = _socketFD->getInputStream();
 	std::string strTmp(data.begin(), data.begin() + data.size());
 	data.clear();
 	_buffer += strTmp;
 
-	if (!isTheHTTPHeaderComplete(_buffer)) {
-		return REQUEST_CREATING;
+	if (_HTTPTool.isTheHTTPHeaderComplete(_buffer) || _HTTPTool.isBodyComplete(_buffer) || _HTTPTool.isChunked()) {
+		//FAZER  IF PARA O HEADER
+		if(_HTTPTool.isTheHTTPHeaderComplete(_buffer) && !_HTTPTool.isParsed()){
+			_HTTPTool.parserHeader(_buffer);
+			_buffer = _buffer.substr(_buffer.find("\r\n\r\n") + 4);
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *1", _HTTPTool.getStatus());
+		}
+		if(_HTTPTool.isChunked()){
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *2", _HTTPTool.getStatus());
+			_HTTPTool.parseChunkedBody(_buffer);
+			if(_HTTPTool.getBody().size() > 0){
+				_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BODY", _HTTPTool.getBody());
+				return REQUEST_CREATED;
+			}
+			else
+				return REQUEST_CREATING;
+		}
+		if(_HTTPTool.HasBody()){
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "BUFFER", _buffer);
+			_HTTPTool.setBody(_buffer);
+			_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the body", _HTTPTool.getBody());
+		}
+		_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status *3", _HTTPTool.getStatus());
+		return REQUEST_CREATED;
 	}
-	_HTTPTool.parserHeader(_buffer);
-
-	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", _buffer, "");
-	return REQUEST_CREATED;
+	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "", _buffer);
+	_logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the status when request is created *4", _HTTPTool.getStatus());
+	return REQUEST_CREATING;
 }
 
-// void HTTPRequest::headerValidation()
-// {
-// 	HTTPMethods httpMethods;
-
-// 	if (_header.find("Host") == _header.end() || _header.find("Method") == _header.end()
-// 		|| _header.find("URL") == _header.end() || _header.find("HTTP-Version") == _header.end()) {
-
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else if (httpMethods.getStringToMethod(_header["Method"]) == HTTPMethods::INVALID) {
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else if (_header["HTTP-Version"] != "HTTP/1.1") {
-// 		_status = HTTPStatus::BAD_REQUEST;
-// 	}
-// 	else
-// 		_status = HTTPStatus::OK;
-// }
-
-// HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
-// 	HTTPMethods httpMethods;
-
-// 	return httpMethods.getStringToMethod(_header[key]);
-// }
-
-HTTPStatus::Status HTTPRequest::getStatus() const{
-	return _status;
+HTTPStatus::Status HTTPRequest::getStatus(){
+	return _HTTPTool.getStatus();
 }
 
-bool HTTPRequest::isTheHTTPHeaderComplete(std::string _buffer){
-	if (_buffer.find("\r\n\r\n") != std::string::npos)
-		return true;
-	return false;
+HTTPMethods::Method HTTPRequest::getMethod(){
+	return _method.getStringToMethod( _HTTPTool.getHeader("Method"));
+}
+
+std::string HTTPRequest::getURLStr(){
+	return _HTTPTool.getHeader("URL");
+}
+
+std::string HTTPRequest::getHost(){
+	return _HTTPTool.getHeader("Host");
+}
+
+std::string HTTPRequest::isToKeepTheConnection(){
+	return _HTTPTool.getHeader("Connection");
 }
 
 
-std::string HTTPRequest::getHost() const{
-	return "";
-}
+//-----------------------------------------------
 
-HTTPMethods::Method HTTPRequest::getMethod() const{
-	return HTTPMethods::GET;
-}
-
-std::string HTTPRequest::getURLStr() const{
-    return "";
-}
-
-URL HTTPRequest::getURL() const {
-	return URL();
-}
-
-HTTPMethods::Method HTTPRequest::getAnythingFromHeader(const std::string &key){
-	(void)key;
-	return HTTPMethods::GET;
-}
 
 int HTTPRequest::getPort() const{
 	return _socketFD->getServerPort();
-}
-
-std::string HTTPRequest::isToKeepTheConnection() const {
-	return "";
-}
-
-std::string HTTPRequest::getContentType() const {
-	return "";
-}
-
-std::string HTTPRequest::getContentLength() const {
-	return "";
 }
 
 std::string HTTPRequest::getClientAddressIPv4() const{
 	return _socketFD->getClientIPv4();
 }
 
-std::string HTTPRequest::getCookie() const{
-	return "";
+URL HTTPRequest::getURL() const {
+	return URL();
 }
 
-std::string HTTPRequest::getBody() const{
-	return "";
+std::string HTTPRequest::getContentType() {
+	return _HTTPTool.getHeader("Content-Type");
+}
+
+std::string HTTPRequest::getContentLength() {
+	return _HTTPTool.getHeader("Content-Length");
+}
+
+std::string HTTPRequest::getCookie() {
+	return _HTTPTool.getHeader("Cookie");
+}
+
+std::string HTTPRequest::getBody(){
+	return _HTTPTool.getBody();
 }

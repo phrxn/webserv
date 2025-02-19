@@ -128,6 +128,7 @@ SOURCES_TEST =  src/config/ProgramConfigurationTest.cpp\
 				src/net/http/html/ItemDirectoryHTMLDocumentTest.cpp\
 				src/net/http/GetMimeTypeTest.cpp\
 				src/net/http/HTTPMethodsTest.cpp\
+				src/net/http/HTTPRequestTest.cpp\
 				src/net/http/HTTPRequestFakeTest.cpp\
 				src/net/http/HTTPRequestToolTest.cpp\
 				src/net/http/HTTPResponseTest.cpp\

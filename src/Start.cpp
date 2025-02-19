@@ -126,7 +126,7 @@ void Start::createProgramConfiguration() {
   listSupportedMethodsByServer.push_back(HTTPMethods::DELETE);
 
   _programConfiguration.setTypeOfProtocol(HTTP);
-  _programConfiguration.setEnvironment(TEST);
+  _programConfiguration.setEnvironment(NORMAL);
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(15);
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setListSupportedMethodsByServer(listSupportedMethodsByServer);

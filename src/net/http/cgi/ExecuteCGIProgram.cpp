@@ -31,7 +31,7 @@ ExecuteCGIProgram &ExecuteCGIProgram::operator=(const ExecuteCGIProgram &src) {
 
 ProcessCGI::ExitStatus ExecuteCGIProgram::execute(
     const std::string &virtualHostRootPath,
-    const std::string &physicalPathToResource, const HTTPRequest &request,
+    const std::string &physicalPathToResource, HTTPRequest &request,
     FilesToCGI &_filesToCGI) {
   ProcessCGI::ExitStatus _executionResult = ProcessCGI::PARENT_ERROR;
 
@@ -46,8 +46,7 @@ ProcessCGI::ExitStatus ExecuteCGIProgram::execute(
   _arrayChar.addString(_cgiBinary.getPathToBinary());
   _arrayChar.addString(_cgiBinary.getPathToScriptToExecute());
 
-  CGIEnvironmentVariables _cgiEnvironmentVariables(
-      physicalPathToResource, virtualHostRootPath, &request);
+  CGIEnvironmentVariables _cgiEnvironmentVariables(physicalPathToResource, virtualHostRootPath, &request);
 
   error::StatusOr<int> forkReturn = _systemCalls->fork();
   if (!forkReturn.ok()) {

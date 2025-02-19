@@ -38,7 +38,7 @@ ProtocolManager *ProtocolManagerFactory::createProtocolManager(
     _logger->log(Log::WARNING, "ProtocolManagerFactory",
                  "createProtocolManager", "webserv is in the test environment",
                  "");
-    return new ProtocolManagerHTTPFake(socketFd, _logger);
+    return new ProtocolManagerHTTPFake(_logger, socketFd);
   }
 
   _logger->log(Log::INFO, "ProtocolManagerFactory", "createProtocolManager",

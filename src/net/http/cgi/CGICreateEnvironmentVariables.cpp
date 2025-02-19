@@ -41,8 +41,7 @@ bool CGICreateEnvironmentVariables::operator==(const CGICreateEnvironmentVariabl
 }
 
 std::map<std::string, std::string>
-CGICreateEnvironmentVariables::createCGIVariables(
-    const HTTPRequest *hTTPRequest) {
+CGICreateEnvironmentVariables::createCGIVariables(HTTPRequest *hTTPRequest) {
 
   _mapVariables["AUTH_TYPE"] = "";
   _mapVariables["CONTENT_LENGTH"] = hTTPRequest->getContentLength();

@@ -20,7 +20,7 @@ class ExecuteCGIProgram {
 
   ProcessCGI::ExitStatus execute(const std::string &virtualHostRootPath,
                                  const std::string &physicalPathToResource,
-                                 const HTTPRequest &request,
+                                 HTTPRequest &request,
                                  FilesToCGI &FilesToCGI);
 
   virtual bool cgiBinaryValid(const CGIBinary &cgiBinary) const;

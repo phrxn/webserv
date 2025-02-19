@@ -41,7 +41,7 @@ HTMLDocument* CGIHTMLDocument::clone() const{
 
 #include <sstream>
 HTTPStatus::Status CGIHTMLDocument::createPage(const std::string &virtualHostRootPath,
-    const std::string &physicalPathToResource, const HTTPRequest &request){
+    const std::string &physicalPathToResource, HTTPRequest &request){
 
 	FilesToCGI _filesToCGI;
 

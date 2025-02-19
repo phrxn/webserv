@@ -18,7 +18,7 @@ class CGICreateEnvironmentVariables {
   CGICreateEnvironmentVariables &operator=(const CGICreateEnvironmentVariables &src);
   bool operator==(const CGICreateEnvironmentVariables &src) const;
 
-  std::map<std::string, std::string> createCGIVariables(const HTTPRequest *hTTPRequest);
+  std::map<std::string, std::string> createCGIVariables(HTTPRequest *hTTPRequest);
 
   std::string methodToString(HTTPMethods::Method method) const;
   std::string extractScriptPath(const URL &url,
