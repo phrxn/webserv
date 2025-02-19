@@ -210,4 +210,5 @@ void HTTPRequestTool::parseChunkedBody(const std::string& input) {
     }
     _logger->log(Log::DEBUG, "HTTPRequest", "createRequest", "the output", output);
     _body = output;
+    _header["Content-Length"] = std::to_string(_body.size());
 }
