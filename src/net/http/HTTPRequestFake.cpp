@@ -67,7 +67,7 @@ std::string HTTPRequestFake::getURLStr(){
 	return _url;
 }
 
-URL HTTPRequestFake::getURL() const{
+URL HTTPRequestFake::getURL(){
 	return _url;
 }
 

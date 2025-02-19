@@ -53,7 +53,7 @@ class HTTPRequest : public Request {
 
   virtual std::string getClientAddressIPv4() const;
 
-  virtual URL getURL() const;
+  virtual URL getURL();
 
   virtual std::string getContentType() ;
 

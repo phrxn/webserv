@@ -22,7 +22,7 @@ class HTTPRequestFake : public HTTPRequest {
 
   std::string getURLStr();
 
-  URL getURL() const;
+  URL getURL();
 
   HTTPStatus::Status getStatus();
 

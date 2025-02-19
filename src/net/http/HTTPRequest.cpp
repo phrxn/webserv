@@ -91,8 +91,8 @@ std::string HTTPRequest::getClientAddressIPv4() const{
 	return _socketFD->getClientIPv4();
 }
 
-URL HTTPRequest::getURL() const {
-	return URL();
+URL HTTPRequest::getURL(){
+	return URL(getURLStr());
 }
 
 std::string HTTPRequest::getContentType() {
