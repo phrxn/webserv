@@ -43,7 +43,30 @@ void HTTPServletManager::doService(HTTPRequest &request, HTTPResponse &response)
 	return _handlerHTTPStatus.doStatusError(response, validRequest);
   }
 
-  if (_virtualHost->isUrlAPathToCGI(url)) {
+  std::string absolutePathToResource = _virtualHost->getThePhysicalPath(url);
+
+  bool pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
+
+   // If the path does not point to a CGI and it ends with "/" we can search for an index file
+   // Why can't you search for an index file in a path that ends with a slash and is CGI?
+   // Because what comes after the path to the CGI script is an extra path to the same
+   // according to RFC CGI 1.1
+    if (!pathPointsToCGI){
+         std::string indexFile = _virtualHost->getIndexFile(url);
+
+        if (absolutePathEndsWithSlash(absolutePathToResource) && !indexFile.empty()) {
+                 std::string absolutePathToIndexFile = absolutePathToResource + indexFile;
+
+                 File file(absolutePathToIndexFile);
+                 if (file.exist()) {
+                         absolutePathToResource = absolutePathToIndexFile;
+                         url.parserStringToURL(request.getURLStr() + indexFile);
+                         pathPointsToCGI = _virtualHost->isUrlAPathToCGI(url);
+                 }
+         }
+  }
+
+  if (pathPointsToCGI) {
     _hTTPServlet = new CGIHTTPServlet(_virtualHost, url);
   } else {
     _hTTPServlet = new StaticHTTPServlet(_virtualHost, url);
@@ -138,4 +161,8 @@ HTTPStatus::Status HTTPServletManager::checkIfRequestIsValid(const VirtualHostDe
 	}
 
 	return HTTPStatus::OK;
+}
+
+bool HTTPServletManager::absolutePathEndsWithSlash(const std::string &absolutePathToResource){
+	return (!absolutePathToResource.empty() && absolutePathToResource[absolutePathToResource.size() - 1] == '/');
 }
