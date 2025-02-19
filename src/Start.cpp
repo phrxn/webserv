@@ -128,7 +128,7 @@ void Start::createProgramConfiguration() {
   _programConfiguration.setTypeOfProtocol(HTTP);
   _programConfiguration.setEnvironment(NORMAL);
   _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(25);
-  _programConfiguration.setLogLevel(Log::DEBUG);
+  _programConfiguration.setLogLevel(Log::INFO);
   _programConfiguration.setListSupportedMethodsByServer(listSupportedMethodsByServer);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);
   _programConfiguration.setMaxRequestSizeInBytes(5242880);  // 5MB
