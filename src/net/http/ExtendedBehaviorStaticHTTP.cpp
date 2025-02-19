@@ -22,7 +22,7 @@ ExtendedBehaviorStaticHTTP &ExtendedBehaviorStaticHTTP::operator=(
 
 HTTPStatus::Status ExtendedBehaviorStaticHTTP::doPost(
     const std::string &physicalRelativePath, const std::string &uploadFolder,
-    const HTTPRequest &request) {
+    HTTPRequest &request) {
 
   if (pathEndsWithSlash(physicalRelativePath)) {
 	return HTTPStatus::FORBIDDEN;

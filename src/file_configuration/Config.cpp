@@ -222,6 +222,17 @@ void Config::_parseRouteStream(std::istringstream &serverStream, ServerConfig &s
                 locationBracketsCount = 0;
                 insideLocationBlock = false;
                 _parseRouteBlock(locationBlock, location);
+
+				if ((ConfigUtils::pathEndsWithSlash(location.getRootDir()) && !ConfigUtils::pathEndsWithSlash(location.getLocationPath())) ||
+					(!ConfigUtils::pathEndsWithSlash(location.getRootDir()) && ConfigUtils::pathEndsWithSlash(location.getLocationPath())))
+				{
+					std::stringstream ss;
+					ss << "If either root or location_path ends with a slash, they must both end with a slash. [";
+					ss << location.getRootDir() << "] [";
+					ss << location.getLocationPath() << "]";
+					throw std::runtime_error(ss.str());
+				}
+
 				server.addRoute(location);
                 locationBlock.clear();
                 return;

@@ -94,16 +94,6 @@ namespace ConfigUtils {
         } else { return true; }
     }
 
-    void	formatPath( std::string &path ) {
-        if (path[0] == '/') {
-            if (!ConfigUtils::directoryExists(path)) {
-                path = "." + path;
-            }
-        } else if (path[0] != '.' && path[1] != '/') {
-            path = "./" + path;
-        }
-    }
-
 	bool	pathEndsWithSlash(const std::string &path) {
 		if (!path.empty() && path[path.size() - 1] == '/') {
 			return true;

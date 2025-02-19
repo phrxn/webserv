@@ -75,6 +75,6 @@ HTTPStatus::Status HTTPRequestFake::getStatus(){
 	return _status;
 }
 
-std::string HTTPRequestFake::getBody() const{
+std::string HTTPRequestFake::getBody(){
 	return "fake body";
 }

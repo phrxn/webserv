@@ -49,7 +49,6 @@ namespace ConfigUtils {
     bool			isRepeatedMethod(const std::vector<HTTPMethods::Method> &methodsVector, HTTPMethods::Method method); // Verifica se um método HTTP já foi configurado
     bool			directoryExists(const std::string &path); // Verifica se um diretório existe
     bool			fileExists(const std::string &path); // Verifica se um arquivo existe
-    void			formatPath(std::string &path); // Formata o caminho do arquivo
 	bool			pathEndsWithSlash(const std::string &path); // Verifica se o caminho termina com uma barra
     void			printServerStruct(const ServerConfig &server); // Imprime a estrutura do servidor
 }

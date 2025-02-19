@@ -127,7 +127,7 @@ void Start::createProgramConfiguration() {
 
   _programConfiguration.setTypeOfProtocol(HTTP);
   _programConfiguration.setEnvironment(NORMAL);
-  _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(15);
+  _programConfiguration.setTimeOutForNewRequestOrToSendAFullRequest(25);
   _programConfiguration.setLogLevel(Log::DEBUG);
   _programConfiguration.setListSupportedMethodsByServer(listSupportedMethodsByServer);
   _programConfiguration.setEnvironmentVariables(_environmentVariables);

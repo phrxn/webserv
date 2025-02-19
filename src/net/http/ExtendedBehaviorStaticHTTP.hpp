@@ -14,7 +14,7 @@ class ExtendedBehaviorStaticHTTP
 	ExtendedBehaviorStaticHTTP(const ExtendedBehaviorStaticHTTP &src);
 	ExtendedBehaviorStaticHTTP &operator=(const ExtendedBehaviorStaticHTTP &src);
 
-	HTTPStatus::Status doPost(const std::string &physicalRelativePath, const std::string &uploadFolder, const HTTPRequest &request);
+	HTTPStatus::Status doPost(const std::string &physicalRelativePath, const std::string &uploadFolder, HTTPRequest &request);
 
 	HTTPStatus::Status doDelete(const std::string &physicalPathToResource);
 

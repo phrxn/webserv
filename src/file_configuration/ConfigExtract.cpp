@@ -57,10 +57,10 @@ namespace ServerExtraction
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
 
         std::stringstream stringSize(tokens[1]);
-        size_t limitBodySizeMB;
+        size_t limitBodySizeInBytes;
 
-        if (stringSize >> limitBodySizeMB){
-			server.setLimitBodySize(limitBodySizeMB * 1024 * 1024);
+        if (stringSize >> limitBodySizeInBytes){
+			server.setLimitBodySize(limitBodySizeInBytes);
             if (tokens[1][0] == '-'){
                 throw std::runtime_error(ERROR_INVALID_LIMIT_BODY_SIZE);
             }
@@ -77,7 +77,7 @@ namespace ServerExtraction
 
         std::string errorCode = tokens[1];
         std::string fileName = tokens[2];
-        ConfigUtils::formatPath(fileName);
+
         std::ifstream file(fileName.c_str());
 
         if (!file.is_open() || file.fail())
@@ -132,10 +132,6 @@ namespace RouteExtraction
     void extractLocationPath(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-		if (!ConfigUtils::pathEndsWithSlash(tokens[1]))
-		{
-			throw std::runtime_error(ERROR_INVALID_LOCATION_PATH_WITHOUT_END_SLASH);
-		}
 		location.setLocationPath(tokens[1]);
     }
 
@@ -144,11 +140,6 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::string rootPath = tokens[1];
-        ConfigUtils::formatPath(rootPath);
-		if (!ConfigUtils::pathEndsWithSlash(rootPath))
-		{
-			throw std::runtime_error(ERROR_INVALID_ROOT_WITHOUT_END_SLASH);
-		}
 
         if (!ConfigUtils::directoryExists(rootPath))
         {
@@ -195,7 +186,7 @@ namespace RouteExtraction
     void extractUploadPath(std::vector<std::string> &tokens, RouteConfig &location)
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
-        ConfigUtils::formatPath(tokens[1]);
+
 		if (!ConfigUtils::pathEndsWithSlash(tokens[1]))
 		{
 			throw std::runtime_error(ERROR_INVALID_UPLOAD_PATH_WITHOUT_END_SLASH);
@@ -223,6 +214,11 @@ namespace RouteExtraction
     {
         validateToken(tokens, 1, ERROR_MISSING_VALUE);
         std::string cgiPath = tokens[1];
+
+		if (!ConfigUtils::pathEndsWithSlash(cgiPath))
+		{
+			cgiPath += "/";
+		}
 
 		location.setCgiPath(cgiPath);
     }
