@@ -14,16 +14,6 @@ StaticHTTPServlet::StaticHTTPServlet(const VirtualHost *virtualHost, const URL &
 
 	_physicalPathToResource = virtualHost->getThePhysicalPath(url);
 
-	std::string indexFile = virtualHost->getIndexFile(url);
-	if (absolutePathEndsWithSlash(_physicalPathToResource) && !indexFile.empty()) {
-		std::string absolutePathToIndexFile = _physicalPathToResource + indexFile;
-
-		File file(absolutePathToIndexFile);
-		if (file.exist()) {
-			_physicalPathToResource = absolutePathToIndexFile;
-		}
-	}
-
 	_urlPathToDir = url.getPathFull(true);
 	_canListDirectory = virtualHost->isDirectoryListingAllowedForThisPath(url);
 }
