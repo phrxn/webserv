@@ -95,16 +95,16 @@ URL HTTPRequest::getURL() const {
 	return URL();
 }
 
-std::string HTTPRequest::getContentType() const {
-	return "";
+std::string HTTPRequest::getContentType() {
+	return _HTTPTool.getHeader("Content-Type");
 }
 
-std::string HTTPRequest::getContentLength() const {
-	return "";
+std::string HTTPRequest::getContentLength() {
+	return _HTTPTool.getHeader("Content-Length");
 }
 
-std::string HTTPRequest::getCookie() const{
-	return "";
+std::string HTTPRequest::getCookie() {
+	return _HTTPTool.getHeader("Cookie");
 }
 
 std::string HTTPRequest::getBody(){

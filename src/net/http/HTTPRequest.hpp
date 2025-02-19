@@ -55,11 +55,11 @@ class HTTPRequest : public Request {
 
   virtual URL getURL() const;
 
-  virtual std::string getContentType() const;
+  virtual std::string getContentType() ;
 
-  virtual std::string getContentLength() const;
+  virtual std::string getContentLength() ;
 
-  virtual std::string getCookie() const;
+  virtual std::string getCookie() ;
 
   virtual std::string getBody();
 };
