@@ -72,7 +72,17 @@ std::string HTTPRequest::getURLStr(){
 }
 
 std::string HTTPRequest::getHost(){
-	return _HTTPTool.getHeader("Host");
+	std::string host = _HTTPTool.getHeader("Host");
+	if (host.empty()) {
+		return "";
+	}
+	size_t pos = host.find(':');
+
+	//remove port from host if it exists
+    if (pos != std::string::npos) {
+        return host.substr(0, pos);
+    }
+    return host;
 }
 
 std::string HTTPRequest::isToKeepTheConnection(){
