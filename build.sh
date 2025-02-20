@@ -141,10 +141,18 @@ USER_OPTION=$1
 
 if [ "$USER_OPTION" == "compile" ]; then
 	make COMPILE=binary -j$(nproc)
+	if [ $? -eq 1 ]; then
+		exit 1;
+	fi
+	exit 0
 fi
 
 if [ "$USER_OPTION" == "clean" ]; then
 	make clean
+	if [ $? -eq 1 ]; then
+		exit 1;
+	fi
+	exit 0
 fi
 
 if [ "$USER_OPTION" == "tests" ]; then
@@ -183,6 +191,7 @@ fi
 if [ "$USER_OPTION" == "re" ]; then
 	make fclean
 	make COMPILE=binary -j$(nproc)
+	exit 0
 fi
 
 if [ "$USER_OPTION" == "val_run" ]; then
@@ -221,3 +230,5 @@ if [ "$USER_OPTION" == "ci" ]; then
 		exit 1
 	fi
 fi
+
+echo -e "\033[1;31m This option is invalid \033[0m"

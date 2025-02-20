@@ -29,8 +29,6 @@ This project is a simple HTTP server in C++98 with some restrictions and require
 
 2. As the project MUST BE written in C++98, but Google tests require at least the C++14 version two folder of objects are created
 
-3. The project is under development...
-
 ## Features
 
 | Feature        | Status    |
@@ -41,11 +39,12 @@ This project is a simple HTTP server in C++98 with some restrictions and require
 | Respond to TELNET | :heavy_check_mark:         |
 | Implement a simple echo for testing | :heavy_check_mark:         |
 | Timeout for connections not to hang forever| :heavy_check_mark:         |
-| Handler the HTTP protocol | :bangbang: _in development_         |
+| Handler the HTTP protocol | :heavy_check_mark:         |
 | CGI | :heavy_check_mark:         |
-| Configuration File | :bangbang: _in development_         |
+| Configuration File | :heavy_check_mark:         |
 | Virtual servers to handle many websites | :heavy_check_mark:         |
 | Run on Linux | :heavy_check_mark:         |
+| Manage Sessions and Cookies | :heavy_check_mark:         |
 | Run on Windows | :bangbang: _in development_         |
 
 ## Compile & Run
@@ -86,12 +85,12 @@ The script build accept 3 options (parameters):
 
 ### Run
 
-5. To run the webserv type: ``./webserv`` at this point the server will wait for clients.
+5. To run the webserv type: ``./webserv <configuration file>`` at this point the server will wait for clients.
 
 **Important things**<br>
-- By default the server will wait for clients on port 8080
 - The Log is in INFO mode.
 - To close the webserv just type CTRL+C.
-- The server will echo every line sent to it. (The line must contain <code>\n</code> for the server to respond.)
-- The timeout for inactivity is 5 seconds. (After 5 seconds of not sending anything to the server, it will close the connection)
-- :bangbang:_These options will be configurable in the future. In the configuration file_
+
+## Configuration File
+
+The ``www_tests`` folder has many examples of websites and how the project works.

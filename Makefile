@@ -181,14 +181,6 @@ else ifeq ($(COMPILE), tests)
 
 endif
 
-
-
-
-
-
-
-
-
 clean:
 	rm -rf output
 
