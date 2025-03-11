@@ -49,12 +49,35 @@ This project is a simple HTTP server in C++98 with some restrictions and require
 
 ## Compile & Run
 
-### Prerequisites
+<table>
+  <tr>
+     <td colspan="2" align="center"><h4>Run on Docker!!</h4> </td>
+  </tr>
+  <tr>
+    <td rowspan="4">
+      <img src="https://raw.githubusercontent.com/phrxn/webserv/refs/heads/main/images/logo-docker.png" width="150">
+    </td>
+    <td> There is a PHP project for example and a configuration file using port <code>9000</code> of the container </td>
+  </tr>
+  <tr>
+    <td>1. build the image:  <code>docker build -t webserv .</code></td>
+  </tr>
+  <tr>
+    <td>2. run/create a container:  <code>docker run --name webserv -p 9000:9000 webserv</code></td>
+  </tr>
+  <tr>
+    <td> Access through your browser: <code>http://localhost:9000</code> <br> to stop press <code>CTRL+C</code></td>
+  </tr>
+</table>
+
+### Run on Linux: Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 - [ ] <code>make</code>
 - [ ] <code>g++</code> (GNU Compiler Collection) or <code>clang</code>
 - [ ] <code>valgrind</code> (It is not necessary for the program to work, but it is important to check for memory leaks in tests)
+- [ ] <code>php php-cgi php-session</code> to run php cgi
+- [ ] <code>python3</code> to run python cgi
 - [ ] You are in a Linux environment
 
 ### Compile
@@ -93,4 +116,5 @@ The script build accept 3 options (parameters):
 
 ## Configuration File
 
-The ``www_tests`` folder has many examples of websites and how the project works.
+The ``www_tests`` folder has many examples of websites and how the project works. <br>
+Example: <code>./webserv www_tests/14_static_office/config.conf</code>

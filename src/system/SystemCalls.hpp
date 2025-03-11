@@ -3,6 +3,7 @@
 
 #include <sys/socket.h>
 #include <signal.h>
+#include <sys/types.h>
 
 #include "../error/StatusOr.hpp"
 #include "Errno.hpp"

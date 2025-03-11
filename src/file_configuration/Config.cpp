@@ -12,7 +12,7 @@ Config::Config(const std::string &fileName) : _configFile(fileName)
 
     if (!configFile.is_open() || configFile.fail())
     {
-        throw std::runtime_error("Could Not Open Log File!");
+        throw std::runtime_error("Could Not Open Config File!");
     }
 
     if (configFile.peek() == std::ifstream::traits_type::eof())
