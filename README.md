@@ -55,7 +55,7 @@ This project is a simple HTTP server in C++98 with some restrictions and require
   </tr>
   <tr>
     <td rowspan="4">
-      <img src="https://raw.githubusercontent.com/phrxn/webserv/refs/heads/main/images/logo-docker.png" width="150">
+      <img src="https://raw.githubusercontent.com/phrxn/webserv/refs/heads/main/images/logo-docker.png" width="120">
     </td>
     <td> There is a PHP project for example and a configuration file using port <code>9000</code> of the container </td>
   </tr>
