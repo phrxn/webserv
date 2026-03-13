@@ -2,6 +2,11 @@
   <img src="https://raw.githubusercontent.com/phrxn/phrxn/refs/heads/master/webserv/webserv_logo.png" />
 </p>
 
+<br>
+<br>
+
+Example of <b>Webserv</b> providing a website in PHP (cgi php)
+[![showroom](https://raw.githubusercontent.com/phrxn/phrxn/refs/heads/master/webserv/showroom.gif)](https://raw.githubusercontent.com/phrxn/phrxn/refs/heads/master/webserv/showroom.gif)
 
 ## About
 
